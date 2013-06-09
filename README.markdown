@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/BlueM/Tree.png)](https://travis-ci.org/BlueM/Tree)
+[![Build Status](https://travis-ci.org/BlueM/Tree.png?branch=master)](https://travis-ci.org/BlueM/Tree)
 
 Tree Overview
 =========================
