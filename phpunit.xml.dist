@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit>
+    <testsuites>
+        <testsuite name="TreeTest">
+            <directory suffix="Test.php">./test</directory>
+        </testsuite>
+    </testsuites>
+	<logging>
+      <log type="testdox-text" target="Testdox-Result.txt" />
+	</logging>
+</phpunit>
