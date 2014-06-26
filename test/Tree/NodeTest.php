@@ -187,7 +187,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function getAPropertyUsingGet()
+    public function getAPropertyUsingMethodGet()
     {
         $node = new Node(array('id' => 16, 'key' => 'value'));
         $this->assertEquals('value', $node->get('key'));
@@ -196,7 +196,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function getAPropertyUsing__call()
+    public function getAPropertyUsingMagicMethod()
     {
         $node = new Node(array('id' => 16, 'key' => 'value'));
         $this->assertEquals('value', $node->getKey());
@@ -207,7 +207,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Unkown property
      */
-    public function tryingToGetANonExistentPropertyUsingGetThrowsAnInvalidArgumentException()
+    public function tryingToGetANonExistentPropertyUsingGetThrowsAnException()
     {
         $node = new Node(array('id' => 1));
         $this->assertEquals('value', $node->get('key'));
@@ -218,7 +218,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
      * @expectedException BadFunctionCallException
      * @expectedExceptionMessage Invalid method getKey()
      */
-    public function tryingToGetANonExistentPropertyUsing__callThrowsABadFunctionCallException()
+    public function tryingToGetANonExistentPropertyUsingMagicMethodThrowsAnException()
     {
         $node = new Node(array('id' => 1));
         $this->assertEquals('value', $node->getKey());
