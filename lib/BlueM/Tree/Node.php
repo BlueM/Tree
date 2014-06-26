@@ -26,8 +26,6 @@
 namespace BlueM\Tree;
 
 use BlueM\Tree;
-use InvalidArgumentException;
-use BadFunctionCallException;
 
 /**
  * Class representing a node in a Tree
@@ -179,23 +177,23 @@ class Node
      * @param string $property
      *
      * @return mixed
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function get($property)
     {
         if (isset($this->properties[$property])) {
             return $this->properties[$property];
         }
-        throw new InvalidArgumentException(
+        throw new \InvalidArgumentException(
             'Unkown property “' . $property . '” for node ' . $this->properties['id']
         );
     }
 
     /**
-     * @param $name
-     * @param $args
+     * @param string $name
+     * @param mixed  $args
      *
-     * @throws BadFunctionCallException
+     * @throws \BadFunctionCallException
      * @return mixed
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -208,7 +206,7 @@ class Node
                 return $this->properties[$property];
             }
         }
-        throw new BadFunctionCallException("Invalid method $name() called");
+        throw new \BadFunctionCallException("Invalid method $name() called");
     }
 
     /**

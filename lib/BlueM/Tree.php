@@ -26,7 +26,6 @@
 
 namespace BlueM;
 
-use InvalidArgumentException;
 
 /**
  * Class for dealing with a tree structure that is constructed by referencing parent IDs
@@ -49,7 +48,8 @@ class Tree
      * Constructor.
      *
      * @param array $data    The data for the tree (array of associative arrays)
-     * @param array $options [optional] Currentl, supported key: "rootId" (ID of the root node)
+     * @param array $options [optional] Currently, the only supported key is "rootId"
+     *                       (ID of the root node)
      */
     public function __construct(array $data, array $options = array())
     {
@@ -81,17 +81,17 @@ class Tree
     /**
      * Returns a single node from the tree, identified by its ID.
      *
-     * @param mixed $id Node ID
+     * @param int $id Node ID
      *
      * @return Tree\Node
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function getNodeById($id)
     {
         if (isset($this->nodes[$id])) {
             return $this->nodes[$id];
         }
-        throw new InvalidArgumentException("Invalid node primary key $id");
+        throw new \InvalidArgumentException("Invalid node primary key $id");
     }
 
     /**
