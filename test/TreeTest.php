@@ -4,6 +4,7 @@ namespace BlueM;
 
 require_once __DIR__ . '/../lib/BlueM/Tree.php';
 require_once __DIR__ . '/../lib/BlueM/Tree/Node.php';
+require_once __DIR__ . '/../lib/BlueM/Tree/InvalidParentException.php';
 
 /**
  * Tests for BlueM\Tree. These are not really unit tests, as they test the class
@@ -119,10 +120,10 @@ class TreeTest extends \PHPUnit_Framework_TestCase
      */
     public function getAllNodes()
     {
-        $data = self::dataWithNumericKeys();
-        $tree = new Tree($data);
-
+        $data  = self::dataWithNumericKeys();
+        $tree  = new Tree($data);
         $nodes = $tree->getNodes();
+
         $this->assertInternalType('array', $nodes);
         $this->assertSame(count($data), count($nodes));
 
@@ -161,10 +162,11 @@ class TreeTest extends \PHPUnit_Framework_TestCase
      */
     public function theTreeIsReturnedAsStringInScalarContext()
     {
-        $data = self::dataWithNumericKeys();
-        $tree = new Tree($data);
-        $actual = "$tree";
-        $expected = '- 5
+        $data     = self::dataWithNumericKeys();
+        $tree     = new Tree($data);
+        $actual   = "$tree";
+        $expected = <<<'EXPECTED'
+- 5
 - 3
 - 4
 - 6
@@ -176,7 +178,8 @@ class TreeTest extends \PHPUnit_Framework_TestCase
       - 27
     - 12
   - 10
-    - 20';
+    - 20
+EXPECTED;
 
         $this->assertEquals($expected, $actual);
     }
@@ -212,7 +215,9 @@ class TreeTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $nodes);
         $this->assertSame(count($data), count($nodes));
 
-        $expectedOrder = array('building', 'library', 'school', 'primary-school', 'vehicle', 'bicycle', 'car');
+        $expectedOrder = array(
+            'building', 'library', 'school', 'primary-school', 'vehicle', 'bicycle', 'car'
+        );
 
         for ($i = 0, $ii = count($nodes); $i < $ii; $i++) {
             $this->assertInstanceOf(__NAMESPACE__ . '\Tree\Node', $nodes[$i]);
@@ -233,10 +238,10 @@ class TreeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @expectedException PHPUnit_Framework_Error_Warning
+     * @expectedException \Bluem\Tree\InvalidParentException
      * @expectedExceptionMessage 123 points to non-existent parent with ID 456
      */
-    public function aWarningIsEmittedWhenAnInvalidParentIdIsReferenced()
+    public function anExceptionIsThrownWhenAnInvalidParentIdIsReferenced()
     {
         new Tree(
             array(

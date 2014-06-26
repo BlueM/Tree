@@ -26,6 +26,7 @@
 
 namespace BlueM;
 
+use BlueM\Tree\InvalidParentException;
 
 /**
  * Class for dealing with a tree structure that is constructed by referencing parent IDs
@@ -109,6 +110,8 @@ class Tree
      * child node that references a non-existing parent node.
      *
      * @param array $data The data from which to generate the tree
+     *
+     * @throws Tree\InvalidParentException
      */
     private function build(array $data)
     {
@@ -138,9 +141,8 @@ class Tree
                 if (isset($this->nodes[$pid])) {
                     $this->nodes[$pid]->addChild($this->nodes[$id]);
                 } else {
-                    user_error(
-                        "Node with ID $id points to non-existent parent with ID $pid",
-                        E_USER_WARNING
+                    throw new InvalidParentException(
+                        "Node with ID $id points to non-existent parent with ID $pid"
                     );
                 }
             }
