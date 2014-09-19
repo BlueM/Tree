@@ -7,6 +7,11 @@ What is it?
 --------------
 Tree and Tree\Node are PHP classes for handling data that is structured hierarchically using parent ID references. A typical example is a table in a relational database where each record’s “parent” field references the primary key of another record. Of course, Tree cannot only use data originating from a database, but anything: you supply the data, and Tree uses it, regardless of where the data came from and how it was processed.
 
+Installation
+-------------
+The preferred way to install Tree is through [Composer](https://getcomposer.org). For this, add `"bluem/tree": "~1.0"` to the requirements in your composer.json file. As this library uses [semantic versioning](http://semver.org), you will get fixes and feature additions when running composer update, but not changes which break the API.
+
+Alternatively, you can clone the repository using git or download a tagged release.
 
 Usage
 -------
@@ -82,3 +87,8 @@ Using it with a self-joined database table
     $tree = new BlueM\Tree($records);
     ...
     ...
+
+
+Author & License
+=================
+This code was written by Carsten Blüm (www.bluem.net) and licensed under the BSD2 license.
