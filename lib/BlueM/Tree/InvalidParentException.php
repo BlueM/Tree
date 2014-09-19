@@ -6,8 +6,8 @@ namespace BlueM\Tree;
  * Exception which will be thrown if a tree node references a parent
  * node (throught the parent ID) which does not exist.
  *
- * If running in a production environment, if might be desirable to leaves the
- * exception uncatched (dev/test) or to catch it
+ * @author Carsten Bluem <carsten@bluem.net>
+ * @license http://www.opensource.org/licenses/bsd-license.php  BSD License
  */
 class InvalidParentException extends \RuntimeException
 {
