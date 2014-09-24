@@ -122,7 +122,6 @@ class Tree
         $this->nodes[$this->options['rootid']] = new Tree\Node(
             array(
                 'id'     => $this->options['rootid'],
-                'title'  => 'ROOT',
                 'parent' => null,
             ),
             $this
