@@ -250,4 +250,18 @@ EXPECTED;
         );
     }
 
+    /**
+     * @test
+     * @expectedException \Bluem\Tree\InvalidParentException
+     * @expectedExceptionMessage 678 references its own ID as parent
+     */
+    public function anExceptionIsThrownWhenANodeWouldBeItsOwnParent()
+    {
+        new Tree(
+            array(
+                array('id' => 123, 'parent' => 0),
+                array('id' => 678, 'parent' => 678),
+            )
+        );
+    }
 }
