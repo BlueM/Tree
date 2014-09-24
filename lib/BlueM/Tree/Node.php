@@ -271,6 +271,19 @@ class Node
     }
 
     /**
+     * Returns an array containing this node and all nodes below (children,
+     * grandchildren, ...) it.
+     *
+     * For order of nodes, see comments on getDescendants()
+     *
+     * @return Node[]
+     */
+    public function getDescendantsAndSelf()
+    {
+        return $this->getDescendants(true);
+    }
+
+    /**
      * Returns any node above (parent, grandparent, ...) this node
      *
      * Note: The argument is deprecated and will be removed in version 2; please use
