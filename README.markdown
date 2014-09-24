@@ -30,6 +30,9 @@ Usage
     // Get a node's ID
     $parent = $node->getId();
 
+    // Get a node's property (other than "id" or "parent")
+    $parent = $node->get('propertyname');
+
     // Get the node's hierarchical level (1-based)
     $level = $node->getLevel();
 
@@ -87,6 +90,17 @@ Using it with a self-joined database table
     $tree = new BlueM\Tree($records);
     ...
     ...
+
+
+Version History
+=================
+
+1.1
+-----
+* Added `getDescendantsAndSelf()`
+* Added `getAncestorsAndSelf()`
+* Arguments to `getDescendants()` and `getAncestors()` are deprecated and will be removed with version 2
+* Added a check to make sure that nodes don’t use their own ID as parent ID. This throws an exception which would not have been thrown before if this is the case. Hence, it might break backward compatibility, but only if the data data is inconsistent.
 
 
 Author & License
