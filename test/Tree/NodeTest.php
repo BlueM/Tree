@@ -391,6 +391,31 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * At the moment, this is an almost exact copy of test method
+     * getANodesAncestorsIncludingTheNodeItself(). This will change when the argument
+     * to method getAncestors() will be removed from the API.
+     *
+     * @test
+     */
+    public function getANodesAncestorsAndSelf()
+    {
+        $parentProperty = new \ReflectionProperty(__NAMESPACE__ . '\Node', 'parent');
+        $parentProperty->setAccessible(true);
+
+        $node        = new Node(array('id' => 1));
+        $parent      = new Node(array('id' => 2));
+        $grandParent = new Node(array('id' => 0)); // Root node
+
+        $parentProperty->setValue($node, $parent);
+        $parentProperty->setValue($parent, $grandParent);
+
+        $this->assertSame(
+            array($node, $parent, $grandParent),
+            $node->getAncestorsAndSelf()
+        );
+    }
+
+    /**
      * @test
      */
     public function getANodesDescendants()
@@ -433,6 +458,33 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             array($node, $child1, $grandChild1, $grandChild2, $child2),
             $node->getDescendants(true)
+        );
+    }
+
+    /**
+     * At the moment, this is an almost exact copy of test method
+     * getANodesDescendantsIncludingTheNodeItself(). This will change when the
+     * argument to getDescendants() is removed from the API.
+     *
+     * @test
+     */
+    public function getANodesDescendantsAndSelf()
+    {
+        $childrenProperty = new \ReflectionProperty(__NAMESPACE__ . '\Node', 'children');
+        $childrenProperty->setAccessible(true);
+
+        $node        = new Node(array('id' => 1));
+        $child1      = new Node(array('id' => 2));
+        $child2      = new Node(array('id' => 3));
+        $grandChild1 = new Node(array('id' => 4));
+        $grandChild2 = new Node(array('id' => 5));
+
+        $childrenProperty->setValue($node, array($child1, $child2));
+        $childrenProperty->setValue($child1, array($grandChild1, $grandChild2));
+
+        $this->assertSame(
+            array($node, $child1, $grandChild1, $grandChild2, $child2),
+            $node->getDescendantsAndSelf(true)
         );
     }
 }
