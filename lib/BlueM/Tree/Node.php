@@ -251,6 +251,9 @@ class Node
      * and B1/B2 are children of B in correct order. If the node itself is to be
      * included, it will be the very first item in the array.
      *
+     * Note: The argument is deprecated and will be removed in version 2; please
+     * use getDescendantsAndSelf().
+     *
      * @param bool $includeSelf [optional] Include the node itself? Default: false.
      *
      * @return Node[]
@@ -269,6 +272,12 @@ class Node
 
     /**
      * Returns any node above (parent, grandparent, ...) this node
+     *
+     * Note: The argument is deprecated and will be removed in version 2; please use
+     * getAncestorsAndSelf() instead. Also, in version 2 the root node will not be
+     * included, as this is hardly ever necessary; you can prepare your code already
+     * now by using constant Tree::API to check whether removing the root node is
+     * necessary.
      *
      * @param bool $includeSelf [optional] Whether to include the node itself.
      *
