@@ -286,6 +286,9 @@ class Node
     /**
      * Returns any node above (parent, grandparent, ...) this node
      *
+     * The array returned from this method will include the root node. If you
+     * do not want the root node, you should do an array_pop() on the array.
+     *
      * Note: The argument is deprecated and will be removed in version 2; please use
      * getAncestorsAndSelf() instead. Also, in version 2 the root node will not be
      * included, as this is hardly ever necessary; you can prepare your code already
@@ -306,6 +309,20 @@ class Node
         }
 
         return array_merge($ancestors, $this->parent->getAncestors(true));
+    }
+
+    /**
+     * Returns an array containing this node and all nodes above (parent, grandparent,
+     * ...) it.
+     *
+     * Note: The array returned from this method will include the root node. If you
+     * do not want the root node, you should do an array_pop() on the array.
+     *
+     * @return Node[] Indexed, sorted array of nodes: self, parent, grandparent, ...
+     */
+    public function getAncestorsAndSelf()
+    {
+        return $this->getAncestors(true);
     }
 
     /**
