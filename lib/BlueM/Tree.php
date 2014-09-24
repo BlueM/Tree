@@ -36,6 +36,17 @@ use BlueM\Tree\InvalidParentException;
  */
 class Tree
 {
+
+    /**
+     * API version
+     *
+     * This number will always be in sync with the first digit of the
+     * release version number.
+     *
+     * @var int
+     */
+    const API = 1;
+
     /**
      * @var array
      */
