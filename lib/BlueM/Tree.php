@@ -118,8 +118,7 @@ class Tree
     }
 
     /**
-     * Core method for creating the tree. Emits an E_USER_WARNING for each
-     * child node that references a non-existing parent node.
+     * Core method for creating the tree
      *
      * @param array $data The data from which to generate the tree
      *
