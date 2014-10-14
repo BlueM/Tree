@@ -39,8 +39,8 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function tryingToGetThePreviousSiblingReturnsNullWhenCalledOnTheFirstNode()
     {
         $node    = new Node(array('id' => 123));
+        $parent  = new Node(array('id' => 789));
 
-        $parent           = new Node(array('id' => 789));
         $childrenProperty = new \ReflectionProperty($parent, 'children');
         $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($parent, array($node));
@@ -205,7 +205,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Unkown property
+     * @expectedExceptionMessage Undefined property: key (Node ID: 1)
      */
     public function tryingToGetANonExistentPropertyUsingGetThrowsAnException()
     {
@@ -486,5 +486,26 @@ class NodeTest extends \PHPUnit_Framework_TestCase
             array($node, $child1, $grandChild1, $grandChild2, $child2),
             $node->getDescendantsAndSelf(true)
         );
+    }
+
+    /**
+     * @test
+     */
+    public function nodePropertiesAreHandledCaseInsensitively()
+    {
+        $node = new Node(
+            array(
+                'id'  => 1,
+                'foo' => 'Foo',
+                'BAR' => 'Bar',
+            )
+        );
+
+        $this->assertSame('Foo', $node->foo);
+        $this->assertSame('Foo', $node->get('foo'));
+        $this->assertSame('Foo', $node->getFoo());
+        $this->assertSame('Bar', $node->bar);
+        $this->assertSame('Bar', $node->get('bar'));
+        $this->assertSame('Bar', $node->getBar());
     }
 }

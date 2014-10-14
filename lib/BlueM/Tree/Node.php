@@ -58,13 +58,11 @@ class Node
     protected $children = array();
 
     /**
-     * Constructor. Used to initially set node properties
-     *
      * @param array $properties Associative array of node properties
      */
     public function __construct(array $properties)
     {
-        $this->properties = $properties;
+        $this->properties = array_change_key_case($properties, CASE_LOWER);
     }
 
     /**
@@ -80,7 +78,7 @@ class Node
     }
 
     /**
-     * Returns prev. node in the same level, or NULL if there's no prev. node
+     * Returns previous node in the same level, or NULL if there's no previous node
      *
      * @return Node|null
      */
@@ -90,7 +88,7 @@ class Node
     }
 
     /**
-     * Returns following node in the same level, or NULL if there's no next node
+     * Returns following node in the same level, or NULL if there's no following node
      *
      * @return Node|null
      */
@@ -100,7 +98,8 @@ class Node
     }
 
     /**
-     * Returns previous or next node in level, or NULL if there is none.
+     * Returns the sibling with the given offset from this node,
+     * or NULL if there is no such sibling
      *
      * @param int $offset If 1, the next node is returned, if -1, then
      *                    the previous one. Can be called with arbitrary
@@ -121,8 +120,9 @@ class Node
     /**
      * Returns siblings of the node, optionally including the node itself.
      *
-     * @param bool $includeSelf [optional] If true, the node itself will be included in the
-     *                   resulting array. In either case, the sort order will be correct.
+     * @param bool $includeSelf If true, the node itself will be included in the resulting
+     *                          array. In either case, the sort order will be correct.
+     *                          This argument is deprecated and will be removed in v2.0
      *
      * @return Node[]
      */
@@ -175,18 +175,19 @@ class Node
     /**
      * Returns a single node property by its name.
      *
-     * @param string $property
+     * @param string $name
      *
      * @return mixed
      * @throws \InvalidArgumentException
      */
-    public function get($property)
+    public function get($name)
     {
-        if (isset($this->properties[$property])) {
-            return $this->properties[$property];
+        $lowerName = strtolower($name);
+        if (isset($this->properties[$lowerName])) {
+            return $this->properties[$lowerName];
         }
         throw new \InvalidArgumentException(
-            'Unkown property “' . $property . '” for node ' . $this->properties['id']
+            "Undefined property: $name (Node ID: " . $this->properties['id'] . ")"
         );
     }
 
@@ -203,7 +204,7 @@ class Node
         $lowerName = strtolower($name);
         if ('get' === substr($lowerName, 0, 3)) {
             $property = substr($lowerName, 3);
-            if (isset($this->properties[$property])) {
+            if (array_key_exists($property, $this->properties)) {
                 return $this->properties[$property];
             }
         }
