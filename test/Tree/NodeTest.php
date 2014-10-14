@@ -491,6 +491,57 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function getReturnsTheExpectedResults()
+    {
+        $node = new Node(
+            array(
+                'id'  => 1,
+                'foo' => 'Foo',
+                'BAR' => 'Bar',
+            )
+        );
+
+        $this->assertSame(array(), $node->children);
+        $this->assertSame(null,    $node->parent);
+        $this->assertSame('Foo',   $node->foo);
+    }
+
+    /**
+     * @test
+     * @expectedException RuntimeException
+     * @expectedExceptionMessage Undefined property
+     */
+    public function getThrowsAnExceptionIfThePropertyIsInvalid()
+    {
+        $node = new Node(array('id'  => 1));
+
+        $node->nosuchproperty;
+    }
+
+    /**
+     * @test
+     */
+    public function issetReturnsTheExpectedResults()
+    {
+        $node = new Node(
+            array(
+                'id'  => 1,
+                'foo' => 'Foo',
+                'BAR' => 'Bar',
+            )
+        );
+
+        $this->assertTrue(isset($node->foo));
+        $this->assertTrue(isset($node->FOO));
+        $this->assertTrue(isset($node->bar));
+        $this->assertTrue(isset($node->BAR));
+        $this->assertTrue(isset($node->children));
+        $this->assertTrue(isset($node->parent));
+    }
+
+    /**
+     * @test
+     */
     public function nodePropertiesAreHandledCaseInsensitively()
     {
         $node = new Node(

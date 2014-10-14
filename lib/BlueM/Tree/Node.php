@@ -212,6 +212,38 @@ class Node
     }
 
     /**
+     * @param string $name
+     *
+     * @throws \RuntimeException
+     * @return null
+     */
+    public function __get($name)
+    {
+        if ('parent' == $name or 'children' == $name) {
+            return $this->$name;
+        }
+        $lowerName = strtolower($name);
+        if (array_key_exists($lowerName, $this->properties)) {
+            return $this->properties[$lowerName];
+        }
+        throw new \RuntimeException(
+            "Undefined property: $name (Node ID: " . $this->properties['id'] . ")"
+        );
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        return 'parent' == $name or
+               'children' == $name or
+               in_array(strtolower($name), array_keys($this->properties));
+    }
+
+    /**
      * Returns the level of this node in the tree
      *
      * @return int Tree level (1 = top level)
