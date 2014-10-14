@@ -138,7 +138,7 @@ class Tree
         );
 
         foreach ($data as $row) {
-            $this->nodes[$row['id']] = new Tree\Node($row, $this);
+            $this->nodes[$row['id']] = new Tree\Node($row);
             if (empty($children[$row['parent']])) {
                 $children[$row['parent']] = array($row['id']);
             } else {
