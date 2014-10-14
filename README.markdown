@@ -66,6 +66,11 @@ Usage
     // Ditto, but include the node itself
     $descendantsPlusSelf = $node->getDescendants(true);
 
+    // Access node properties using get() overloaded getters or __get():
+    $value = $node->get('myproperty');
+    $value = $node->myproperty;
+    $value = $node->getMyyProperty();
+
     // Get the node's properties as an associative array
     $array = $node->toArray();
 
@@ -94,6 +99,11 @@ Using it with a self-joined database table
 
 Version History
 =================
+
+1.2
+----
+* Implemented `__isset()` and `__get()` on the `Node` class. This makes it possible to pass nodes to Twig (or other libraries that handle object properties similarly) and to access nodes’ properties intuitively.
+* Improved case-insensitive handling of node properties
 
 1.1
 -----
