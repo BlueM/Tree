@@ -17,66 +17,68 @@ Alternatively, you can clone the repository using git or download a tagged relea
 Usage
 -------
 
-    $tree = new BlueM\Tree($data);
+```php
+$tree = new BlueM\Tree($data);
 
-    // Get the top-level nodes
-    $rootNodes = $tree->getRootNodes();
+// Get the top-level nodes
+$rootNodes = $tree->getRootNodes();
 
-    // Get all nodes
-    $allNodes = $tree->getNodes();
+// Get all nodes
+$allNodes = $tree->getNodes();
 
-    // Get a single node by its unique identifier
-    $node = $tree->getNodeById(12345);
+// Get a single node by its unique identifier
+$node = $tree->getNodeById(12345);
 
-    // Get a node's ID
-    $parent = $node->getId();
+// Get a node's ID
+$parent = $node->getId();
 
-    // Get a node's property (other than "id" or "parent")
-    $parent = $node->get('propertyname');
+// Get a node's property (other than "id" or "parent")
+$parent = $node->get('propertyname');
 
-    // Get the node's hierarchical level (1-based)
-    $level = $node->getLevel();
+// Get the node's hierarchical level (1-based)
+$level = $node->getLevel();
 
-    // Get a node's preceding sibling
-    $precedingSibling = $node->getPrecedingSibling();
+// Get a node's preceding sibling
+$precedingSibling = $node->getPrecedingSibling();
 
-    // Get a node's following sibling
-    $followingSibling = $node->getFollowingSibling();
+// Get a node's following sibling
+$followingSibling = $node->getFollowingSibling();
 
-    // Get a node's parent node
-    $parent = $node->getParent();
+// Get a node's parent node
+$parent = $node->getParent();
 
-    // Get a node's ancestors (parent, grandparent, ...)
-    $ancestors = $node->getAncestors();
+// Get a node's ancestors (parent, grandparent, ...)
+$ancestors = $node->getAncestors();
 
-    // Ditto, but include the node itself
-    $ancestorsPlusSelf = $node->getAncestors(true);
+// Ditto, but include the node itself
+$ancestorsPlusSelf = $node->getAncestors(true);
 
-    // Get a node's child nodes
-    $children = $node->getChildren();
+// Get a node's child nodes
+$children = $node->getChildren();
 
-    // Does the node have children?
-    $bool = $node->hasChildren();
+// Does the node have children?
+$bool = $node->hasChildren();
 
-    // Get the number of Children
-    $bool = $node->countChildren();
+// Get the number of Children
+$bool = $node->countChildren();
 
-    // Get a node's descendants (children, grandchildren, ...)
-    $descendants = $node->getDescendants();
+// Get a node's descendants (children, grandchildren, ...)
+$descendants = $node->getDescendants();
 
-    // Ditto, but include the node itself
-    $descendantsPlusSelf = $node->getDescendants(true);
+// Ditto, but include the node itself
+$descendantsPlusSelf = $node->getDescendants(true);
 
-    // Access node properties using get() overloaded getters or __get():
-    $value = $node->get('myproperty');
-    $value = $node->myproperty;
-    $value = $node->getMyyProperty();
+// Access node properties using get() overloaded getters or __get():
+$value = $node->get('myproperty');
+$value = $node->myproperty;
+$value = $node->getMyyProperty();
 
-    // Get the node's properties as an associative array
-    $array = $node->toArray();
+// Get the node's properties as an associative array
+$array = $node->toArray();
 
-    // Get a string representation (which will be the node ID)
-    echo "$node";
+// Get a string representation (which will be the node ID)
+echo "$node";
+```
 
 
 Example
@@ -85,17 +87,19 @@ Example
 Using it with a self-joined database table
 ------------------------------------------
 
-    <?php
+```php
+<?php
 
-    require '/path/to/vendor/autoload.php';
+require '/path/to/vendor/autoload.php';
 
-    $db = new PDO(...); // Set up your database connection
-    $stm = $db->query('SELECT id, parent, title FROM tablename ORDER BY title');
-    $records = $stm->fetchAll(PDO::FETCH_ASSOC);
+$db = new PDO(...); // Set up your database connection
+$stm = $db->query('SELECT id, parent, title FROM tablename ORDER BY title');
+$records = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-    $tree = new BlueM\Tree($records);
-    ...
-    ...
+$tree = new BlueM\Tree($records);
+...
+...
+```
 
 
 Version History
