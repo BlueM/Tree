@@ -71,7 +71,7 @@ $descendantsPlusSelf = $node->getDescendants(true);
 // Access node properties using get() overloaded getters or __get():
 $value = $node->get('myproperty');
 $value = $node->myproperty;
-$value = $node->getMyyProperty();
+$value = $node->getMyProperty();
 
 // Get the node's properties as an associative array
 $array = $node->toArray();
