@@ -160,6 +160,32 @@ class TreeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function getANodeByItsValuePath()
+    {
+        $data = self::dataWithNumericKeys();
+        $tree = new Tree($data);
+        $this->assertEquals(
+            $tree->getNodeById(11),
+            $tree->getNodeByValuePath('name', array('Europe', 'Germany', 'Hamburg'))
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function tryingToGetANodeByItsValuePathReturnsNullIfNoNodeMatches()
+    {
+        $data = self::dataWithNumericKeys();
+        $tree = new Tree($data);
+        $this->assertEquals(
+            null,
+            $tree->getNodeByValuePath('name', array('Europe', 'Germany', 'Frankfurt'))
+        );
+    }
+
+    /**
+     * @test
+     */
     public function theTreeIsReturnedAsStringInScalarContext()
     {
         $data     = self::dataWithNumericKeys();

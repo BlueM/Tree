@@ -118,6 +118,43 @@ class Tree
     }
 
     /**
+     * Returns the first node for which a specific property's values of all ancestors
+     * and the node are equal to the values in the given argument.
+     *
+     * Example: If nodes have property "name", and on the root level there is a node with
+     * name "A" which has a child with name "B" which has a child which has node "C", you
+     * would get the latter one by invoking getNodeByValuePath('name', ['A', 'B', 'C']).
+     * Comparison is case-sensitive and type-safe.
+     *
+     * @param string $name
+     * @param array  $search
+     *
+     * @return Node|null
+     */
+    public function getNodeByValuePath($name, array $search)
+    {
+        $findNested = function (array $nodes, array $tokens) use ($name, &$findNested) {
+            $token = array_shift($tokens);
+            foreach ($nodes as $node) {
+                $nodeName = $node->get($name);
+                if ($nodeName === $token) {
+                    // Match
+                    if (count($tokens)) {
+                        // Search next level
+                        return $findNested($node->getChildren(), $tokens);
+                    } else {
+                        // We found the node we were looking for
+                        return $node;
+                    }
+                }
+            }
+            return null;
+        };
+
+        return $findNested($this->getRootNodes(), $search);
+    }
+
+    /**
      * Core method for creating the tree
      *
      * @param array $data The data from which to generate the tree
