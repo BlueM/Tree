@@ -1,0 +1,49 @@
+BlueM\Tree\Node
+ [x] Get the previous sibling
+ [x] Trying to get the previous sibling returns null when called on the first node
+ [x] Get the next sibling
+ [x] Get all siblings
+ [x] Get the siblings including the node itself
+ [x] Get the children
+ [x] Get children returns empty array when no child nodes exist
+ [x] Get the parent node
+ [x] Trying to get the parent returns null for the root node
+ [x] Get the id
+ [x] Get a property using method get
+ [x] Get a property using magic method
+ [x] Trying to get a non existent property using get throws an exception
+ [x] Trying to get a non existent property using magic method throws an exception
+ [x] The level of a root node is 0
+ [x] Get a nodes level
+ [x] Get the number of children
+ [x] Get whether the node has any children
+ [x] Get the properties as an array
+ [x] In scalar context the node is typecasted to its id
+ [x] Add a child to a node
+ [x] Get the root node ancestors
+ [x] Get the root node ancestors including the node itself
+ [x] Get a nodes ancestors
+ [x] Get a nodes ancestors including the node itself
+ [x] Get a nodes ancestors and self
+ [x] Get a nodes descendants
+ [x] Get a nodes descendants including the node itself
+ [x] Get a nodes descendants and self
+ [x] Get returns the expected results
+ [x] Get throws an exception if the property is invalid
+ [x] Isset returns the expected results
+ [x] Node properties are handled case insensitively
+
+BlueM\Tree
+ [x] Get the root nodes
+ [x] Get all nodes
+ [x] Get a node by its id
+ [x] Trying to get a node by its id throws an exception if the id is invalid
+ [x] Get a node by its value path
+ [x] Trying to get a node by its value path returns null if no node matches
+ [x] The tree is returned as string in scalar context
+ [x] Get the root nodes for data with string keys
+ [x] Get all nodes for data with string keys
+ [x] Get a node by its id for data with string keys
+ [x] An exception is thrown when an invalid parent id is referenced
+ [x] An exception is thrown when a node would be its own parent
+
