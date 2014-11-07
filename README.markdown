@@ -105,6 +105,10 @@ $tree = new BlueM\Tree($records);
 Version History
 =================
 
+1.3
+----
+* Added `getNodeByValuePath()` method on `Tree` class, which can be used to find a node deeply nested in the tree based on ancestors’ and the node’s values for an arbitrary property. (See method doc comment for example.)
+
 1.2
 ----
 * Implemented `__isset()` and `__get()` on the `Node` class. This makes it possible to pass nodes to Twig (or other libraries that handle object properties similarly) and to access nodes’ properties intuitively.
