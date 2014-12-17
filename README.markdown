@@ -30,28 +30,25 @@ $allNodes = $tree->getNodes();
 $node = $tree->getNodeById(12345);
 
 // Get a node's ID
-$parent = $node->getId();
+$id = $node->getId();
 
-// Get a node's property (other than "id" or "parent")
-$parent = $node->get('propertyname');
+// Get a node's parent node (will be null for the root node)
+$parentNode = $node->getParent();
 
 // Get the node's hierarchical level (1-based)
 $level = $node->getLevel();
 
-// Get a node's preceding sibling
+// Get a node's preceding sibling (null, if there is no preceding sibling)
 $precedingSibling = $node->getPrecedingSibling();
 
-// Get a node's following sibling
+// Get a node's following sibling (null, if there is no following sibling)
 $followingSibling = $node->getFollowingSibling();
-
-// Get a node's parent node
-$parent = $node->getParent();
 
 // Get a node's ancestors (parent, grandparent, ...)
 $ancestors = $node->getAncestors();
 
 // Ditto, but include the node itself
-$ancestorsPlusSelf = $node->getAncestors(true);
+$ancestorsPlusSelf = $node->getAncestorsAndSelf();
 
 // Get a node's child nodes
 $children = $node->getChildren();
@@ -66,7 +63,7 @@ $bool = $node->countChildren();
 $descendants = $node->getDescendants();
 
 // Ditto, but include the node itself
-$descendantsPlusSelf = $node->getDescendants(true);
+$descendantsPlusSelf = $node->getDescendantsAndSelf();
 
 // Access node properties using get() overloaded getters or __get():
 $value = $node->get('myproperty');
