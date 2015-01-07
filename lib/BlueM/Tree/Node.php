@@ -124,19 +124,30 @@ class Node
      *                          array. In either case, the sort order will be correct.
      *                          This argument is deprecated and will be removed in v2.0
      *
+     * Note: The argument is deprecated and will be removed in version 2; please
+     * use getSiblingsAndSelf().
+     *
      * @return Node[]
      */
     public function getSiblings($includeSelf = false)
     {
         $siblings = array();
         foreach ($this->parent->getChildren() as $child) {
-            if ($includeSelf or
-                $child->getId() != $this->getId()
-            ) {
+            if ($includeSelf || $child->getId() != $this->getId()) {
                 $siblings[] = $child;
             }
         }
         return $siblings;
+    }
+
+    /**
+     * Returns siblings of the node, optionally including the node itself.
+     *
+     * @return Node[]
+     */
+    public function getSiblingsAndSelf()
+    {
+        return $this->getSiblings(true);
     }
 
     /**
@@ -219,7 +230,7 @@ class Node
      */
     public function __get($name)
     {
-        if ('parent' == $name or 'children' == $name) {
+        if ('parent' == $name || 'children' == $name) {
             return $this->$name;
         }
         $lowerName = strtolower($name);
@@ -238,8 +249,8 @@ class Node
      */
     public function __isset($name)
     {
-        return 'parent' == $name or
-               'children' == $name or
+        return 'parent' == $name ||
+               'children' == $name ||
                in_array(strtolower($name), array_keys($this->properties));
     }
 

@@ -123,6 +123,31 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function getTheSiblingsAndSelf()
+    {
+        // Note: currently, this test is basically identical to getTheSiblingsIncludingTheNodeItself()
+        $node     = new Node(array('id' => 10));
+        $sibling1 = new Node(array('id' => 20));
+        $sibling2 = new Node(array('id' => 30));
+
+        $parent           = new Node(array('id' => 333));
+        $childrenProperty = new \ReflectionProperty($parent, 'children');
+        $childrenProperty->setAccessible(true);
+        $childrenProperty->setValue($parent, array($sibling1, $node, $sibling2));
+
+        $parentProperty = new \ReflectionProperty($node, 'parent');
+        $parentProperty->setAccessible(true);
+        $parentProperty->setValue($node, $parent);
+
+        $this->assertSame(
+            array($sibling1, $node, $sibling2),
+            $node->getSiblingsAndSelf()
+        );
+    }
+
+    /**
+     * @test
+     */
     function getTheChildren()
     {
         $node1 = new Node(array('id' => 10));
