@@ -31,7 +31,7 @@ use BlueM\Tree;
  * Class representing a node in a Tree
  *
  * @author Carsten Bluem <carsten@bluem.net>
- * @license http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @license http://www.opensource.org/licenses/bsd-license.php  BSD 2-Clause License
  */
 class Node
 {

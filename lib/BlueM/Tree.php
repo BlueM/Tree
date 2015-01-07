@@ -32,7 +32,7 @@ use BlueM\Tree\InvalidParentException;
  * Class for dealing with a tree structure that is constructed by referencing parent IDs
  *
  * @author Carsten Bluem <carsten@bluem.net>
- * @license http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @license http://www.opensource.org/licenses/bsd-license.php BSD 2-Clause License
  */
 class Tree
 {
