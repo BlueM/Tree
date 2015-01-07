@@ -4,7 +4,7 @@
     "description": "Library for handling tree structures based on parent IDs, e.g. a self-joined database table",
     "keywords": ["tree", "hierarchical"],
     "homepage": "https://github.com/BlueM/Tree",
-    "license": "BSD-2",
+    "license": "BSD-2-Clause",
     "authors": [
         {
             "name": "Carsten Blüm",
