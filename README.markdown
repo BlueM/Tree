@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/BlueM/Tree.png?branch=master)](https://travis-ci.org/BlueM/Tree)
 [![HHVM Status](http://hhvm.h4cc.de/badge/bluem/tree.svg)](http://hhvm.h4cc.de/package/bluem/tree)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/584d20e2-cd62-4aed-8d09-b87eb72005d2/mini.png)](https://insight.sensiolabs.com/projects/584d20e2-cd62-4aed-8d09-b87eb72005d2)
 
 Tree Overview
 =========================
@@ -37,6 +38,12 @@ $parentNode = $node->getParent();
 
 // Get the node's hierarchical level (1-based)
 $level = $node->getLevel();
+
+// Get a node's siblings as an array
+$siblings = $node->getSiblings();
+
+// Ditto, but include the node itself (identical to $node->parent->getChildren())
+$siblings = $node->getSiblingsAndSelf();
 
 // Get a node's preceding sibling (null, if there is no preceding sibling)
 $precedingSibling = $node->getPrecedingSibling();
@@ -102,6 +109,11 @@ $tree = new BlueM\Tree($records);
 Version History
 =================
 
+1.4
+----
+* Added `getSiblingsAndSelf()` method on `Node` class.
+* The argument to `getSiblings()` is deprecated and will be removed in version 2
+
 1.3
 ----
 * Added `getNodeByValuePath()` method on `Tree` class, which can be used to find a node deeply nested in the tree based on ancestors’ and the node’s values for an arbitrary property. (See method doc comment for example.)
@@ -121,4 +133,4 @@ Version History
 
 Author & License
 =================
-This code was written by Carsten Blüm (www.bluem.net) and licensed under the BSD2 license.
+This code was written by Carsten Blüm (www.bluem.net) and licensed under the BSD 2-Clause license.
