@@ -170,8 +170,7 @@ class Tree
             array(
                 'id'     => $this->options['rootid'],
                 'parent' => null,
-            ),
-            $this
+            )
         );
 
         foreach ($data as $row) {
