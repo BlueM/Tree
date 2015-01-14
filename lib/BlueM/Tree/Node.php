@@ -188,8 +188,9 @@ class Node
      *
      * @param string $name
      *
-     * @return mixed
      * @throws \InvalidArgumentException
+     *
+     * @return mixed
      */
     public function get($name)
     {
@@ -198,7 +199,7 @@ class Node
             return $this->properties[$lowerName];
         }
         throw new \InvalidArgumentException(
-            "Undefined property: $name (Node ID: " . $this->properties['id'] . ")"
+            "Undefined property: $name (Node ID: ".$this->properties['id'].')'
         );
     }
 
@@ -207,8 +208,8 @@ class Node
      * @param mixed  $args
      *
      * @throws \BadFunctionCallException
+     *
      * @return mixed
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __call($name, $args)
     {
@@ -226,7 +227,8 @@ class Node
      * @param string $name
      *
      * @throws \RuntimeException
-     * @return null
+     *
+     * @return mixed
      */
     public function __get($name)
     {
@@ -238,7 +240,7 @@ class Node
             return $this->properties[$lowerName];
         }
         throw new \RuntimeException(
-            "Undefined property: $name (Node ID: " . $this->properties['id'] . ")"
+            "Undefined property: $name (Node ID: ".$this->properties['id'].')'
         );
     }
 
