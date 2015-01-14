@@ -27,6 +27,7 @@
 namespace BlueM;
 
 use BlueM\Tree\InvalidParentException;
+use BlueM\Tree\Node;
 
 /**
  * Class for dealing with a tree structure that is constructed by referencing parent IDs
@@ -36,7 +37,6 @@ use BlueM\Tree\InvalidParentException;
  */
 class Tree
 {
-
     /**
      * API version
      *
@@ -77,10 +77,10 @@ class Tree
     /**
      * Returns a flat, sorted array of all node objects in the tree.
      *
-     * @return Tree\Node[] Nodes, sorted as if the tree was hierarchical,
-     *                     i.e.: the first level 1 item, then the children of
-     *                     the first level 1 item (and their children), then
-     *                     the second level 1 item and so on.
+     * @return Node[] Nodes, sorted as if the tree was hierarchical,
+     *                i.e.: the first level 1 item, then the children of
+     *                the first level 1 item (and their children), then
+     *                the second level 1 item and so on.
      */
     public function getNodes()
     {
@@ -96,21 +96,22 @@ class Tree
      *
      * @param int $id Node ID
      *
-     * @return Tree\Node
      * @throws \InvalidArgumentException
+     *
+     * @return Node
      */
     public function getNodeById($id)
     {
-        if (isset($this->nodes[$id])) {
-            return $this->nodes[$id];
+        if (empty($this->nodes[$id])) {
+            throw new \InvalidArgumentException("Invalid node primary key $id");
         }
-        throw new \InvalidArgumentException("Invalid node primary key $id");
+        return $this->nodes[$id];
     }
 
     /**
      * Returns an array of all nodes in the root level
      *
-     * @return Tree\Node[] Nodes in the correct order
+     * @return Node[] Nodes in the correct order
      */
     public function getRootNodes()
     {
@@ -159,14 +160,14 @@ class Tree
      *
      * @param array $data The data from which to generate the tree
      *
-     * @throws Tree\InvalidParentException
+     * @throws InvalidParentException
      */
     private function build(array $data)
     {
         $children = array();
 
         // Create the root node
-        $this->nodes[$this->options['rootid']] = new Tree\Node(
+        $this->nodes[$this->options['rootid']] = $this->createNode(
             array(
                 'id'     => $this->options['rootid'],
                 'parent' => null,
@@ -174,7 +175,7 @@ class Tree
         );
 
         foreach ($data as $row) {
-            $this->nodes[$row['id']] = new Tree\Node($row);
+            $this->nodes[$row['id']] = $this->createNode($row);
             if (empty($children[$row['parent']])) {
                 $children[$row['parent']] = array($row['id']);
             } else {
@@ -209,11 +210,25 @@ class Tree
     {
         $str = array();
         foreach ($this->getNodes() as $node) {
-            $indent1st = str_repeat('  ', $node->getLevel() - 1) . '- ';
+            $indent1st = str_repeat('  ', $node->getLevel() - 1).'- ';
             $indent    = str_repeat('  ', ($node->getLevel() - 1) + 2);
-            $node      = (string)$node;
+            $node      = (string) $node;
             $str[]     = "$indent1st" . str_replace("\n", "$indent\n  ", $node);
         }
         return join("\n", $str);
+    }
+
+    /**
+     * Creates and returns a node with the given properties
+     *
+     * Can be overridden by subclasses to use a Node subclass for nodes.
+     *
+     * @param array $properties
+     *
+     * @return Node
+     */
+    protected function createNode(array $properties)
+    {
+        return new Node($properties);
     }
 }
