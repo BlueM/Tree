@@ -7,7 +7,11 @@ Tree Overview
 
 What is it?
 --------------
-Tree and Tree\Node are PHP classes for handling data that is structured hierarchically using parent ID references. A typical example is a table in a relational database where each record’s “parent” field references the primary key of another record. Of course, Tree cannot only use data originating from a database, but anything: you supply the data, and Tree uses it, regardless of where the data came from and how it was processed.
+`Tree` and `Tree\Node` are PHP classes for handling data that is structured hierarchically using parent ID references. A typical example is a table in a relational database where each record’s “parent” field references the primary key of another record. Of course, Tree cannot only use data originating from a database, but anything: you supply the data, and Tree uses it, regardless of where the data came from and how it was processed.
+
+It is important to know that the tree structure created by this package is read-only: you can’t use it to perform modifications (add, update, delete, reorder) of the tree nodes.
+
+On the other hand, one nice thing is that it’s pretty fast. This does not only mean the code itself, but also that the constructor takes the input data in a format that is simple to create. For instance, to create a tree from database content, a single `SELECT` is sufficient, regardless of the depth of the tree and even for thousands of nodes.
 
 Installation
 -------------
@@ -108,6 +112,10 @@ $tree = new BlueM\Tree($records);
 
 Version History
 =================
+
+1.5
+----
+* Added `createNode()` method to Tree, which makes it possible to use instances of a Node subclass as nodes
 
 1.4
 ----
