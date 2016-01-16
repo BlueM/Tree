@@ -71,7 +71,7 @@ class Tree
             $this->options['rootid'] = 0;
         }
 
-        $this->build($data, $options);
+        $this->build($data);
     }
 
     /**
