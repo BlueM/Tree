@@ -113,6 +113,10 @@ $tree = new BlueM\Tree($records);
 Version History
 =================
 
+1.5.1
+----
+* Remove superfluous 2nd argument to `build()` in constructor
+
 1.5
 ----
 * Added `createNode()` method to Tree, which makes it possible to use instances of a Node subclass as nodes
