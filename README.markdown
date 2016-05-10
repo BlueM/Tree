@@ -109,9 +109,42 @@ $tree = new BlueM\Tree($records);
 ...
 ```
 
+Advanced topics
+===============
+
+Controlling JSON serialization
+------------------------------
+In case you want to serialize a tree of nodes managed by this class to JSON using `json_encode()`, you will probably find that you don’t get the data you expect or even are confronted with a recursion-related warning.
+
+The code in this package cannot anticipate in what way you will use it and what you would like the JSON representation to contain. Luckily, you can fully control the generated JSON. Starting with PHP 5.4, there is the `JsonSerializable` interface which includes a single method `jsonSerialize()`, which may return *anything*.
+
+An example implementation which returns the node’s properties plus children as an array might look like this:
+
+```php
+
+class YourNodeClass extends \BlueM\Tree\Node implements \JsonSerializable
+{
+    /**
+     * @return array Or whatever datatype you like
+     */
+    public function jsonSerialize()
+    {
+        return array_merge($this->properties, ['children' => $this->getChildren()]);
+    }
+}
+```
+
+The result is recursive, which is probably too much when using `getNodes()` to get all nodes, but can be handy when invoking `getRootNodes()`. When using `getNodes()`, you might therefore – again: depending on your needs – just skip including the children or include only children IDs.
+
+To be able to use a custom node class you must extend `BlueM\Tree` and overwrite the `createNode()` method (requires version 1.5 or later), but that’s *really* easy to do.
+
 
 Version History
 =================
+
+1.5.2
+-----
+* Add info on JSON serialization in Readme. No code changes.
 
 1.5.1
 ----
