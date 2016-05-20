@@ -5,7 +5,13 @@
             <directory suffix="Test.php">./test</directory>
         </testsuite>
     </testsuites>
-	<logging>
-      <!-- <log type="testdox-text" target="test/Testdox-Result.txt" /> -->
-	</logging>
+    <filter>
+        <whitelist>
+            <directory>lib</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <!--<log type="testdox-text" target="test/Testdox-Result.txt"/>-->
+        <!--<log type="coverage-html" target="/tmp/phpunit-coverage"/>-->
+    </logging>
 </phpunit>
