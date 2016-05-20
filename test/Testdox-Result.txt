@@ -4,6 +4,7 @@ BlueM\Tree\Node
  [x] Get the next sibling
  [x] Get all siblings
  [x] Get the siblings including the node itself
+ [x] Get the siblings and self
  [x] Get the children
  [x] Get children returns empty array when no child nodes exist
  [x] Get the parent node
@@ -46,4 +47,6 @@ BlueM\Tree
  [x] Get a node by its id for data with string keys
  [x] An exception is thrown when an invalid parent id is referenced
  [x] An exception is thrown when a node would be its own parent
+ [x] An exception is thrown when a node would be its own parent when own id and parent id have different types
+ [x] When mixing numeric and string ids no exception is thrown due to implicit typecasting
 

@@ -133,7 +133,7 @@ class Node
     {
         $siblings = array();
         foreach ($this->parent->getChildren() as $child) {
-            if ($includeSelf || $child->getId() != $this->getId()) {
+            if ($includeSelf || (string)$child->getId() !== (string)$this->getId()) {
                 $siblings[] = $child;
             }
         }

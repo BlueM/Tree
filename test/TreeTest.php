@@ -290,4 +290,32 @@ EXPECTED;
             )
         );
     }
+
+    /**
+     * @test
+     * @ticket 3
+     * @expectedException \Bluem\Tree\InvalidParentException
+     * @expectedExceptionMessage references its own ID as parent
+     */
+    public function anExceptionIsThrownWhenANodeWouldBeItsOwnParentWhenOwnIdAndParentIdHaveDifferentTypes()
+    {
+        new Tree(
+            array(
+                array('id' => '5', 'parent' => 5),
+            )
+        );
+    }
+
+    /**
+     * @test
+     * @ticket 3
+     */
+    public function whenMixingNumericAndStringIdsNoExceptionIsThrownDueToImplicitTypecasting()
+    {
+        new Tree(
+            array(
+                array('id' => 'foo', 'parent' => 0)
+            )
+        );
+    }
 }
