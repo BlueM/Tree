@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2011, Carsten Blüm <carsten@bluem.net>
+ * Copyright (c) 2011-2016, Carsten Blüm <carsten@bluem.net>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +48,7 @@ class Node
      *
      * @var Node
      */
-    protected $parent = null;
+    protected $parent;
 
     /**
      * Indexed array of child nodes in correct order
@@ -214,7 +214,7 @@ class Node
     public function __call($name, $args)
     {
         $lowerName = strtolower($name);
-        if ('get' === substr($lowerName, 0, 3)) {
+        if (0 === strpos($lowerName, 'get')) {
             $property = substr($lowerName, 3);
             if (array_key_exists($property, $this->properties)) {
                 return $this->properties[$property];
@@ -232,7 +232,7 @@ class Node
      */
     public function __get($name)
     {
-        if ('parent' == $name || 'children' == $name) {
+        if ('parent' === $name || 'children' === $name) {
             return $this->$name;
         }
         $lowerName = strtolower($name);
@@ -251,8 +251,8 @@ class Node
      */
     public function __isset($name)
     {
-        return 'parent' == $name ||
-               'children' == $name ||
+        return 'parent' === $name ||
+               'children' === $name ||
                in_array(strtolower($name), array_keys($this->properties));
     }
 

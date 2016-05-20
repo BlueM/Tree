@@ -6,8 +6,6 @@ require_once __DIR__ . '/../../lib/BlueM/Tree.php';
 require_once __DIR__ . '/../../lib/BlueM/Tree/Node.php';
 
 /**
- * Unit tests for BlueM\Tree\Node
- *
  * @covers BlueM\Tree\Node
  */
 class NodeTest extends \PHPUnit_Framework_TestCase
@@ -172,7 +170,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    function getTheChildren()
+    public function getTheChildren()
     {
         $node1 = new Node(array('id' => 10));
         $node2 = new Node(array('id' => 20));

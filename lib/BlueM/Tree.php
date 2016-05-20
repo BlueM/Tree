@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2011, Carsten Blüm <carsten@bluem.net>
+ * Copyright (c) 2011-2016, Carsten Blüm <carsten@bluem.net>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -215,7 +215,7 @@ class Tree
             $node      = (string) $node;
             $str[]     = "$indent1st" . str_replace("\n", "$indent\n  ", $node);
         }
-        return join("\n", $str);
+        return implode("\n", $str);
     }
 
     /**

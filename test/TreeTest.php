@@ -105,7 +105,7 @@ class TreeTest extends \PHPUnit_Framework_TestCase
 
         $nodes = $tree->getRootNodes();
         $this->assertInternalType('array', $nodes);
-        $this->assertSame(5, count($nodes));
+        $this->assertCount(5, $nodes);
 
         $expectedOrder = array(5, 3, 4, 6, 1);
 
