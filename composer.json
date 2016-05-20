@@ -1,5 +1,5 @@
 {
-    "name": "bluem/tree",
+    "name": "Viky-zhang/tree",
     "type": "library",
     "description": "Library for handling tree structures based on parent IDs, e.g. a self-joined database table",
     "keywords": ["tree", "hierarchical"],

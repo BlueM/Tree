@@ -185,7 +185,7 @@ class Tree
 
         foreach ($children as $pid => $childids) {
             foreach ($childids as $id) {
-                if ($pid == $id) {
+                if ($pid === $id) {
                     throw new InvalidParentException(
                         "Node with ID $id references its own ID as parent ID"
                     );
