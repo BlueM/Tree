@@ -3,6 +3,7 @@ BlueM\Tree\Node
  [x] Trying to get the previous sibling returns null when called on the first node
  [x] Get the next sibling
  [x] Get all siblings
+ [x] Getting all siblings returns the siblings when mixed data types are used for the ids
  [x] Get the siblings including the node itself
  [x] Get the siblings and self
  [x] Get the children

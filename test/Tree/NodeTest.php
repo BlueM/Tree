@@ -99,7 +99,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function getAllSiblings2()
+    public function gettingAllSiblingsReturnsTheSiblingsWhenMixedDataTypesAreUsedForTheIds()
     {
         $node     = new Node(array('id' => 0));
         $sibling1 = new Node(array('id' => 'a'));
