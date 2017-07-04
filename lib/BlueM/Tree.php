@@ -155,6 +155,32 @@ class Tree
         return $findNested($this->getRootNodes(), $search);
     }
 
+        /**
+     * Returns a flat, array of all node objects in determined level.
+     *
+     * @param int $level desired
+     *
+     * @return Node[] Nodes, all nodes from determined level
+     */
+    public function getLevelNodes($level)
+    {
+        $nodes = array();
+        if ( $level>0 ){
+           foreach ($this->getRootNodes() as $subnode){
+              if ( $subnode->getLevel()==$level ){
+                 $nodes[$subnode->getId()] = $subnode;
+              }
+              else{
+                 $checkreturn = $subnode->getLevelNode($level);
+                 if ( $checkreturn!==false ){
+                    $nodes = array_merge($nodes,$checkreturn);
+                 }
+              } 
+           }
+        }
+        return $nodes;
+    }
+    
     /**
      * Core method for creating the tree
      *
