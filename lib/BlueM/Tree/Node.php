@@ -172,7 +172,35 @@ class Node
         }
         return $this->parent;
     }
-
+    
+    /**
+     * Returns the node if the level is desired or search for it's children if it's lower
+     * Created by Guiii
+     *
+     * @param int $level
+     *
+     * @return Node[]
+     */
+    public function getLevelNode($level)
+    {
+        if ( $this->getLevel()==$level ){
+           return array($this->getId()=>$this);
+        }
+        elseif( $this->getLevel()<$level ){
+           $levelchildren = array();
+           foreach($this->getChildren() as $nodechildren){
+              $checkreturn = $nodechildren->getLevelNode($level);
+              if ( $checkreturn!==false ){
+                 $levelchildren = array_merge($levelchildren,$checkreturn);
+              }
+           }
+           if ( count($levelchildren)>0 ){
+              return $levelchildren;
+           }
+        }
+        return false;
+    }
+    
     /**
      * Returns a node's ID
      *
