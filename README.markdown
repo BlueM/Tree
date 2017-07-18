@@ -1,13 +1,11 @@
-[![Build Status](https://travis-ci.org/BlueM/Tree.png?branch=master)](https://travis-ci.org/BlueM/Tree)
-[![HHVM Status](http://hhvm.h4cc.de/badge/bluem/tree.svg)](http://hhvm.h4cc.de/package/bluem/tree)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/584d20e2-cd62-4aed-8d09-b87eb72005d2/mini.png)](https://insight.sensiolabs.com/projects/584d20e2-cd62-4aed-8d09-b87eb72005d2)
+[![Build Status](https://travis-ci.org/Esolitos/TreeNode.png?branch=master)](https://travis-ci.org/Esolitos/TreeNode)
 
-Tree Overview
+TreeNode Overview
 =========================
 
 What is it?
 --------------
-`Tree` and `Tree\Node` are PHP classes for handling data that is structured hierarchically using parent ID references. A typical example is a table in a relational database where each record’s “parent” field references the primary key of another record. Of course, Tree cannot only use data originating from a database, but anything: you supply the data, and Tree uses it, regardless of where the data came from and how it was processed.
+Based on [`Tree` by BlueM](https://github.com/BlueM/Tree) merges the two classes in a more compact `TreeNode`. This is a PHP classes for handling data that is structured hierarchically using parent ID references. A typical example is a table in a relational database where each record’s “parent” field references the primary key of another record. Of course, Tree cannot only use data originating from a database, but anything: you supply the data, and Tree uses it, regardless of where the data came from and how it was processed.
 
 It is important to know that the tree structure created by this package is *read-only*: you can’t use it to perform modifications of the tree nodes. If you need a library for that, you might want to take a look at [nicmart/tree](https://github.com/nicmart/Tree).
 
@@ -15,7 +13,7 @@ On the other hand, one nice thing is that it’s pretty fast. This does not only
 
 Installation
 -------------
-The preferred way to install Tree is through [Composer](https://getcomposer.org). For this, add `"bluem/tree": "~1.0"` to the requirements in your composer.json file. As this library uses [semantic versioning](http://semver.org), you will get fixes and feature additions when running composer update, but not changes which break the API.
+The preferred way to install Tree is through [Composer](https://getcomposer.org). For this, add `"esolitos/treenode": "~1.0"` to the requirements in your composer.json file. As this library uses [semantic versioning](http://semver.org), you will get fixes and feature additions when running composer update, but not changes which break the API.
 
 Alternatively, you can clone the repository using git or download a tagged release.
 
@@ -23,7 +21,7 @@ Usage
 -------
 
 ```php
-$tree = new BlueM\Tree($data);
+$tree = new Esolitos\TreeNode($data);
 
 // Get the top-level nodes
 $rootNodes = $tree->getRootNodes();
@@ -104,7 +102,7 @@ $db = new PDO(...); // Set up your database connection
 $stm = $db->query('SELECT id, parent, title FROM tablename ORDER BY title');
 $records = $stm->fetchAll(PDO::FETCH_ASSOC);
 
-$tree = new BlueM\Tree($records);
+$tree = new Esolitos\TreeNode($records);
 ...
 ...
 ```
@@ -112,35 +110,13 @@ $tree = new BlueM\Tree($records);
 Advanced topics
 ===============
 
-Controlling JSON serialization
-------------------------------
-In case you want to serialize a tree of nodes managed by this class to JSON using `json_encode()`, you will probably find that you don’t get the data you expect or even are confronted with a recursion-related warning.
-
-The code in this package cannot anticipate in what way you will use it and what you would like the JSON representation to contain. Luckily, you can fully control the generated JSON. Starting with PHP 5.4, there is the `JsonSerializable` interface which includes a single method `jsonSerialize()`, which may return *anything*.
-
-An example implementation which returns the node’s properties plus children as an array might look like this:
-
-```php
-
-class YourNodeClass extends \BlueM\Tree\Node implements \JsonSerializable
-{
-    /**
-     * @return array Or whatever datatype you like
-     */
-    public function jsonSerialize()
-    {
-        return array_merge($this->properties, ['children' => $this->getChildren()]);
-    }
-}
-```
-
-The result is recursive, which is probably too much when using `getNodes()` to get all nodes, but can be handy when invoking `getRootNodes()`. When using `getNodes()`, you might therefore – again: depending on your needs – just skip including the children or include only children IDs.
-
-To be able to use a custom node class you must extend `BlueM\Tree` and overwrite the `createNode()` method (requires version 1.5 or later), but that’s *really* easy to do.
-
 
 Version History
 =================
+
+2.0-alpha1
+----
+TBD
 
 1.5.3
 -----
@@ -182,4 +158,4 @@ Version History
 
 Author & License
 =================
-This code was written by Carsten Blüm (www.bluem.net) and licensed under the BSD 2-Clause license.
+This code was written by Carsten Blüm (http://www.bluem.net), extended by Esolitos (https://esolitos.com) and licensed under the BSD 2-Clause license.
