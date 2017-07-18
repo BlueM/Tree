@@ -20,6 +20,6 @@
     },
     "autoload": {
         "psr-0": { "Esolitos\\TreeNode": "lib/" },
-        "psr-4": { "Esolitos\\TreeNode": "lib/" }
+        "psr-4": { "Esolitos\\": "lib/" }
     }
 }
