@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/BlueM/Tree.png?branch=master)](https://travis-ci.org/BlueM/Tree)
-[![HHVM Status](http://hhvm.h4cc.de/badge/bluem/tree.svg)](http://hhvm.h4cc.de/package/bluem/tree)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/584d20e2-cd62-4aed-8d09-b87eb72005d2/mini.png)](https://insight.sensiolabs.com/projects/584d20e2-cd62-4aed-8d09-b87eb72005d2)
 
 Tree Overview
