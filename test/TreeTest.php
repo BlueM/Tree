@@ -2,6 +2,9 @@
 
 namespace BlueM;
 
+use BlueM\Tree\Node;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests for BlueM\Tree.
  *
@@ -10,7 +13,7 @@ namespace BlueM;
  *
  * @covers \BlueM\Tree
  */
-class TreeTest extends \PHPUnit_Framework_TestCase
+class TreeTest extends TestCase
 {
     /**
      * @test
@@ -21,14 +24,14 @@ class TreeTest extends \PHPUnit_Framework_TestCase
         $tree = new Tree($data);
 
         $nodes = $tree->getRootNodes();
-        $this->assertInternalType('array', $nodes);
-        $this->assertCount(5, $nodes);
+        static::assertInternalType('array', $nodes);
+        static::assertCount(5, $nodes);
 
         $expectedOrder = [5, 3, 4, 6, 1];
 
         for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
-            $this->assertInstanceOf(__NAMESPACE__.'\Tree\Node', $nodes[$i]);
-            $this->assertSame($expectedOrder[$i], $nodes[$i]->getId());
+            static::assertInstanceOf(Node::class, $nodes[$i]);
+            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
     }
 
@@ -41,14 +44,14 @@ class TreeTest extends \PHPUnit_Framework_TestCase
         $tree = new Tree($data);
         $nodes = $tree->getNodes();
 
-        $this->assertInternalType('array', $nodes);
-        $this->assertSame(\count($data), \count($nodes));
+        static::assertInternalType('array', $nodes);
+        static::assertSame(\count($data), \count($nodes));
 
         $expectedOrder = [5, 3, 4, 6, 1, 7, 15, 11, 21, 27, 12, 10, 20];
 
         for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
-            $this->assertInstanceOf(__NAMESPACE__.'\Tree\Node', $nodes[$i]);
-            $this->assertSame($expectedOrder[$i], $nodes[$i]->getId());
+            static::assertInstanceOf(Node::class, $nodes[$i]);
+            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
     }
 
@@ -60,7 +63,7 @@ class TreeTest extends \PHPUnit_Framework_TestCase
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
         $node = $tree->getNodeById(20);
-        $this->assertEquals(20, $node->getId());
+        static::assertEquals(20, $node->getId());
     }
 
     /**
@@ -81,7 +84,7 @@ class TreeTest extends \PHPUnit_Framework_TestCase
     {
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
-        $this->assertEquals(
+        static::assertEquals(
             $tree->getNodeById(11),
             $tree->getNodeByValuePath('name', ['Europe', 'Germany', 'Hamburg'])
         );
@@ -94,7 +97,7 @@ class TreeTest extends \PHPUnit_Framework_TestCase
     {
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
-        $this->assertEquals(
+        static::assertEquals(
             null,
             $tree->getNodeByValuePath('name', ['Europe', 'Germany', 'Frankfurt'])
         );
@@ -124,7 +127,7 @@ class TreeTest extends \PHPUnit_Framework_TestCase
     - 20
 EXPECTED;
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
     /**
@@ -136,13 +139,13 @@ EXPECTED;
         $tree = new Tree($data, ['rootId' => '']);
 
         $nodes = $tree->getRootNodes();
-        $this->assertInternalType('array', $nodes);
+        static::assertInternalType('array', $nodes);
 
         $expectedOrder = ['building', 'vehicle'];
 
         for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
-            $this->assertInstanceOf(__NAMESPACE__.'\Tree\Node', $nodes[$i]);
-            $this->assertSame($expectedOrder[$i], $nodes[$i]->getId());
+            static::assertInstanceOf(Node::class, $nodes[$i]);
+            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
     }
 
@@ -155,16 +158,16 @@ EXPECTED;
         $tree = new Tree($data, ['rootId' => '']);
 
         $nodes = $tree->getNodes();
-        $this->assertInternalType('array', $nodes);
-        $this->assertSame(\count($data), \count($nodes));
+        static::assertInternalType('array', $nodes);
+        static::assertSame(\count($data), \count($nodes));
 
         $expectedOrder = [
             'building', 'library', 'school', 'primary-school', 'vehicle', 'bicycle', 'car',
         ];
 
         for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
-            $this->assertInstanceOf(__NAMESPACE__.'\Tree\Node', $nodes[$i]);
-            $this->assertSame($expectedOrder[$i], $nodes[$i]->getId());
+            static::assertInstanceOf(Node::class, $nodes[$i]);
+            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
     }
 
@@ -176,7 +179,7 @@ EXPECTED;
         $data = self::dataWithStringKeys();
         $tree = new Tree($data, ['rootId' => '']);
         $node = $tree->getNodeById('library');
-        $this->assertEquals('library', $node->getId());
+        static::assertEquals('library', $node->getId());
     }
 
     /**
@@ -229,11 +232,10 @@ EXPECTED;
      */
     public function whenMixingNumericAndStringIdsNoExceptionIsThrownDueToImplicitTypecasting()
     {
-        new Tree(
-            [
-                ['id' => 'foo', 'parent' => 0],
-            ]
-        );
+        new Tree([
+            ['id' => 'foo', 'parent' => 0],
+        ]);
+        static::assertTrue(true); // Just to make PHPUnit happy
     }
 
     /**

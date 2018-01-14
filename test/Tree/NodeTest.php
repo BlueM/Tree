@@ -2,10 +2,12 @@
 
 namespace BlueM\Tree;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers \BlueM\Tree\Node
  */
-class NodeTest extends \PHPUnit_Framework_TestCase
+class NodeTest extends TestCase
 {
     /**
      * @test
@@ -24,7 +26,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
-        $this->assertSame($sibling, $node->getPrecedingSibling());
+        static::assertSame($sibling, $node->getPrecedingSibling());
     }
 
     /**
@@ -43,7 +45,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
-        $this->assertNull($node->getPrecedingSibling());
+        static::assertNull($node->getPrecedingSibling());
     }
 
     /**
@@ -63,7 +65,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
-        $this->assertSame($sibling, $node->getFollowingSibling());
+        static::assertSame($sibling, $node->getFollowingSibling());
     }
 
     /**
@@ -84,7 +86,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
-        $this->assertSame(
+        static::assertSame(
             [$sibling1, $sibling2],
             $node->getSiblings()
         );
@@ -108,7 +110,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
-        $this->assertSame(
+        static::assertSame(
             [$sibling1, $sibling2],
             $node->getSiblings()
         );
@@ -132,7 +134,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
-        $this->assertSame(
+        static::assertSame(
             [$sibling1, $node, $sibling2],
             $node->getSiblings(true)
         );
@@ -157,7 +159,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
-        $this->assertSame(
+        static::assertSame(
             [$sibling1, $node, $sibling2],
             $node->getSiblingsAndSelf()
         );
@@ -177,7 +179,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($parent, [$node1, $node2, $node3]);
 
-        $this->assertSame([$node1, $node2, $node3], $parent->getChildren());
+        static::assertSame([$node1, $node2, $node3], $parent->getChildren());
     }
 
     /**
@@ -186,7 +188,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function getChildrenReturnsEmptyArrayWhenNoChildNodesExist()
     {
         $parent = new Node(['id' => 52]);
-        $this->assertSame([], $parent->getChildren());
+        static::assertSame([], $parent->getChildren());
     }
 
     /**
@@ -201,7 +203,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
-        $this->assertSame($parent, $node->getParent());
+        static::assertSame($parent, $node->getParent());
     }
 
     /**
@@ -215,7 +217,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, null);
 
-        $this->assertNull($node->getParent());
+        static::assertNull($node->getParent());
     }
 
     /**
@@ -224,7 +226,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function getTheId()
     {
         $node = new Node(['id' => 16]);
-        $this->assertEquals(16, $node->getId());
+        static::assertEquals(16, $node->getId());
     }
 
     /**
@@ -233,7 +235,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function getAPropertyUsingMethodGet()
     {
         $node = new Node(['id' => 16, 'key' => 'value']);
-        $this->assertEquals('value', $node->get('key'));
+        static::assertEquals('value', $node->get('key'));
     }
 
     /**
@@ -242,7 +244,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function getAPropertyUsingMagicMethod()
     {
         $node = new Node(['id' => 16, 'key' => 'value']);
-        $this->assertEquals('value', $node->getKey());
+        static::assertEquals('value', $node->getKey());
     }
 
     /**
@@ -253,7 +255,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function tryingToGetANonExistentPropertyUsingGetThrowsAnException()
     {
         $node = new Node(['id' => 1]);
-        $this->assertEquals('value', $node->get('key'));
+        static::assertEquals('value', $node->get('key'));
     }
 
     /**
@@ -264,7 +266,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     public function tryingToGetANonExistentPropertyUsingMagicMethodThrowsAnException()
     {
         $node = new Node(['id' => 1]);
-        $this->assertEquals('value', $node->getKey());
+        static::assertEquals('value', $node->getKey());
     }
 
     /**
@@ -278,7 +280,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, null);
 
-        $this->assertSame(0, $node->getLevel());
+        static::assertSame(0, $node->getLevel());
     }
 
     /**
@@ -294,7 +296,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, null);
 
-        $this->assertSame(1, $node->getLevel());
+        static::assertSame(1, $node->getLevel());
     }
 
     /**
@@ -308,7 +310,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($node, ['dummy1', 'dummy2']);
 
-        $this->assertSame(2, $node->countChildren());
+        static::assertSame(2, $node->countChildren());
     }
 
     /**
@@ -322,7 +324,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($node, ['dummy1', 'dummy2']);
 
-        $this->assertTrue($node->hasChildren());
+        static::assertTrue($node->hasChildren());
     }
 
     /**
@@ -332,7 +334,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $properties = ['id' => 'xyz', 'foo' => 'bar', 'gggg' => 123];
         $node = new Node($properties);
-        $this->assertEquals($properties, $node->toArray());
+        static::assertEquals($properties, $node->toArray());
     }
 
     /**
@@ -342,7 +344,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
     {
         $properties = ['id' => 123];
         $node = new Node($properties);
-        $this->assertEquals('123', "$node");
+        static::assertEquals('123', "$node");
     }
 
     /**
@@ -357,15 +359,15 @@ class NodeTest extends \PHPUnit_Framework_TestCase
 
         $childrenProperty = new \ReflectionProperty($node, 'children');
         $childrenProperty->setAccessible(true);
-        $this->assertSame([$child], $childrenProperty->getValue($node));
+        static::assertSame([$child], $childrenProperty->getValue($node));
 
         $parentProperty = new \ReflectionProperty($child, 'parent');
         $parentProperty->setAccessible(true);
-        $this->assertSame($node, $parentProperty->getValue($child));
+        static::assertSame($node, $parentProperty->getValue($child));
 
         $propertiesProperty = new \ReflectionProperty($child, 'properties');
         $propertiesProperty->setAccessible(true);
-        $this->assertSame(
+        static::assertSame(
             ['id' => 200, 'parent' => 100],
             $propertiesProperty->getValue($child)
         );
@@ -381,7 +383,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, null);
 
-        $this->assertSame([], $node->getAncestors());
+        static::assertSame([], $node->getAncestors());
     }
 
     /**
@@ -394,7 +396,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, null);
 
-        $this->assertSame([$node], $node->getAncestors(true));
+        static::assertSame([$node], $node->getAncestors(true));
     }
 
     /**
@@ -412,7 +414,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, $grandParent);
 
-        $this->assertSame([$parent, $grandParent], $node->getAncestors());
+        static::assertSame([$parent, $grandParent], $node->getAncestors());
     }
 
     /**
@@ -430,7 +432,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, $grandParent);
 
-        $this->assertSame([$node, $parent, $grandParent], $node->getAncestors(true));
+        static::assertSame([$node, $parent, $grandParent], $node->getAncestors(true));
     }
 
     /**
@@ -452,7 +454,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, $grandParent);
 
-        $this->assertSame(
+        static::assertSame(
             [$node, $parent, $grandParent],
             $node->getAncestorsAndSelf()
         );
@@ -475,7 +477,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $childrenProperty->setValue($node, [$child1, $child2]);
         $childrenProperty->setValue($child1, [$grandChild1, $grandChild2]);
 
-        $this->assertSame(
+        static::assertSame(
             [$child1, $grandChild1, $grandChild2, $child2],
             $node->getDescendants()
         );
@@ -498,7 +500,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $childrenProperty->setValue($node, [$child1, $child2]);
         $childrenProperty->setValue($child1, [$grandChild1, $grandChild2]);
 
-        $this->assertSame(
+        static::assertSame(
             [$node, $child1, $grandChild1, $grandChild2, $child2],
             $node->getDescendants(true)
         );
@@ -525,7 +527,7 @@ class NodeTest extends \PHPUnit_Framework_TestCase
         $childrenProperty->setValue($node, [$child1, $child2]);
         $childrenProperty->setValue($child1, [$grandChild1, $grandChild2]);
 
-        $this->assertSame(
+        static::assertSame(
             [$node, $child1, $grandChild1, $grandChild2, $child2],
             $node->getDescendantsAndSelf(true)
         );
@@ -542,9 +544,9 @@ class NodeTest extends \PHPUnit_Framework_TestCase
             'BAR' => 'Bar',
         ]);
 
-        $this->assertSame([], $node->children);
-        $this->assertSame(null, $node->parent);
-        $this->assertSame('Foo', $node->foo);
+        static::assertSame([], $node->children);
+        static::assertSame('Foo', $node->foo);
+        static::assertNull($node->parent);
     }
 
     /**
@@ -570,12 +572,12 @@ class NodeTest extends \PHPUnit_Framework_TestCase
             'BAR' => 'Bar',
         ]);
 
-        $this->assertTrue(isset($node->foo));
-        $this->assertTrue(isset($node->FOO));
-        $this->assertTrue(isset($node->bar));
-        $this->assertTrue(isset($node->BAR));
-        $this->assertTrue(isset($node->children));
-        $this->assertTrue(isset($node->parent));
+        static::assertTrue(isset($node->foo));
+        static::assertTrue(isset($node->FOO));
+        static::assertTrue(isset($node->bar));
+        static::assertTrue(isset($node->BAR));
+        static::assertTrue(isset($node->children));
+        static::assertTrue(isset($node->parent));
     }
 
     /**
@@ -589,11 +591,11 @@ class NodeTest extends \PHPUnit_Framework_TestCase
             'BAR' => 'Bar',
         ]);
 
-        $this->assertSame('Foo', $node->foo);
-        $this->assertSame('Foo', $node->get('foo'));
-        $this->assertSame('Foo', $node->getFoo());
-        $this->assertSame('Bar', $node->bar);
-        $this->assertSame('Bar', $node->get('bar'));
-        $this->assertSame('Bar', $node->getBar());
+        static::assertSame('Foo', $node->foo);
+        static::assertSame('Foo', $node->get('foo'));
+        static::assertSame('Foo', $node->getFoo());
+        static::assertSame('Bar', $node->bar);
+        static::assertSame('Bar', $node->get('bar'));
+        static::assertSame('Bar', $node->getBar());
     }
 }

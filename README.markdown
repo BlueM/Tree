@@ -138,6 +138,16 @@ The result is recursive, which is probably too much when using `getNodes()` to g
 To be able to use a custom node class you must extend `BlueM\Tree` and overwrite the `createNode()` method (requires version 1.5 or later), but that’s *really* easy to do.
 
 
+Running Tests
+==============
+PHPUnit is installed via Composer, so running tests is a matter of:
+
+* `composer install`
+* `./vendor/bin/phpunit`
+
+If you want to see TestDox output or coverage data, you can comment in the commented lines in the `<log>` section of `phpunit.xml.dist`.
+
+
 Version History
 =================
 
