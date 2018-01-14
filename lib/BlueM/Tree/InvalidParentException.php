@@ -11,5 +11,4 @@ namespace BlueM\Tree;
  */
 class InvalidParentException extends \RuntimeException
 {
-
 }

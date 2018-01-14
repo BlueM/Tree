@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2011-2016, Carsten Blüm <carsten@bluem.net>
+ * Copyright (c) 2011-2018, Carsten Blüm <carsten@bluem.net>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,39 +23,38 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 namespace BlueM\Tree;
 
-use BlueM\Tree;
-
 /**
- * Class representing a node in a Tree
+ * Class representing a node in a Tree.
  *
- * @author Carsten Bluem <carsten@bluem.net>
+ * @author  Carsten Bluem <carsten@bluem.net>
  * @license http://www.opensource.org/licenses/bsd-license.php  BSD 2-Clause License
  */
 class Node
 {
     /**
      * Indexed array of node properties. Must at least contain key
-     * "id" and "parent"; any other keys may be added as needed
+     * "id" and "parent"; any other keys may be added as needed.
      *
      * @var array Associative array
      */
-    protected $properties = array('id' => null, 'parent' => 0);
+    protected $properties = ['id' => null, 'parent' => 0];
 
     /**
-     * Reference to the parent node, in case of the root object: null
+     * Reference to the parent node, in case of the root object: null.
      *
      * @var Node
      */
     protected $parent;
 
     /**
-     * Indexed array of child nodes in correct order
+     * Indexed array of child nodes in correct order.
      *
      * @var array
      */
-    protected $children = array();
+    protected $children = [];
 
     /**
      * @param array $properties Associative array of node properties
@@ -66,19 +65,19 @@ class Node
     }
 
     /**
-     * Adds the given node to this node's children
+     * Adds the given node to this node's children.
      *
      * @param Node $child
      */
     public function addChild(Node $child)
     {
-        $this->children[]            = $child;
-        $child->parent               = $this;
+        $this->children[] = $child;
+        $child->parent = $this;
         $child->properties['parent'] = $this->getId();
     }
 
     /**
-     * Returns previous node in the same level, or NULL if there's no previous node
+     * Returns previous node in the same level, or NULL if there's no previous node.
      *
      * @return Node|null
      */
@@ -88,7 +87,7 @@ class Node
     }
 
     /**
-     * Returns following node in the same level, or NULL if there's no following node
+     * Returns following node in the same level, or NULL if there's no following node.
      *
      * @return Node|null
      */
@@ -99,7 +98,7 @@ class Node
 
     /**
      * Returns the sibling with the given offset from this node,
-     * or NULL if there is no such sibling
+     * or NULL if there is no such sibling.
      *
      * @param int $offset If 1, the next node is returned, if -1, then
      *                    the previous one. Can be called with arbitrary
@@ -110,10 +109,11 @@ class Node
     private function getSibling($offset)
     {
         $siblingsAndSelf = $this->parent->getChildren();
-        $pos             = array_search($this, $siblingsAndSelf);
+        $pos = array_search($this, $siblingsAndSelf);
         if (isset($siblingsAndSelf[$pos + $offset])) {
             return $siblingsAndSelf[$pos + $offset]; // Next / prev. node
         }
+
         return null;
     }
 
@@ -129,14 +129,15 @@ class Node
      *
      * @return Node[]
      */
-    public function getSiblings($includeSelf = false)
+    public function getSiblings($includeSelf = false): array
     {
-        $siblings = array();
+        $siblings = [];
         foreach ($this->parent->getChildren() as $child) {
-            if ($includeSelf || (string)$child->getId() !== (string)$this->getId()) {
+            if ($includeSelf || (string) $child->getId() !== (string) $this->getId()) {
                 $siblings[] = $child;
             }
         }
+
         return $siblings;
     }
 
@@ -145,38 +146,35 @@ class Node
      *
      * @return Node[]
      */
-    public function getSiblingsAndSelf()
+    public function getSiblingsAndSelf(): array
     {
         return $this->getSiblings(true);
     }
 
     /**
-     * Returns all direct children of this node
+     * Returns all direct children of this node.
      *
      * @return Node[]
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         return $this->children;
     }
 
     /**
-     * Returns the parent object or null, if it has no parent
+     * Returns the parent object or null, if it has no parent.
      *
      * @return Node|null Either parent node or, when called on root node, NULL
      */
     public function getParent()
     {
-        if (null === $this->parent) {
-            return null;
-        }
-        return $this->parent;
+        return $this->parent ?? null;
     }
 
     /**
-     * Returns a node's ID
+     * Returns a node's ID.
      *
-     * @return int
+     * @return mixed
      */
     public function getId()
     {
@@ -253,40 +251,41 @@ class Node
     {
         return 'parent' === $name ||
                'children' === $name ||
-               in_array(strtolower($name), array_keys($this->properties));
+               array_key_exists(strtolower($name), $this->properties);
     }
 
     /**
-     * Returns the level of this node in the tree
+     * Returns the level of this node in the tree.
      *
      * @return int Tree level (1 = top level)
      */
-    public function getLevel()
+    public function getLevel(): int
     {
-        if ($this->parent === null) {
+        if (null === $this->parent) {
             return 0;
         }
+
         return $this->parent->getLevel() + 1;
     }
 
     /**
-     * Returns whether or not this node has at least one child node
+     * Returns whether or not this node has at least one child node.
      *
      * @return bool
      */
-    public function hasChildren()
+    public function hasChildren(): bool
     {
-        return count($this->children) ? true : false;
+        return \count($this->children) > 0;
     }
 
     /**
-     * Returns number of children this node has
+     * Returns number of children this node has.
      *
      * @return int
      */
-    public function countChildren()
+    public function countChildren(): int
     {
-        return count($this->children);
+        return \count($this->children);
     }
 
     /**
@@ -300,19 +299,20 @@ class Node
      * Note: The argument is deprecated and will be removed in version 2; please
      * use getDescendantsAndSelf().
      *
-     * @param bool $includeSelf [optional] Include the node itself? Default: false.
+     * @param bool $includeSelf [optional] Include the node itself? Default: false
      *
      * @return Node[]
      */
-    public function getDescendants($includeSelf = false)
+    public function getDescendants($includeSelf = false): array
     {
-        $descendants = $includeSelf ? array($this) : array();
+        $descendants = $includeSelf ? [$this] : [];
         foreach ($this->children as $childnode) {
             $descendants[] = $childnode;
             if ($childnode->hasChildren()) {
                 $descendants = array_merge($descendants, $childnode->getDescendants());
             }
         }
+
         return $descendants;
     }
 
@@ -324,13 +324,13 @@ class Node
      *
      * @return Node[]
      */
-    public function getDescendantsAndSelf()
+    public function getDescendantsAndSelf(): array
     {
         return $this->getDescendants(true);
     }
 
     /**
-     * Returns any node above (parent, grandparent, ...) this node
+     * Returns any node above (parent, grandparent, ...) this node.
      *
      * The array returned from this method will include the root node. If you
      * do not want the root node, you should do an array_pop() on the array.
@@ -341,14 +341,14 @@ class Node
      * now by using constant Tree::API to check whether removing the root node is
      * necessary.
      *
-     * @param bool $includeSelf [optional] Whether to include the node itself.
+     * @param bool $includeSelf [optional] Whether to include the node itself
      *
      * @return Node[] Indexed array of nodes, sorted from the nearest
      *                one (or self) to the most remote one
      */
-    public function getAncestors($includeSelf = false)
+    public function getAncestors($includeSelf = false): array
     {
-        $ancestors = $includeSelf ? array($this) : array();
+        $ancestors = $includeSelf ? [$this] : [];
 
         if (null === $this->parent) {
             return $ancestors;
@@ -366,28 +366,28 @@ class Node
      *
      * @return Node[] Indexed, sorted array of nodes: self, parent, grandparent, ...
      */
-    public function getAncestorsAndSelf()
+    public function getAncestorsAndSelf(): array
     {
         return $this->getAncestors(true);
     }
 
     /**
-     * Returns the node's properties as an array
+     * Returns the node's properties as an array.
      *
      * @return array Associative array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->properties;
     }
 
     /**
-     * Returns a textual representation of this node
+     * Returns a textual representation of this node.
      *
      * @return string The node's ID
      */
     public function __toString()
     {
-        return (string)$this->properties['id'];
+        return (string) $this->properties['id'];
     }
 }

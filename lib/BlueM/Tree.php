@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2011-2016, Carsten Blüm <carsten@bluem.net>
+ * Copyright (c) 2011-2018, Carsten Blüm <carsten@bluem.net>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,15 +30,15 @@ use BlueM\Tree\InvalidParentException;
 use BlueM\Tree\Node;
 
 /**
- * Class for dealing with a tree structure that is constructed by referencing parent IDs
+ * Class for dealing with a tree structure that is constructed by referencing parent IDs.
  *
- * @author Carsten Bluem <carsten@bluem.net>
+ * @author  Carsten Bluem <carsten@bluem.net>
  * @license http://www.opensource.org/licenses/bsd-license.php BSD 2-Clause License
  */
 class Tree
 {
     /**
-     * API version
+     * API version.
      *
      * This number will always be in sync with the first digit of the
      * release version number.
@@ -50,21 +50,21 @@ class Tree
     /**
      * @var array
      */
-    protected $nodes = array();
+    protected $nodes = [];
 
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
-     * Constructor.
-     *
      * @param array $data    The data for the tree (array of associative arrays)
      * @param array $options [optional] Currently, the only supported key is "rootId"
      *                       (ID of the root node)
+     *
+     * @throws InvalidParentException
      */
-    public function __construct(array $data, array $options = array())
+    public function __construct(array $data, array $options = [])
     {
         $this->options = array_change_key_case($options, CASE_LOWER);
         if (!isset($this->options['rootid'])) {
@@ -82,12 +82,13 @@ class Tree
      *                the first level 1 item (and their children), then
      *                the second level 1 item and so on.
      */
-    public function getNodes()
+    public function getNodes(): array
     {
-        $nodes = array();
+        $nodes = [];
         foreach ($this->nodes[$this->options['rootid']]->getDescendants() as $subnode) {
             $nodes[] = $subnode;
         }
+
         return $nodes;
     }
 
@@ -100,20 +101,21 @@ class Tree
      *
      * @return Node
      */
-    public function getNodeById($id)
+    public function getNodeById($id): Node
     {
         if (empty($this->nodes[$id])) {
             throw new \InvalidArgumentException("Invalid node primary key $id");
         }
+
         return $this->nodes[$id];
     }
 
     /**
-     * Returns an array of all nodes in the root level
+     * Returns an array of all nodes in the root level.
      *
      * @return Node[] Nodes in the correct order
      */
-    public function getRootNodes()
+    public function getRootNodes(): array
     {
         return $this->nodes[$this->options['rootid']]->getChildren();
     }
@@ -140,15 +142,16 @@ class Tree
                 $nodeName = $node->get($name);
                 if ($nodeName === $token) {
                     // Match
-                    if (count($tokens)) {
+                    if (\count($tokens)) {
                         // Search next level
                         return $findNested($node->getChildren(), $tokens);
-                    } else {
-                        // We found the node we were looking for
-                        return $node;
                     }
+
+                    // We found the node we were looking for
+                    return $node;
                 }
             }
+
             return null;
         };
 
@@ -156,7 +159,7 @@ class Tree
     }
 
     /**
-     * Core method for creating the tree
+     * Core method for creating the tree.
      *
      * @param array $data The data from which to generate the tree
      *
@@ -164,28 +167,26 @@ class Tree
      */
     private function build(array $data)
     {
-        $children = array();
+        $children = [];
 
         // Create the root node
-        $this->nodes[$this->options['rootid']] = $this->createNode(
-            array(
-                'id'     => $this->options['rootid'],
-                'parent' => null,
-            )
-        );
+        $this->nodes[$this->options['rootid']] = $this->createNode([
+            'id'     => $this->options['rootid'],
+            'parent' => null,
+        ]);
 
         foreach ($data as $row) {
             $this->nodes[$row['id']] = $this->createNode($row);
             if (empty($children[$row['parent']])) {
-                $children[$row['parent']] = array($row['id']);
+                $children[$row['parent']] = [$row['id']];
             } else {
                 $children[$row['parent']][] = $row['id'];
             }
         }
 
-        foreach ($children as $pid => $childids) {
-            foreach ($childids as $id) {
-                if ((string)$pid === (string)$id) {
+        foreach ($children as $pid => $childIds) {
+            foreach ($childIds as $id) {
+                if ((string) $pid === (string) $id) {
                     throw new InvalidParentException(
                         "Node with ID $id references its own ID as parent ID"
                     );
@@ -202,24 +203,25 @@ class Tree
     }
 
     /**
-     * Returns a textual representation of the tree
+     * Returns a textual representation of the tree.
      *
      * @return string
      */
     public function __toString()
     {
-        $str = array();
+        $str = [];
         foreach ($this->getNodes() as $node) {
             $indent1st = str_repeat('  ', $node->getLevel() - 1).'- ';
-            $indent    = str_repeat('  ', ($node->getLevel() - 1) + 2);
-            $node      = (string) $node;
-            $str[]     = "$indent1st" . str_replace("\n", "$indent\n  ", $node);
+            $indent = str_repeat('  ', ($node->getLevel() - 1) + 2);
+            $node = (string) $node;
+            $str[] = $indent1st.str_replace("\n", "$indent\n  ", $node);
         }
+
         return implode("\n", $str);
     }
 
     /**
-     * Creates and returns a node with the given properties
+     * Creates and returns a node with the given properties.
      *
      * Can be overridden by subclasses to use a Node subclass for nodes.
      *
@@ -227,7 +229,7 @@ class Tree
      *
      * @return Node
      */
-    protected function createNode(array $properties)
+    protected function createNode(array $properties): Node
     {
         return new Node($properties);
     }
