@@ -120,16 +120,29 @@ class Node
     /**
      * Returns siblings of the node, optionally including the node itself.
      *
-     * @param bool $includeSelf If true, the node itself will be included in the resulting
-     *                          array. In either case, the sort order will be correct.
-     *                          This argument is deprecated and will be removed in v2.0
-     *
-     * Note: The argument is deprecated and will be removed in version 2; please
-     * use getSiblingsAndSelf().
+     * @return Node[]
+     */
+    public function getSiblings(): array
+    {
+        return $this->getSiblingsGeneric(false);
+    }
+
+    /**
+     * Returns siblings of the node and the node itself.
      *
      * @return Node[]
      */
-    public function getSiblings($includeSelf = false): array
+    public function getSiblingsAndSelf(): array
+    {
+        return $this->getSiblingsGeneric(true);
+    }
+
+    /**
+     * @param bool $includeSelf
+     *
+     * @return array
+     */
+    protected function getSiblingsGeneric(bool $includeSelf): array
     {
         $siblings = [];
         foreach ($this->parent->getChildren() as $child) {
@@ -303,7 +316,30 @@ class Node
      *
      * @return Node[]
      */
-    public function getDescendants($includeSelf = false): array
+    public function getDescendants(): array
+    {
+        return $this->getDescendantsGeneric(false);
+    }
+
+    /**
+     * Returns an array containing this node and all nodes below (children,
+     * grandchildren, ...) it.
+     *
+     * For order of nodes, see comments on getDescendants()
+     *
+     * @return Node[]
+     */
+    public function getDescendantsAndSelf(): array
+    {
+        return $this->getDescendantsGeneric(true);
+    }
+
+    /**
+     * @param bool $includeSelf
+     *
+     * @return array
+     */
+    protected function getDescendantsGeneric(bool $includeSelf): array
     {
         $descendants = $includeSelf ? [$this] : [];
         foreach ($this->children as $childnode) {
@@ -348,13 +384,7 @@ class Node
      */
     public function getAncestors($includeSelf = false): array
     {
-        $ancestors = $includeSelf ? [$this] : [];
-
-        if (null === $this->parent) {
-            return $ancestors;
-        }
-
-        return array_merge($ancestors, $this->parent->getAncestors(true));
+        return $this->getAncestorsGeneric(false);
     }
 
     /**
@@ -368,7 +398,23 @@ class Node
      */
     public function getAncestorsAndSelf(): array
     {
-        return $this->getAncestors(true);
+        return $this->getAncestorsGeneric(true);
+    }
+
+    /**
+     * @param bool $includeSelf
+     *
+     * @return array
+     */
+    protected function getAncestorsGeneric(bool $includeSelf): array
+    {
+        if (null === $this->parent) {
+            return [];
+        }
+
+        $ancestors = $includeSelf ? [$this] : [];
+
+        return array_merge($ancestors, $this->parent->getAncestorsGeneric(true));
     }
 
     /**

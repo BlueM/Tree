@@ -15,7 +15,7 @@
         "php": ">=7.0"
     },
     "autoload": {
-        "psr-0": {"BlueM\\Tree": "lib/"}
+        "psr-4": {"BlueM\\": "src/"}
     },
     "require-dev": {
         "phpunit/phpunit": "6.*",

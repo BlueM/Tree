@@ -95,7 +95,7 @@ class Tree
     /**
      * Returns a single node from the tree, identified by its ID.
      *
-     * @param int $id Node ID
+     * @param int|string $id Node ID
      *
      * @throws \InvalidArgumentException
      *

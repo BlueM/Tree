@@ -2,16 +2,16 @@
 <phpunit>
     <testsuites>
         <testsuite name="TreeTest">
-            <directory suffix="Test.php">./test</directory>
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory>lib</directory>
+            <directory>src</directory>
         </whitelist>
     </filter>
     <logging>
-        <!--<log type="testdox-text" target="test/Testdox-Result.txt"/>-->
+        <!--<log type="testdox-text" target="tests/Testdox-Result.txt"/>-->
         <!--<log type="coverage-html" target="/tmp/phpunit-coverage"/>-->
     </logging>
 </phpunit>
