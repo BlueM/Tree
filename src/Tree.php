@@ -45,7 +45,7 @@ class Tree
      *
      * @var int
      */
-    const API = 1;
+    const API = 2;
 
     /**
      * @var array

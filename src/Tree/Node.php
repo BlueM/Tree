@@ -118,7 +118,7 @@ class Node
     }
 
     /**
-     * Returns siblings of the node, optionally including the node itself.
+     * Returns siblings of the node.
      *
      * @return Node[]
      */
@@ -152,16 +152,6 @@ class Node
         }
 
         return $siblings;
-    }
-
-    /**
-     * Returns siblings of the node, optionally including the node itself.
-     *
-     * @return Node[]
-     */
-    public function getSiblingsAndSelf(): array
-    {
-        return $this->getSiblings(true);
     }
 
     /**
@@ -309,11 +299,6 @@ class Node
      * and B1/B2 are children of B in correct order. If the node itself is to be
      * included, it will be the very first item in the array.
      *
-     * Note: The argument is deprecated and will be removed in version 2; please
-     * use getDescendantsAndSelf().
-     *
-     * @param bool $includeSelf [optional] Include the node itself? Default: false
-     *
      * @return Node[]
      */
     public function getDescendants(): array
@@ -345,6 +330,9 @@ class Node
         foreach ($this->children as $childnode) {
             $descendants[] = $childnode;
             if ($childnode->hasChildren()) {
+                // Note: array_merge() in loop looks bad, but measuring showed it's OK
+                // here, unless maybe really large amounts of data
+                /** @noinspection SlowArrayOperationsInLoopInspection */
                 $descendants = array_merge($descendants, $childnode->getDescendants());
             }
         }
@@ -353,36 +341,15 @@ class Node
     }
 
     /**
-     * Returns an array containing this node and all nodes below (children,
-     * grandchildren, ...) it.
-     *
-     * For order of nodes, see comments on getDescendants()
-     *
-     * @return Node[]
-     */
-    public function getDescendantsAndSelf(): array
-    {
-        return $this->getDescendants(true);
-    }
-
-    /**
      * Returns any node above (parent, grandparent, ...) this node.
      *
      * The array returned from this method will include the root node. If you
      * do not want the root node, you should do an array_pop() on the array.
      *
-     * Note: The argument is deprecated and will be removed in version 2; please use
-     * getAncestorsAndSelf() instead. Also, in version 2 the root node will not be
-     * included, as this is hardly ever necessary; you can prepare your code already
-     * now by using constant Tree::API to check whether removing the root node is
-     * necessary.
-     *
-     * @param bool $includeSelf [optional] Whether to include the node itself
-     *
      * @return Node[] Indexed array of nodes, sorted from the nearest
      *                one (or self) to the most remote one
      */
-    public function getAncestors($includeSelf = false): array
+    public function getAncestors(): array
     {
         return $this->getAncestorsGeneric(false);
     }

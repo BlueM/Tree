@@ -151,6 +151,16 @@ If you want to see TestDox output or coverage data, you can comment in the comme
 Version History
 =================
 
+2.0
+-----
+* BC break: `getAncestors()` or `getAncestorsAndSelf()` no longer include the root node as last item of the returned array.
+* BC break: Removed argument to `getAncestors()`. If you passed `true` as argument before, change this to `getAncestorsAndSelf()`.
+* BC break: Removed argument to `getDescendants()`. If you passed `true` as argument before, change this to `getDescendantsAndSelf()`.
+* BC break: Removed argument to `getSiblings()`. If you passed `true` as argument before, change this to `getSiblingsAndSelf()`.
+* Changed autoloading from PSR-0 to PSR-4, renamed sources’ directory from `lib/` to `src/` and tests’ directory from `test/` to `tests/`.
+* Code modernization, which now requires PHP >= 7.0
+
+
 1.5.3
 -----
 * Handle IDs of mixed type (strings and integers)

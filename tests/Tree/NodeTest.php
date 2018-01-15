@@ -119,33 +119,8 @@ class NodeTest extends TestCase
     /**
      * @test
      */
-    public function getTheSiblingsIncludingTheNodeItself()
-    {
-        $node = new Node(['id' => 10]);
-        $sibling1 = new Node(['id' => 20]);
-        $sibling2 = new Node(['id' => 30]);
-
-        $parent = new Node(['id' => 333]);
-        $childrenProperty = new \ReflectionProperty($parent, 'children');
-        $childrenProperty->setAccessible(true);
-        $childrenProperty->setValue($parent, [$sibling1, $node, $sibling2]);
-
-        $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
-        $parentProperty->setValue($node, $parent);
-
-        static::assertSame(
-            [$sibling1, $node, $sibling2],
-            $node->getSiblings(true)
-        );
-    }
-
-    /**
-     * @test
-     */
     public function getTheSiblingsAndSelf()
     {
-        // Note: currently, this test is basically identical to getTheSiblingsIncludingTheNodeItself()
         $node = new Node(['id' => 10]);
         $sibling1 = new Node(['id' => 20]);
         $sibling2 = new Node(['id' => 30]);
@@ -291,7 +266,7 @@ class NodeTest extends TestCase
         $node = new Node(['id' => 123]);
         $parent = new Node(['id' => 789]);
 
-        $parentProperty = new \ReflectionProperty(__NAMESPACE__.'\Node', 'parent');
+        $parentProperty = new \ReflectionProperty(Node::class, 'parent');
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, null);
@@ -389,14 +364,14 @@ class NodeTest extends TestCase
     /**
      * @test
      */
-    public function getTheRootNodeAncestorsIncludingTheNodeItself()
+    public function whenRetrievingTheRootNodesAncestorsAnEmptyArrayIsReturned()
     {
         $node = new Node(['id' => 0]);
         $parentProperty = new \ReflectionProperty($node, 'parent');
         $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, null);
 
-        static::assertSame([$node], $node->getAncestors(true));
+        static::assertEquals([], $node->getAncestors());
     }
 
     /**
@@ -404,15 +379,17 @@ class NodeTest extends TestCase
      */
     public function getANodesAncestors()
     {
-        $parentProperty = new \ReflectionProperty(__NAMESPACE__.'\Node', 'parent');
+        $parentProperty = new \ReflectionProperty(Node::class, 'parent');
         $parentProperty->setAccessible(true);
 
-        $node = new Node(['id' => 1]);
+        $node = new Node(['id' => 3]);
         $parent = new Node(['id' => 2]);
-        $grandParent = new Node(['id' => 0]); // Root node
+        $grandParent = new Node(['id' => 1]);
+        $rootNode = new Node(['id' => 0]);
 
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, $grandParent);
+        $parentProperty->setValue($grandParent, $rootNode);
 
         static::assertSame([$parent, $grandParent], $node->getAncestors());
     }
@@ -420,44 +397,21 @@ class NodeTest extends TestCase
     /**
      * @test
      */
-    public function getANodesAncestorsIncludingTheNodeItself()
-    {
-        $parentProperty = new \ReflectionProperty(__NAMESPACE__.'\Node', 'parent');
-        $parentProperty->setAccessible(true);
-
-        $node = new Node(['id' => 1]);
-        $parent = new Node(['id' => 2]);
-        $grandParent = new Node(['id' => 0]); // Root node
-
-        $parentProperty->setValue($node, $parent);
-        $parentProperty->setValue($parent, $grandParent);
-
-        static::assertSame([$node, $parent, $grandParent], $node->getAncestors(true));
-    }
-
-    /**
-     * At the moment, this is an almost exact copy of test method
-     * getANodesAncestorsIncludingTheNodeItself(). This will change when the argument
-     * to method getAncestors() will be removed from the API.
-     *
-     * @test
-     */
     public function getANodesAncestorsAndSelf()
     {
-        $parentProperty = new \ReflectionProperty(__NAMESPACE__.'\Node', 'parent');
+        $parentProperty = new \ReflectionProperty(Node::class, 'parent');
         $parentProperty->setAccessible(true);
 
-        $node = new Node(['id' => 1]);
+        $node = new Node(['id' => 3]);
         $parent = new Node(['id' => 2]);
-        $grandParent = new Node(['id' => 0]); // Root node
+        $grandParent = new Node(['id' => 1]);
+        $rootNode = new Node(['id' => 0]);
 
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, $grandParent);
+        $parentProperty->setValue($grandParent, $rootNode);
 
-        static::assertSame(
-            [$node, $parent, $grandParent],
-            $node->getAncestorsAndSelf()
-        );
+        static::assertSame([$node, $parent, $grandParent], $node->getAncestorsAndSelf());
     }
 
     /**
@@ -465,7 +419,7 @@ class NodeTest extends TestCase
      */
     public function getANodesDescendants()
     {
-        $childrenProperty = new \ReflectionProperty(__NAMESPACE__.'\Node', 'children');
+        $childrenProperty = new \ReflectionProperty(Node::class, 'children');
         $childrenProperty->setAccessible(true);
 
         $node = new Node(['id' => 1]);
@@ -484,29 +438,6 @@ class NodeTest extends TestCase
     }
 
     /**
-     * @test
-     */
-    public function getANodesDescendantsIncludingTheNodeItself()
-    {
-        $childrenProperty = new \ReflectionProperty(__NAMESPACE__.'\Node', 'children');
-        $childrenProperty->setAccessible(true);
-
-        $node = new Node(['id' => 1]);
-        $child1 = new Node(['id' => 2]);
-        $child2 = new Node(['id' => 3]);
-        $grandChild1 = new Node(['id' => 4]);
-        $grandChild2 = new Node(['id' => 5]);
-
-        $childrenProperty->setValue($node, [$child1, $child2]);
-        $childrenProperty->setValue($child1, [$grandChild1, $grandChild2]);
-
-        static::assertSame(
-            [$node, $child1, $grandChild1, $grandChild2, $child2],
-            $node->getDescendants(true)
-        );
-    }
-
-    /**
      * At the moment, this is an almost exact copy of test method
      * getANodesDescendantsIncludingTheNodeItself(). This will change when the
      * argument to getDescendants() is removed from the API.
@@ -515,7 +446,7 @@ class NodeTest extends TestCase
      */
     public function getANodesDescendantsAndSelf()
     {
-        $childrenProperty = new \ReflectionProperty(__NAMESPACE__.'\Node', 'children');
+        $childrenProperty = new \ReflectionProperty(Node::class, 'children');
         $childrenProperty->setAccessible(true);
 
         $node = new Node(['id' => 1]);
@@ -529,7 +460,7 @@ class NodeTest extends TestCase
 
         static::assertSame(
             [$node, $child1, $grandChild1, $grandChild2, $child2],
-            $node->getDescendantsAndSelf(true)
+            $node->getDescendantsAndSelf()
         );
     }
 
