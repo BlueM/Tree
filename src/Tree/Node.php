@@ -1,33 +1,9 @@
 <?php
 
-/**
- * Copyright (c) 2011-2018, Carsten Blüm <carsten@bluem.net>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 namespace BlueM\Tree;
 
 /**
- * Class representing a node in a Tree.
+ * Represents a node in a tree of nodes.
  *
  * @author  Carsten Bluem <carsten@bluem.net>
  * @license http://www.opensource.org/licenses/bsd-license.php  BSD 2-Clause License
@@ -40,7 +16,7 @@ class Node
      *
      * @var array Associative array
      */
-    protected $properties = ['id' => null, 'parent' => 0];
+    protected $properties;
 
     /**
      * Reference to the parent node, in case of the root object: null.
@@ -57,11 +33,16 @@ class Node
     protected $children = [];
 
     /**
-     * @param array $properties Associative array of node properties
+     * @param string|int $id
+     * @param string|int $parent
+     * @param array      $properties Associative array of node properties
      */
-    public function __construct(array $properties)
+    public function __construct($id, $parent, array $properties = [])
     {
         $this->properties = array_change_key_case($properties, CASE_LOWER);
+        unset($this->properties['id'], $this->properties['parent']);
+        $this->properties['id'] = $id;
+        $this->properties['parent'] = $parent;
     }
 
     /**
@@ -97,19 +78,16 @@ class Node
     }
 
     /**
-     * Returns the sibling with the given offset from this node,
-     * or NULL if there is no such sibling.
+     * Returns the sibling with the given offset from this node, or NULL if there is no such sibling.
      *
-     * @param int $offset If 1, the next node is returned, if -1, then
-     *                    the previous one. Can be called with arbitrary
-     *                    values, too, if desired.
+     * @param int $offset
      *
      * @return Node|null
      */
-    private function getSibling($offset)
+    private function getSibling(int $offset)
     {
         $siblingsAndSelf = $this->parent->getChildren();
-        $pos = array_search($this, $siblingsAndSelf);
+        $pos = array_search($this, $siblingsAndSelf, true);
         if (isset($siblingsAndSelf[$pos + $offset])) {
             return $siblingsAndSelf[$pos + $offset]; // Next / prev. node
         }

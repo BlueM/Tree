@@ -1,36 +1,12 @@
 <?php
 
-/**
- * Copyright (c) 2011-2018, Carsten Blüm <carsten@bluem.net>
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 namespace BlueM;
 
 use BlueM\Tree\InvalidParentException;
 use BlueM\Tree\Node;
 
 /**
- * Class for dealing with a tree structure that is constructed by referencing parent IDs.
+ * Builds and gives access to a tree of nodes which is constructed thru nodes' parent node ID references.
  *
  * @author  Carsten Bluem <carsten@bluem.net>
  * @license http://www.opensource.org/licenses/bsd-license.php BSD 2-Clause License
@@ -38,37 +14,64 @@ use BlueM\Tree\Node;
 class Tree
 {
     /**
-     * API version.
-     *
-     * This number will always be in sync with the first digit of the
-     * release version number.
+     * API version (will always be in sync with first digit of release version number).
      *
      * @var int
      */
     const API = 2;
 
     /**
-     * @var array
+     * @var int|float|string
+     */
+    protected $rootId = 0;
+
+    /**
+     * @var string
+     */
+    protected $idKey = 'id';
+
+    /**
+     * @var string
+     */
+    protected $parentKey = 'parent';
+
+    /**
+     * @var Node[]
      */
     protected $nodes = [];
 
     /**
-     * @var array
-     */
-    protected $options = [];
-
-    /**
      * @param array $data    The data for the tree (array of associative arrays)
-     * @param array $options [optional] Currently, the only supported key is "rootId"
-     *                       (ID of the root node)
+     * @param array $options 0 or more of the following keys: "rootId" (ID of the root node, defaults to 0), "id"
+     *                       (name of the ID field / array key, defaults to "id"), "parent", (name of the parent
+     *                       ID field / array key, defaults to "parent")
      *
      * @throws InvalidParentException
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $data, array $options = [])
     {
-        $this->options = array_change_key_case($options, CASE_LOWER);
-        if (!isset($this->options['rootid'])) {
-            $this->options['rootid'] = 0;
+        $options = array_change_key_case($options, CASE_LOWER);
+
+        if (isset($options['rootid'])) {
+            if (!\is_scalar($options['rootid'])) {
+                throw new \InvalidArgumentException('Option “rootid” must be a scalar');
+            }
+            $this->rootId = $options['rootid'];
+        }
+
+        if (!empty($options['id'])) {
+            if (!\is_string($options['id'])) {
+                throw new \InvalidArgumentException('Option “id” must be a string');
+            }
+            $this->idKey = $options['id'];
+        }
+
+        if (!empty($options['parent'])) {
+            if (!\is_string($options['parent'])) {
+                throw new \InvalidArgumentException('Option “parent” must be a string');
+            }
+            $this->parentKey = $options['parent'];
         }
 
         $this->build($data);
@@ -85,7 +88,7 @@ class Tree
     public function getNodes(): array
     {
         $nodes = [];
-        foreach ($this->nodes[$this->options['rootid']]->getDescendants() as $subnode) {
+        foreach ($this->nodes[$this->rootId]->getDescendants() as $subnode) {
             $nodes[] = $subnode;
         }
 
@@ -117,7 +120,7 @@ class Tree
      */
     public function getRootNodes(): array
     {
-        return $this->nodes[$this->options['rootid']]->getChildren();
+        return $this->nodes[$this->rootId]->getChildren();
     }
 
     /**
@@ -170,17 +173,14 @@ class Tree
         $children = [];
 
         // Create the root node
-        $this->nodes[$this->options['rootid']] = $this->createNode([
-            'id'     => $this->options['rootid'],
-            'parent' => null,
-        ]);
+        $this->nodes[$this->rootId] = $this->createNode($this->rootId, null, []);
 
         foreach ($data as $row) {
-            $this->nodes[$row['id']] = $this->createNode($row);
-            if (empty($children[$row['parent']])) {
-                $children[$row['parent']] = [$row['id']];
+            $this->nodes[$row[$this->idKey]] = $this->createNode($row[$this->idKey], $row[$this->parentKey], $row);
+            if (empty($children[$row[$this->parentKey]])) {
+                $children[$row[$this->parentKey]] = [$row[$this->idKey]];
             } else {
-                $children[$row['parent']][] = $row['id'];
+                $children[$row[$this->parentKey]][] = $row[$this->idKey];
             }
         }
 
@@ -225,12 +225,14 @@ class Tree
      *
      * Can be overridden by subclasses to use a Node subclass for nodes.
      *
-     * @param array $properties
+     * @param string|int $id
+     * @param string|int $parent
+     * @param array      $properties
      *
      * @return Node
      */
-    protected function createNode(array $properties): Node
+    protected function createNode($id, $parent, array $properties): Node
     {
-        return new Node($properties);
+        return new Node($id, $parent, $properties);
     }
 }

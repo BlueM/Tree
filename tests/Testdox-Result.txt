@@ -1,53 +1,53 @@
 BlueM\Tree\Node
- [x] Get the previous sibling
+ [x] The previous sibling can be retrieved
  [x] Trying to get the previous sibling returns null when called on the first node
- [x] Get the next sibling
- [x] Get all siblings
- [x] Getting all siblings returns the siblings when mixed data types are used for the ids
- [x] Get the siblings including the node itself
- [x] Get the siblings and self
- [x] Get the children
- [x] Get children returns empty array when no child nodes exist
- [x] Get the parent node
+ [x] The next sibling can be retrieved
+ [x] All siblings can be retrieved
+ [x] All siblings can be retrieved including the node itself
+ [x] All siblings can be retrieved when mixed data types are used for the ids
+ [x] The child nodes can be retrieved
+ [x] When trying to get the child nodes an empty array is returned if there are no child nodes
+ [x] A node can tell how many children it has
+ [x] A node can tell if it has any child nodes
+ [x] The parent node can be retrieved
  [x] Trying to get the parent returns null for the root node
- [x] Get the id
- [x] Get a property using method get
- [x] Get a property using magic method
+ [x] A child can be attached to a node
+ [x] The node id can be retrieved
+ [x] A node property can be fetched using method get
  [x] Trying to get a non existent property using get throws an exception
+ [x] A node property can be fetched using magic method
  [x] Trying to get a non existent property using magic method throws an exception
- [x] The level of a root node is 0
- [x] Get a nodes level
- [x] Get the number of children
- [x] Get whether the node has any children
- [x] Get the properties as an array
- [x] In scalar context the node is typecasted to its id
- [x] Add a child to a node
- [x] Get the root node ancestors
- [x] Get the root node ancestors including the node itself
- [x] Get a nodes ancestors
- [x] Get a nodes ancestors including the node itself
- [x] Get a nodes ancestors and self
- [x] Get a nodes descendants
- [x] Get a nodes descendants including the node itself
- [x] Get a nodes descendants and self
- [x] Get returns the expected results
- [x] Get throws an exception if the property is invalid
- [x] Isset returns the expected results
+ [x] The existence of a property can be checked using isset function
  [x] Node properties are handled case insensitively
+ [x] The properties can be access using magic properties
+ [x] An exception is thrown when accessing an inexistent magic property
+ [x] The properties can be fetched as an array
+ [x] In scalar context the node is typecasted to its id
+ [x] The level of a root node is 0
+ [x] A node 2 levels below the root node has level 2
+ [x] The root nodes ancestors is an empty array
+ [x] A nodes ancestors can be retrieved
+ [x] A nodes ancestors can be retrieved including the node itself
+ [x] A nodes descendants can be retrieved
+ [x] A nodes descendants can be retrieved including the node itself
 
 BlueM\Tree
- [x] Get the root nodes
- [x] Get all nodes
- [x] Get a node by its id
+ [x] An exception is thrown if a non scalar value should be used as root id
+ [x] An exception is thrown if a non string value should be used as id field name
+ [x] An exception is thrown if a non string value should be used as parent id field name
+ [x] The root nodes can be retrieved
+ [x] The root nodes can be retrieved when the ids are strings
+ [x] All nodes can be retrieved
+ [x] All nodes can be retrieved when node ids are strings
+ [x] A node can be accessed by its integer id
+ [x] A node can be accessed by its string id
  [x] Trying to get a node by its id throws an exception if the id is invalid
- [x] Get a node by its value path
+ [x] A node can be accessed by its value path
  [x] Trying to get a node by its value path returns null if no node matches
- [x] The tree is returned as string in scalar context
- [x] Get the root nodes for data with string keys
- [x] Get all nodes for data with string keys
- [x] Get a node by its id for data with string keys
+ [x] In scalar context the tree is returned as a string
  [x] An exception is thrown when an invalid parent id is referenced
  [x] An exception is thrown when a node would be its own parent
  [x] An exception is thrown when a node would be its own parent when own id and parent id have different types
  [x] When mixing numeric and string ids no exception is thrown due to implicit typecasting
+ [x] Clients can supply differing names for id and parent id in input data
 

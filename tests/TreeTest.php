@@ -17,8 +17,38 @@ class TreeTest extends TestCase
 {
     /**
      * @test
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Option “rootid” must be a scalar
      */
-    public function getTheRootNodes()
+    public function anExceptionIsThrownIfANonScalarValueShouldBeUsedAsRootId()
+    {
+        new Tree([], ['rootId' => []]);
+    }
+
+    /**
+     * @test
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Option “id” must be a string
+     */
+    public function anExceptionIsThrownIfANonStringValueShouldBeUsedAsIdFieldName()
+    {
+        new Tree([], ['id' => 123]);
+    }
+
+    /**
+     * @test
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Option “parent” must be a string
+     */
+    public function anExceptionIsThrownIfANonStringValueShouldBeUsedAsParentIdFieldName()
+    {
+        new Tree([], ['parent' => new \DateTime()]);
+    }
+
+    /**
+     * @test
+     */
+    public function theRootNodesCanBeRetrieved()
     {
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
@@ -38,7 +68,26 @@ class TreeTest extends TestCase
     /**
      * @test
      */
-    public function getAllNodes()
+    public function theRootNodesCanBeRetrievedWhenTheIdsAreStrings()
+    {
+        $data = self::dataWithStringKeys();
+        $tree = new Tree($data, ['rootId' => '']);
+
+        $nodes = $tree->getRootNodes();
+        static::assertInternalType('array', $nodes);
+
+        $expectedOrder = ['building', 'vehicle'];
+
+        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
+            static::assertInstanceOf(Node::class, $nodes[$i]);
+            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function allNodesCanBeRetrieved()
     {
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
@@ -58,12 +107,45 @@ class TreeTest extends TestCase
     /**
      * @test
      */
-    public function getANodeByItsId()
+    public function allNodesCanBeRetrievedWhenNodeIdsAreStrings()
+    {
+        $data = self::dataWithStringKeys();
+        $tree = new Tree($data, ['rootId' => '']);
+
+        $nodes = $tree->getNodes();
+        static::assertInternalType('array', $nodes);
+        static::assertSame(\count($data), \count($nodes));
+
+        $expectedOrder = [
+            'building', 'library', 'school', 'primary-school', 'vehicle', 'bicycle', 'car',
+        ];
+
+        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
+            static::assertInstanceOf(Node::class, $nodes[$i]);
+            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function aNodeCanBeAccessedByItsIntegerId()
     {
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
         $node = $tree->getNodeById(20);
         static::assertEquals(20, $node->getId());
+    }
+
+    /**
+     * @test
+     */
+    public function aNodeCanBeAccessedByItsStringId()
+    {
+        $data = self::dataWithStringKeys();
+        $tree = new Tree($data, ['rootId' => '']);
+        $node = $tree->getNodeById('library');
+        static::assertEquals('library', $node->getId());
     }
 
     /**
@@ -80,7 +162,7 @@ class TreeTest extends TestCase
     /**
      * @test
      */
-    public function getANodeByItsValuePath()
+    public function aNodeCanBeAccessedByItsValuePath()
     {
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
@@ -106,7 +188,7 @@ class TreeTest extends TestCase
     /**
      * @test
      */
-    public function theTreeIsReturnedAsStringInScalarContext()
+    public function inScalarContextTheTreeIsReturnedAsAString()
     {
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
@@ -128,58 +210,6 @@ class TreeTest extends TestCase
 EXPECTED;
 
         static::assertEquals($expected, $actual);
-    }
-
-    /**
-     * @test
-     */
-    public function getTheRootNodesForDataWithStringKeys()
-    {
-        $data = self::dataWithStringKeys();
-        $tree = new Tree($data, ['rootId' => '']);
-
-        $nodes = $tree->getRootNodes();
-        static::assertInternalType('array', $nodes);
-
-        $expectedOrder = ['building', 'vehicle'];
-
-        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
-            static::assertInstanceOf(Node::class, $nodes[$i]);
-            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function getAllNodesForDataWithStringKeys()
-    {
-        $data = self::dataWithStringKeys();
-        $tree = new Tree($data, ['rootId' => '']);
-
-        $nodes = $tree->getNodes();
-        static::assertInternalType('array', $nodes);
-        static::assertSame(\count($data), \count($nodes));
-
-        $expectedOrder = [
-            'building', 'library', 'school', 'primary-school', 'vehicle', 'bicycle', 'car',
-        ];
-
-        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
-            static::assertInstanceOf(Node::class, $nodes[$i]);
-            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function getANodeByItsIdForDataWithStringKeys()
-    {
-        $data = self::dataWithStringKeys();
-        $tree = new Tree($data, ['rootId' => '']);
-        $node = $tree->getNodeById('library');
-        static::assertEquals('library', $node->getId());
     }
 
     /**
@@ -239,6 +269,26 @@ EXPECTED;
     }
 
     /**
+     * @test
+     */
+    public function clientsCanSupplyDifferingNamesForIdAndParentIdInInputData()
+    {
+        $data = self::dataWithStringKeys(true, 'id_node', 'id_parent');
+
+        $tree = new Tree($data, ['rootId' => '', 'id' => 'id_node', 'parent' => 'id_parent']);
+
+        $nodes = $tree->getRootNodes();
+        static::assertInternalType('array', $nodes);
+
+        $expectedOrder = ['building', 'vehicle'];
+
+        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
+            static::assertInstanceOf(Node::class, $nodes[$i]);
+            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
+        }
+    }
+
+    /**
      * @param bool $sorted
      *
      * @return array
@@ -285,30 +335,32 @@ EXPECTED;
     }
 
     /**
-     * @param bool $sorted
+     * @param bool   $sorted
+     * @param string $idName
+     * @param string $parentName
      *
      * @return array
      */
-    private static function dataWithStringKeys($sorted = true): array
+    private static function dataWithStringKeys($sorted = true, string $idName = 'id', string $parentName = 'parent'): array
     {
         $data = [
-            ['id' => 'vehicle', 'parent' => ''],
-            ['id' => 'bicycle', 'parent' => 'vehicle'],
-            ['id' => 'car', 'parent' => 'vehicle'],
-            ['id' => 'building', 'parent' => ''],
-            ['id' => 'school', 'parent' => 'building'],
-            ['id' => 'library', 'parent' => 'building'],
-            ['id' => 'primary-school', 'parent' => 'school'],
+            [$idName => 'vehicle', $parentName => ''],
+            [$idName => 'bicycle', $parentName => 'vehicle'],
+            [$idName => 'car', $parentName => 'vehicle'],
+            [$idName => 'building', $parentName => ''],
+            [$idName => 'school', $parentName => 'building'],
+            [$idName => 'library', $parentName => 'building'],
+            [$idName => 'primary-school', $parentName => 'school'],
         ];
 
         if ($sorted) {
             usort(
                 $data,
-                function ($a, $b) {
-                    if ($a['id'] < $b['id']) {
+                function ($a, $b) use ($idName) {
+                    if ($a[$idName] < $b[$idName]) {
                         return -1;
                     }
-                    if ($a['id'] > $b['id']) {
+                    if ($a[$idName] > $b[$idName]) {
                         return 1;
                     }
 
