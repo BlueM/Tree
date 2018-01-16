@@ -1,6 +1,12 @@
 language: php
+
 php:
-  - 7
+  - 7.0
   - 7.1
 
+# Let Travis choose PHPUnit version, ignore lockfile
+before_script:
+  - composer install --no-scripts --no-suggest --no-interaction
 
+script:
+  - ./vendor/bin/phpunit
