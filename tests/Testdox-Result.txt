@@ -22,6 +22,7 @@ BlueM\Tree\Node
  [x] The properties can be access using magic properties
  [x] An exception is thrown when accessing an inexistent magic property
  [x] The properties can be fetched as an array
+ [x] When serializing a node to json its array representation is used
  [x] In scalar context the node is typecasted to its id
  [x] The level of a root node is 0
  [x] A node 2 levels below the root node has level 2
@@ -37,6 +38,7 @@ BlueM\Tree
  [x] An exception is thrown if a non string value should be used as parent id field name
  [x] The root nodes can be retrieved
  [x] The root nodes can be retrieved when the ids are strings
+ [x] The tree can be serialized to a json representation from which a tree with the same data can be built when decoded
  [x] All nodes can be retrieved
  [x] All nodes can be retrieved when node ids are strings
  [x] A node can be accessed by its integer id

@@ -8,7 +8,7 @@ namespace BlueM\Tree;
  * @author  Carsten Bluem <carsten@bluem.net>
  * @license http://www.opensource.org/licenses/bsd-license.php  BSD 2-Clause License
  */
-class Node
+class Node implements \JsonSerializable
 {
     /**
      * Indexed array of node properties. Must at least contain key
@@ -380,5 +380,13 @@ class Node
     public function __toString()
     {
         return (string) $this->properties['id'];
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }

@@ -87,6 +87,28 @@ class TreeTest extends TestCase
     /**
      * @test
      */
+    public function theTreeCanBeSerializedToAJsonRepresentationFromWhichATreeWithTheSameDataCanBeBuiltWhenDecoded()
+    {
+        $data = self::dataWithNumericKeys();
+
+        $tree1 = new Tree($data);
+        $tree1Json = json_encode($tree1);
+        $tree1JsonDecoded = json_decode($tree1Json, true);
+
+        static::assertCount(\count($data), $tree1JsonDecoded);
+        foreach ($data as $nodeData) {
+            static::assertContains($nodeData, $tree1JsonDecoded);
+        }
+
+        $tree2 = new Tree($tree1JsonDecoded);
+        $tree2Json = json_encode($tree2);
+
+        static::assertSame($tree1Json, $tree2Json);
+    }
+
+    /**
+     * @test
+     */
     public function allNodesCanBeRetrieved()
     {
         $data = self::dataWithNumericKeys();
@@ -94,7 +116,7 @@ class TreeTest extends TestCase
         $nodes = $tree->getNodes();
 
         static::assertInternalType('array', $nodes);
-        static::assertSame(\count($data), \count($nodes));
+        static::assertCount(\count($data), $nodes);
 
         $expectedOrder = [5, 3, 4, 6, 1, 7, 15, 11, 21, 27, 12, 10, 20];
 
@@ -114,7 +136,7 @@ class TreeTest extends TestCase
 
         $nodes = $tree->getNodes();
         static::assertInternalType('array', $nodes);
-        static::assertSame(\count($data), \count($nodes));
+        static::assertCount(\count($data), $nodes);
 
         $expectedOrder = [
             'building', 'library', 'school', 'primary-school', 'vehicle', 'bicycle', 'car',

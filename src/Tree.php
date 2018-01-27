@@ -11,7 +11,7 @@ use BlueM\Tree\Node;
  * @author  Carsten Bluem <carsten@bluem.net>
  * @license http://www.opensource.org/licenses/bsd-license.php BSD 2-Clause License
  */
-class Tree
+class Tree implements \JsonSerializable
 {
     /**
      * API version (will always be in sync with first digit of release version number).
@@ -176,7 +176,12 @@ class Tree
         $this->nodes[$this->rootId] = $this->createNode($this->rootId, null, []);
 
         foreach ($data as $row) {
-            $this->nodes[$row[$this->idKey]] = $this->createNode($row[$this->idKey], $row[$this->parentKey], $row);
+            $this->nodes[$row[$this->idKey]] = $this->createNode(
+                $row[$this->idKey],
+                $row[$this->parentKey],
+                $row
+            );
+
             if (empty($children[$row[$this->parentKey]])) {
                 $children[$row[$this->parentKey]] = [$row[$this->idKey]];
             } else {
@@ -218,6 +223,14 @@ class Tree
         }
 
         return implode("\n", $str);
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->getNodes();
     }
 
     /**

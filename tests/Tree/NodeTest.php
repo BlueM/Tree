@@ -363,6 +363,18 @@ class NodeTest extends TestCase
     /**
      * @test
      */
+    public function whenSerializingANodeToJsonItsArrayRepresentationIsUsed()
+    {
+        $node = new Node('xyz', 456, ['foo' => 'bar', 'gggg' => 123]);
+        static::assertEquals(
+            '{"foo":"bar","gggg":123,"id":"xyz","parent":456}',
+            json_encode($node)
+        );
+    }
+
+    /**
+     * @test
+     */
     public function inScalarContextTheNodeIsTypecastedToItsId()
     {
         $node = new Node(123, null);
