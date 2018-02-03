@@ -2,7 +2,8 @@
 
 namespace BlueM;
 
-use BlueM\Tree\InvalidParentException;
+use BlueM\Tree\Exception\InvalidDatatypeException;
+use BlueM\Tree\Exception\InvalidParentException;
 use BlueM\Tree\Node;
 
 /**
@@ -41,15 +42,16 @@ class Tree implements \JsonSerializable
     protected $nodes;
 
     /**
-     * @param array $data    The data for the tree (array of associative arrays)
-     * @param array $options 0 or more of the following keys: "rootId" (ID of the root node, defaults to 0), "id"
-     *                       (name of the ID field / array key, defaults to "id"), "parent", (name of the parent
-     *                       ID field / array key, defaults to "parent")
+     * @param array|\Traversable $data    The data for the tree (iterable)
+     * @param array              $options 0 or more of the following keys: "rootId" (ID of the root node, defaults to 0), "id"
+     *                                    (name of the ID field / array key, defaults to "id"), "parent", (name of the parent
+     *                                    ID field / array key, defaults to "parent")
      *
-     * @throws InvalidParentException
+     * @throws \BlueM\Tree\Exception\InvalidParentException
+     * @throws \BlueM\Tree\Exception\InvalidDatatypeException
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $data = [], array $options = [])
+    public function __construct($data = [], array $options = [])
     {
         $options = array_change_key_case($options, CASE_LOWER);
 
@@ -80,7 +82,8 @@ class Tree implements \JsonSerializable
     /**
      * @param array $data
      *
-     * @throws InvalidParentException
+     * @throws \BlueM\Tree\Exception\InvalidParentException
+     * @throws \BlueM\Tree\Exception\InvalidDatatypeException
      */
     public function rebuildWithData(array $data)
     {
@@ -174,12 +177,17 @@ class Tree implements \JsonSerializable
     /**
      * Core method for creating the tree.
      *
-     * @param array $data The data from which to generate the tree
+     * @param array|\Traversable $data The data from which to generate the tree
      *
-     * @throws InvalidParentException
+     * @throws \BlueM\Tree\Exception\InvalidParentException
+     * @throws InvalidDatatypeException
      */
-    private function build(array $data)
+    private function build($data)
     {
+        if (!\is_array($data) && !($data instanceof \Traversable)) {
+            throw new InvalidDatatypeException('Data must be an iterable (array or implement Traversable)');
+        }
+
         $this->nodes = [];
         $children = [];
 
@@ -187,6 +195,10 @@ class Tree implements \JsonSerializable
         $this->nodes[$this->rootId] = $this->createNode($this->rootId, null, []);
 
         foreach ($data as $row) {
+            if ($row instanceof \Iterator) {
+                $row = iterator_to_array($row);
+            }
+
             $this->nodes[$row[$this->idKey]] = $this->createNode(
                 $row[$this->idKey],
                 $row[$this->parentKey],

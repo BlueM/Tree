@@ -102,6 +102,90 @@ class TreeTest extends TestCase
 
     /**
      * @test
+     * @expectedException \BlueM\Tree\Exception\InvalidDatatypeException
+     * @expectedExceptionMessage Data must be an iterable
+     */
+    public function anExceptionIsThrownWhenTryingToCreateATreeFromUnusableData()
+    {
+        new Tree('a');
+    }
+
+    /**
+     * @test
+     */
+    public function aTreeCanBeCreatedFromAnIterable()
+    {
+        function gen()
+        {
+            yield ['id' => 1, 'parent' => 0];
+            yield ['id' => 2, 'parent' => 0];
+            yield ['id' => 3, 'parent' => 2];
+            yield ['id' => 4, 'parent' => 0];
+        }
+
+        $tree = new Tree(gen());
+        static::assertSame('[{"id":1,"parent":0},{"id":2,"parent":0},{"id":3,"parent":2},{"id":4,"parent":0}]', json_encode($tree));
+    }
+
+    /**
+     * @test
+     */
+    public function aTreeCanBeCreatedFromAnArrayOfObjectsImplementingIterator()
+    {
+        function makeIterableInstance($data) {
+            return new class($data) implements \Iterator {
+
+                private $data;
+                private $pos = 0;
+                private $keys;
+
+                public function __construct(array $data)
+                {
+                    $this->data = $data;
+                    $this->keys = array_keys($data);
+                }
+
+                public function current()
+                {
+                    return $this->data[$this->keys[$this->pos]];
+                }
+
+                public function next()
+                {
+                    ++$this->pos;
+                }
+
+                public function key()
+                {
+                    return $this->keys[$this->pos];
+                }
+
+                public function valid()
+                {
+                    return isset($this->keys[$this->pos]);
+                }
+
+                public function rewind()
+                {
+                    $this->pos = 0;
+                }
+            };
+        }
+
+        $tree = new Tree([
+            makeIterableInstance(['id' => 1, 'parent' => 0, 'title' => 'A']),
+            makeIterableInstance(['id' => 2, 'parent' => 0, 'title' => 'B']),
+            makeIterableInstance(['id' => 3, 'parent' => 2, 'title' => 'B-1']),
+            makeIterableInstance(['id' => 4, 'parent' => 0, 'title' => 'D']),
+        ]);
+        static::assertSame(
+            '[{"title":"A","id":1,"parent":0},{"title":"B","id":2,"parent":0},{"title":"B-1","id":3,"parent":2},{"title":"D","id":4,"parent":0}]',
+            json_encode($tree)
+        );
+    }
+
+    /**
+     * @test
      */
     public function theTreeCanBeSerializedToAJsonRepresentationFromWhichATreeWithTheSameDataCanBeBuiltWhenDecoded()
     {
@@ -252,7 +336,7 @@ EXPECTED;
 
     /**
      * @test
-     * @expectedException \Bluem\Tree\InvalidParentException
+     * @expectedException \BlueM\Tree\Exception\InvalidParentException
      * @expectedExceptionMessage 123 points to non-existent parent with ID 456
      */
     public function anExceptionIsThrownWhenAnInvalidParentIdIsReferenced()
@@ -266,7 +350,7 @@ EXPECTED;
 
     /**
      * @test
-     * @expectedException \Bluem\Tree\InvalidParentException
+     * @expectedException \BlueM\Tree\Exception\InvalidParentException
      * @expectedExceptionMessage 678 references its own ID as parent
      */
     public function anExceptionIsThrownWhenANodeWouldBeItsOwnParent()
@@ -282,7 +366,7 @@ EXPECTED;
     /**
      * @test
      * @ticket                   3
-     * @expectedException \Bluem\Tree\InvalidParentException
+     * @expectedException \BlueM\Tree\Exception\InvalidParentException
      * @expectedExceptionMessage references its own ID as parent
      */
     public function anExceptionIsThrownWhenANodeWouldBeItsOwnParentWhenOwnIdAndParentIdHaveDifferentTypes()

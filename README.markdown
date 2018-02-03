@@ -22,6 +22,8 @@ Usage
 -------
 
 ```php
+// Create the tree with an array of arrays, array of Iterators,
+// Traversable of arrays or Traversable of Iterators
 $tree = new BlueM\Tree($data);
 
 // Rebuild the tree from new data
@@ -57,12 +59,6 @@ $precedingSibling = $node->getPrecedingSibling();
 // Get a node's following sibling (null, if there is no following sibling)
 $followingSibling = $node->getFollowingSibling();
 
-// Get a node's ancestors (parent, grandparent, ...)
-$ancestors = $node->getAncestors();
-
-// Ditto, but include the node itself
-$ancestorsPlusSelf = $node->getAncestorsAndSelf();
-
 // Get a node's child nodes
 $children = $node->getChildren();
 
@@ -71,6 +67,12 @@ $bool = $node->hasChildren();
 
 // Get the number of Children
 $bool = $node->countChildren();
+
+// Get a node's ancestors (parent, grandparent, ...)
+$ancestors = $node->getAncestors();
+
+// Ditto, but include the node itself
+$ancestorsPlusSelf = $node->getAncestorsAndSelf();
 
 // Get a node's descendants (children, grandchildren, ...)
 $descendants = $node->getDescendants();
@@ -111,35 +113,6 @@ $tree = new BlueM\Tree($records);
 ...
 ```
 
-Advanced topics
-===============
-
-Controlling JSON serialization
-------------------------------
-In case you want to serialize a tree of nodes managed by this class to JSON using `json_encode()`, you will probably find that you don’t get the data you expect or even are confronted with a recursion-related warning.
-
-The code in this package cannot anticipate in what way you will use it and what you would like the JSON representation to contain. Luckily, you can fully control the generated JSON. Starting with PHP 5.4, there is the `JsonSerializable` interface which includes a single method `jsonSerialize()`, which may return *anything*.
-
-An example implementation which returns the node’s properties plus children as an array might look like this:
-
-```php
-
-class YourNodeClass extends \BlueM\Tree\Node implements \JsonSerializable
-{
-    /**
-     * @return array Or whatever datatype you like
-     */
-    public function jsonSerialize()
-    {
-        return array_merge($this->properties, ['children' => $this->getChildren()]);
-    }
-}
-```
-
-The result is recursive, which is probably too much when using `getNodes()` to get all nodes, but can be handy when invoking `getRootNodes()`. When using `getNodes()`, you might therefore – again: depending on your needs – just skip including the children or include only children IDs.
-
-To be able to use a custom node class you must extend `BlueM\Tree` and overwrite the `createNode()` method (requires version 1.5 or later), but that’s *really* easy to do.
-
 
 Running Tests
 ==============
@@ -156,13 +129,16 @@ Version History
 
 2.0
 -----
-* BC break: `getAncestors()` or `getAncestorsAndSelf()` no longer include the root node as last item of the returned array.
-* BC break: Removed argument to `getAncestors()`. If you passed `true` as argument before, change this to `getAncestorsAndSelf()`.
-* BC break: Removed argument to `getDescendants()`. If you passed `true` as argument before, change this to `getDescendantsAndSelf()`.
-* BC break: Removed argument to `getSiblings()`. If you passed `true` as argument before, change this to `getSiblingsAndSelf()`.
-* Added method `Tree::rebuildWithData()` to rebuild the tree with new data
-* Changed autoloading from PSR-0 to PSR-4, renamed sources’ directory from `lib/` to `src/` and tests’ directory from `test/` to `tests/`.
-* Code modernization, which now requires PHP >= 7.0
+* BC break: `getAncestors()` or `getAncestorsAndSelf()` no longer include the root node as last item of the returned array. *Solution:* add it yourself, if you need it. 
+* BC break: Removed argument to `getAncestors()`. *Solution:* If you passed `true` as argument before, change this to `getAncestorsAndSelf()`.
+* BC break: Removed argument to `getDescendants()`. *Solution:* If you passed `true` as argument before, change this to `getDescendantsAndSelf()`.
+* BC break: Removed argument to `getSiblings()`. *Solution:* If you passed `true` as argument before, change this to `getSiblingsAndSelf()`.
+* BC break: Moved `BlueM\Tree\InvalidParentException` to `BlueM\Tree\Exception\InvalidParentException`. *Solution:* Update namespace imports.
+* New: Added method `Tree::rebuildWithData()` to rebuild the tree with new data.
+* New: `Tree` and `Tree\Node` implement `JsonSerializable` and provide default implementations, which means that you can easily serialize the whole tree oder nodes to JSON.
+* New: The tree data no longer has to be an `array`, but instead it must be an `iterable`, which means that you can either pass in an `array` or an object implementing the `Traversable` interface. Also, the data for a node no longer has to be an array, but can also be an object implementing the `Iterator` interface. These changes should make working with the library more flexible. 
+* Internal change: Changed autoloading from PSR-0 to PSR-4, renamed sources’ directory from `lib/` to `src/` and tests’ directory from `test/` to `tests/`.
+* Internal change: Code modernization, which now requires PHP >= 7.0
 
 
 1.5.3

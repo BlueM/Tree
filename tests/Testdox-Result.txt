@@ -39,6 +39,9 @@ BlueM\Tree
  [x] The root nodes can be retrieved
  [x] The root nodes can be retrieved when the ids are strings
  [x] The tree can be rebuilt from new data
+ [x] An exception is thrown when trying to create a tree from unusable data
+ [x] A tree can be created from an iterable
+ [x] A tree can be created from an array of objects implementing iterator
  [x] The tree can be serialized to a json representation from which a tree with the same data can be built when decoded
  [x] All nodes can be retrieved
  [x] All nodes can be retrieved when node ids are strings

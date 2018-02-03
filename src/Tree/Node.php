@@ -16,7 +16,7 @@ class Node implements \JsonSerializable
      *
      * @var array Associative array
      */
-    protected $properties;
+    protected $properties = [];
 
     /**
      * Reference to the parent node, in case of the root object: null.
