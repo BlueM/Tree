@@ -38,6 +38,7 @@ BlueM\Tree
  [x] An exception is thrown if a non string value should be used as parent id field name
  [x] The root nodes can be retrieved
  [x] The root nodes can be retrieved when the ids are strings
+ [x] The tree can be rebuilt from new data
  [x] The tree can be serialized to a json representation from which a tree with the same data can be built when decoded
  [x] All nodes can be retrieved
  [x] All nodes can be retrieved when node ids are strings

@@ -87,6 +87,22 @@ class TreeTest extends TestCase
     /**
      * @test
      */
+    public function theTreeCanBeRebuiltFromNewData()
+    {
+        $data = self::dataWithNumericKeys();
+
+        $tree = new Tree($data);
+        $originalData = json_encode($tree);
+
+        for ($i = 0; $i < 3; $i++) {
+            $tree->rebuildWithData($data);
+            static::assertSame($originalData, json_encode($tree));
+        }
+    }
+
+    /**
+     * @test
+     */
     public function theTreeCanBeSerializedToAJsonRepresentationFromWhichATreeWithTheSameDataCanBeBuiltWhenDecoded()
     {
         $data = self::dataWithNumericKeys();

@@ -24,6 +24,9 @@ Usage
 ```php
 $tree = new BlueM\Tree($data);
 
+// Rebuild the tree from new data
+$tree->rebuildWithData($newData);
+
 // Get the top-level nodes
 $rootNodes = $tree->getRootNodes();
 
@@ -157,6 +160,7 @@ Version History
 * BC break: Removed argument to `getAncestors()`. If you passed `true` as argument before, change this to `getAncestorsAndSelf()`.
 * BC break: Removed argument to `getDescendants()`. If you passed `true` as argument before, change this to `getDescendantsAndSelf()`.
 * BC break: Removed argument to `getSiblings()`. If you passed `true` as argument before, change this to `getSiblingsAndSelf()`.
+* Added method `Tree::rebuildWithData()` to rebuild the tree with new data
 * Changed autoloading from PSR-0 to PSR-4, renamed sources’ directory from `lib/` to `src/` and tests’ directory from `test/` to `tests/`.
 * Code modernization, which now requires PHP >= 7.0
 

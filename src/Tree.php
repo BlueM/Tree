@@ -38,7 +38,7 @@ class Tree implements \JsonSerializable
     /**
      * @var Node[]
      */
-    protected $nodes = [];
+    protected $nodes;
 
     /**
      * @param array $data    The data for the tree (array of associative arrays)
@@ -49,7 +49,7 @@ class Tree implements \JsonSerializable
      * @throws InvalidParentException
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $data, array $options = [])
+    public function __construct(array $data = [], array $options = [])
     {
         $options = array_change_key_case($options, CASE_LOWER);
 
@@ -74,6 +74,16 @@ class Tree implements \JsonSerializable
             $this->parentKey = $options['parent'];
         }
 
+        $this->build($data);
+    }
+
+    /**
+     * @param array $data
+     *
+     * @throws InvalidParentException
+     */
+    public function rebuildWithData(array $data)
+    {
         $this->build($data);
     }
 
@@ -170,6 +180,7 @@ class Tree implements \JsonSerializable
      */
     private function build(array $data)
     {
+        $this->nodes = [];
         $children = [];
 
         // Create the root node
