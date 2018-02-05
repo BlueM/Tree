@@ -56,10 +56,10 @@ $tree->rebuildWithData($newData);
 Retrieving nodes
 ---------------
 ```php
-// Get the top-level nodes
+// Get the top-level nodes (returns array)
 $rootNodes = $tree->getRootNodes();
 
-// Get all nodes
+// Get all nodes (returns array)
 $allNodes = $tree->getNodes();
 
 // Get a single node by its unique identifier
@@ -75,7 +75,7 @@ $parentNode = $node->getParent();
 // Get a node's siblings as an array
 $siblings = $node->getSiblings();
 
-// Ditto, but include the node itself (identical to $node->parent->getChildren())
+// Ditto, but include the node itself (identical to $node->getParent()->getChildren())
 $siblings = $node->getSiblingsAndSelf();
 
 // Get a node's preceding sibling (null, if there is no preceding sibling)
