@@ -18,8 +18,8 @@ Alternatively, you can clone the repository using git or download a tagged relea
 Usage
 ========
 
-Creating a tree and updating data
-------------------------
+Creating a tree
+---------------
 ```php
 // Create the tree with an array of arrays (or use an array of Iterators,
 // Traversable of arrays or Traversable of Iterators):
