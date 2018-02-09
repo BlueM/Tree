@@ -2,6 +2,7 @@
 
 namespace BlueM;
 
+require_once __DIR__ . '/../lib/BlueM/BaseTree.php';
 require_once __DIR__ . '/../lib/BlueM/Tree.php';
 require_once __DIR__ . '/../lib/BlueM/Tree/Node.php';
 require_once __DIR__ . '/../lib/BlueM/Tree/InvalidParentException.php';

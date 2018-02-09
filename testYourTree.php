@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/./lib/BlueM/Tree.php';
+require __DIR__ . '/vendor/autoload.php';
 
 use BlueM\Tree;
 
@@ -25,3 +25,11 @@ $data = array(
 
 $m = new Tree($data);
 echo $m;
+$rnodes = $m->getRootNodes();
+
+foreach ($rnodes as $node) {
+    echo $node->getName() . "\r\n";
+}
+foreach ($rnodes as $node) {
+    print_r( $node->getOptions()) . "\r\n";
+}

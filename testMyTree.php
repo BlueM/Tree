@@ -1,9 +1,8 @@
 <?php
-require_once __DIR__ . '/./MyNode.php';
-require_once __DIR__ . '/./MyTree.php';
+require __DIR__ . '/vendor/autoload.php';
+//require_once __DIR__ . '/./MyNode.php';
+//require_once __DIR__ . '/./MyTree.php';
 
-use \MyTree;
-use \MyNode;
 $data = array(
     array('id' => 1,  'parent' => 0,  'name' =>'Europe'),
     array('id' => 3,  'parent' => 0,  'name' =>'America'),
@@ -26,3 +25,8 @@ $data = array(
 
 $m = new MyTree($data);
 echo $m;
+$rnodes = $m->getRootNodes();
+foreach ($rnodes as $node) {
+    echo $node->getName() . "\r\n";
+    print_r( $node->getOptions()) . "\r\n";
+}
