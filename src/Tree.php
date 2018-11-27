@@ -2,9 +2,11 @@
 
 namespace BlueM;
 
+use BlueM\Tree\Serializer\FlatSerializer;
 use BlueM\Tree\Exception\InvalidDatatypeException;
 use BlueM\Tree\Exception\InvalidParentException;
 use BlueM\Tree\Node;
+use BlueM\Tree\Serializer\SerializerInterface;
 
 /**
  * Builds and gives access to a tree of nodes which is constructed thru nodes' parent node ID references.
@@ -40,6 +42,11 @@ class Tree implements \JsonSerializable
      * @var Node[]
      */
     protected $nodes;
+
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
 
     /**
      * @param array|\Traversable $data    The data for the tree (iterable)
@@ -249,11 +256,25 @@ class Tree implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * Sets the serializer class to be used, if a different one than the default is required.
+     *
+     * @param SerializerInterface $serializer
+     */
+    public function setSerializer(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+    /**
+     * @return mixed
      */
     public function jsonSerialize()
     {
-        return $this->getNodes();
+        if (!$this->serializer) {
+            $this->serializer = new FlatSerializer();
+        }
+
+        return $this->serializer->serialize($this);
     }
 
     /**

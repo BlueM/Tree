@@ -354,9 +354,7 @@ class Node implements \JsonSerializable
             return [];
         }
 
-        $ancestors = $includeSelf ? [$this] : [];
-
-        return array_merge($ancestors, $this->parent->getAncestorsGeneric(true));
+        return array_merge($includeSelf ? [$this] : [], $this->parent->getAncestorsGeneric(true));
     }
 
     /**
