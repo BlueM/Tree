@@ -17,7 +17,7 @@ Alternatively, you can clone the repository using git or download a tagged relea
 
 Updating
 ---------
-As this library uses [semantic versioning](http://semver.org), you will get fixes and feature additions when running `composer update`, but not changes which break the API.
+As this library uses [semantic versioning](https://semver.org), you will get fixes and feature additions when running `composer update`, but not changes which break the API.
 
 
 Usage
@@ -167,6 +167,11 @@ If you want to see TestDox output or coverage data, you can comment in the comme
 Version History
 =================
 
+2.1 (...)
+-----------
+* License change: BSD-2 to BSD-3
+ 
+
 2.0 (2018-02-04)
 -----
 * BC break: `getAncestors()` or `getAncestorsAndSelf()` no longer include the root node as last item of the returned array. *Solution:* add it yourself, if you need it. 
@@ -225,4 +230,4 @@ Version History
 
 Author & License
 =================
-This code was written by Carsten Blüm (www.bluem.net) and licensed under the BSD 2-Clause license.
+This code was written by Carsten Blüm (www.bluem.net) and licensed under the BSD 3-Clause license.
