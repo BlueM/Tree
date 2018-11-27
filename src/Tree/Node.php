@@ -88,11 +88,8 @@ class Node implements \JsonSerializable
     {
         $siblingsAndSelf = $this->parent->getChildren();
         $pos = array_search($this, $siblingsAndSelf, true);
-        if (isset($siblingsAndSelf[$pos + $offset])) {
-            return $siblingsAndSelf[$pos + $offset]; // Next / prev. node
-        }
 
-        return null;
+        return $siblingsAndSelf[$pos + $offset] ?? null;
     }
 
     /**
