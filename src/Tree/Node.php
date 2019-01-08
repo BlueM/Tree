@@ -11,10 +11,9 @@ namespace BlueM\Tree;
 class Node implements \JsonSerializable
 {
     /**
-     * Indexed array of node properties. Must at least contain key
-     * "id" and "parent"; any other keys may be added as needed.
+     * Associative array, at least having keys "id" and "parent". Other keys may be added as needed.
      *
-     * @var array Associative array
+     * @var array
      */
     protected $properties = [];
 
