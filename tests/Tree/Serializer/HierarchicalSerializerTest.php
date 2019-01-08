@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @group  unit
- * @covers \BlueM\Tree\SerializerHierarchicalSerializer
+ * @covers \BlueM\Tree\Serializer\HierarchicalSerializer
  */
 class HierarchicalSerializerTest extends TestCase
 {

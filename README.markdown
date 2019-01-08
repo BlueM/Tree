@@ -153,6 +153,14 @@ $tree = new BlueM\Tree($records);
 ...
 ```
 
+JSON serialization
+===================
+As `Tree` implements `JsonSerializable`, a tree can be serialized to JSON. By default, the resulting JSON represents a flat (non-hierarchical) representation of the tree data, which – once decoded from JSON – can be re-fed into a new Tree instance. In former versions, you had to subclass the `Tree` and the `Node` class to customize the JSON output. Now, serialization is extracted to an external helper class which can be changed both by setting a constructor argument or at runtime just before serialization. However, the default serialization result is the same as before, so you won’t notice any change in behavior unless you tweaked JSON serialization.
+
+To control the JSON, you can either pass an option `serializer` to the constructor, which must be an object implementing `\BlueM\Tree\Serializer\SerializerInterface`. Or you call method `setSerializer()` on the tree. The latter approach can also be used to re-set serialization behavior to the default by calling it without argument.
+
+The library comes with two distinct serializers: `\BlueM\Tree\Serializer\FlatSerializer` is the default, which is used if no serializer is set and which results in the “old”, flat JSON output. Plus, there is `\BlueM\Tree\Serializer\HierarchicalSerializer`, which creates a hierarchical, depth-first sorted representation of the tree nodes. If you need something else, feel free to write your own serializer.
+
 
 Running Tests
 ==============

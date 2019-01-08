@@ -3,6 +3,7 @@
 namespace BlueM;
 
 use BlueM\Tree\Node;
+use BlueM\Tree\Serializer\HierarchicalSerializer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -42,7 +43,32 @@ class TreeTest extends TestCase
      */
     public function anExceptionIsThrownIfANonStringValueShouldBeUsedAsParentIdFieldName()
     {
-        new Tree([], ['parent' => new \DateTime()]);
+        new Tree([], ['parent' => $this]);
+    }
+
+    /**
+     * @test
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Option “serializer” must be an object
+     */
+    public function anExceptionIsThrownIfANonObjectShouldBeUsedAsSerializer()
+    {
+        new Tree([], ['serializer' => 'not an object']);
+    }
+
+    /**
+     * @test
+     */
+    public function theSerializerCanBeSetToAnObjectImplementingSerializerinterface()
+    {
+        $serializer = new HierarchicalSerializer();
+
+        $subject = new Tree([], ['serializer' => $serializer]);
+
+        $serializerProperty = new \ReflectionProperty($subject, 'serializer');
+        $serializerProperty->setAccessible(true);
+
+        static::assertSame($serializer, $serializerProperty->getValue($subject));
     }
 
     /**

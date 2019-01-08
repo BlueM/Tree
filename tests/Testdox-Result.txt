@@ -32,10 +32,18 @@ BlueM\Tree\Node
  [x] A nodes descendants can be retrieved
  [x] A nodes descendants can be retrieved including the node itself
 
+BlueM\Tree\Serializer\FlatSerializer
+ [x] Serialization happens by calling get nodes method on the tree
+
+BlueM\Tree\Serializer\HierarchicalSerializer
+ [x] Serializes to a hierarchical array
+
 BlueM\Tree
  [x] An exception is thrown if a non scalar value should be used as root id
  [x] An exception is thrown if a non string value should be used as id field name
  [x] An exception is thrown if a non string value should be used as parent id field name
+ [x] An exception is thrown if a non object should be used as serializer
+ [x] The serializer can be set to an object implementing serializerinterface
  [x] The root nodes can be retrieved
  [x] The root nodes can be retrieved when the ids are strings
  [x] The tree can be rebuilt from new data

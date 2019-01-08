@@ -21,7 +21,7 @@ class Tree implements \JsonSerializable
      *
      * @var int
      */
-    const API = 2;
+    const API = 3;
 
     /**
      * @var int|float|string
@@ -81,6 +81,13 @@ class Tree implements \JsonSerializable
                 throw new \InvalidArgumentException('Option “parent” must be a string');
             }
             $this->parentKey = $options['parent'];
+        }
+
+        if (!empty($options['serializer'])) {
+            if (!is_object($options['serializer'])) {
+                throw new \InvalidArgumentException('Option “serializer” must be an object');
+            }
+            $this->setSerializer($options['serializer']);
         }
 
         $this->build($data);
@@ -258,9 +265,9 @@ class Tree implements \JsonSerializable
     /**
      * Sets the serializer class to be used, if a different one than the default is required.
      *
-     * @param SerializerInterface $serializer
+     * @param SerializerInterface $serializer By passing null, the serializer can be reset to the default one
      */
-    public function setSerializer(SerializerInterface $serializer)
+    public function setSerializer(SerializerInterface $serializer = null)
     {
         $this->serializer = $serializer;
     }
