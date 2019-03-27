@@ -1,7 +1,7 @@
 <?php
 
-/** @noinspection ReturnTypeCanBeDeclaredInspection */
-/** @noinspection PhpParamsInspection */
+/* @noinspection ReturnTypeCanBeDeclaredInspection */
+/* @noinspection PhpParamsInspection */
 
 namespace BlueM\Tree\Serializer;
 
@@ -9,9 +9,9 @@ use BlueM\Tree;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \BlueM\Tree\Serializer\FlatSerializer
+ * @covers \BlueM\Tree\Serializer\FlatTreeJsonSerializer
  */
-class FlatSerializerTest extends TestCase
+class FlatTreeJsonSerializerTest extends TestCase
 {
     /**
      * @test
@@ -23,7 +23,7 @@ class FlatSerializerTest extends TestCase
                  ->method('getNodes')
                  ->willReturn(['Dummy return value']);
 
-        $subject = new FlatSerializer();
+        $subject = new FlatTreeJsonSerializer();
         static::assertSame(['Dummy return value'], $subject->serialize($treeMock));
     }
 }

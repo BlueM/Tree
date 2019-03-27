@@ -1,7 +1,7 @@
 <?php
 
-/** @noinspection ReturnTypeCanBeDeclaredInspection */
-/** @noinspection PhpParamsInspection */
+/* @noinspection ReturnTypeCanBeDeclaredInspection */
+/* @noinspection PhpParamsInspection */
 
 namespace BlueM\Tree\Serializer;
 
@@ -11,9 +11,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @group  unit
- * @covers \BlueM\Tree\Serializer\HierarchicalSerializer
+ * @covers \BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer
  */
-class HierarchicalSerializerTest extends TestCase
+class HierarchicalTreeJsonSerializerTest extends TestCase
 {
     /**
      * @test
@@ -41,7 +41,7 @@ class HierarchicalSerializerTest extends TestCase
                  ->method('getRootNodes')
                  ->willReturn($rootNodes);
 
-        $serializer = new HierarchicalSerializer();
+        $serializer = new HierarchicalTreeJsonSerializer();
         $actual = $serializer->serialize($treeStub);
 
         static::assertSame(

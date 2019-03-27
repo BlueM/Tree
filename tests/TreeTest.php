@@ -3,7 +3,7 @@
 namespace BlueM;
 
 use BlueM\Tree\Node;
-use BlueM\Tree\Serializer\HierarchicalSerializer;
+use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -49,11 +49,11 @@ class TreeTest extends TestCase
     /**
      * @test
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Option “serializer” must be an object
+     * @expectedExceptionMessage Option “jsonSerializer” must be an object
      */
     public function anExceptionIsThrownIfANonObjectShouldBeUsedAsSerializer()
     {
-        new Tree([], ['serializer' => 'not an object']);
+        new Tree([], ['jsonSerializer' => 'not an object']);
     }
 
     /**
@@ -61,11 +61,11 @@ class TreeTest extends TestCase
      */
     public function theSerializerCanBeSetToAnObjectImplementingSerializerinterface()
     {
-        $serializer = new HierarchicalSerializer();
+        $serializer = new HierarchicalTreeJsonSerializer();
 
-        $subject = new Tree([], ['serializer' => $serializer]);
+        $subject = new Tree([], ['jsonSerializer' => $serializer]);
 
-        $serializerProperty = new \ReflectionProperty($subject, 'serializer');
+        $serializerProperty = new \ReflectionProperty($subject, 'jsonSerializer');
         $serializerProperty->setAccessible(true);
 
         static::assertSame($serializer, $serializerProperty->getValue($subject));

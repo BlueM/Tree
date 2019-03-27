@@ -32,10 +32,10 @@ BlueM\Tree\Node
  [x] A nodes descendants can be retrieved
  [x] A nodes descendants can be retrieved including the node itself
 
-BlueM\Tree\Serializer\FlatSerializer
+BlueM\Tree\Serializer\FlatTreeJsonSerializer
  [x] Serialization happens by calling get nodes method on the tree
 
-BlueM\Tree\Serializer\HierarchicalSerializer
+BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer
  [x] Serializes to a hierarchical array
 
 BlueM\Tree

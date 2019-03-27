@@ -2,11 +2,11 @@
 
 namespace BlueM;
 
-use BlueM\Tree\Serializer\FlatSerializer;
+use BlueM\Tree\Serializer\FlatTreeJsonSerializer;
 use BlueM\Tree\Exception\InvalidDatatypeException;
 use BlueM\Tree\Exception\InvalidParentException;
 use BlueM\Tree\Node;
-use BlueM\Tree\Serializer\SerializerInterface;
+use BlueM\Tree\Serializer\TreeJsonSerializerInterface;
 
 /**
  * Builds and gives access to a tree of nodes which is constructed thru nodes' parent node ID references.
@@ -44,15 +44,15 @@ class Tree implements \JsonSerializable
     protected $nodes;
 
     /**
-     * @var SerializerInterface
+     * @var TreeJsonSerializerInterface
      */
-    protected $serializer;
+    protected $jsonSerializer;
 
     /**
      * @param array|\Traversable $data    The data for the tree (iterable)
      * @param array              $options 0 or more of the following keys: "rootId" (ID of the root node, defaults to 0), "id"
      *                                    (name of the ID field / array key, defaults to "id"), "parent", (name of the parent
-     *                                    ID field / array key, defaults to "parent")
+     *                                    ID field / array key, defaults to "parent"), "jsonSerializer"
      *
      * @throws \BlueM\Tree\Exception\InvalidParentException
      * @throws \BlueM\Tree\Exception\InvalidDatatypeException
@@ -83,11 +83,11 @@ class Tree implements \JsonSerializable
             $this->parentKey = $options['parent'];
         }
 
-        if (!empty($options['serializer'])) {
-            if (!is_object($options['serializer'])) {
-                throw new \InvalidArgumentException('Option “serializer” must be an object');
+        if (!empty($options['jsonserializer'])) {
+            if (!is_object($options['jsonserializer'])) {
+                throw new \InvalidArgumentException('Option “jsonSerializer” must be an object');
             }
-            $this->setSerializer($options['serializer']);
+            $this->setJsonSerializer($options['jsonserializer']);
         }
 
         $this->build($data);
@@ -263,13 +263,13 @@ class Tree implements \JsonSerializable
     }
 
     /**
-     * Sets the serializer class to be used, if a different one than the default is required.
+     * Sets the JSON serializer class to be used, if a different one than the default is required.
      *
-     * @param SerializerInterface $serializer By passing null, the serializer can be reset to the default one
+     * @param TreeJsonSerializerInterface $serializer By passing null, the serializer can be reset to the default one
      */
-    public function setSerializer(SerializerInterface $serializer = null)
+    public function setJsonSerializer(TreeJsonSerializerInterface $serializer = null)
     {
-        $this->serializer = $serializer;
+        $this->jsonSerializer = $serializer;
     }
 
     /**
@@ -277,11 +277,11 @@ class Tree implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        if (!$this->serializer) {
-            $this->serializer = new FlatSerializer();
+        if (!$this->jsonSerializer) {
+            $this->jsonSerializer = new FlatTreeJsonSerializer();
         }
 
-        return $this->serializer->serialize($this);
+        return $this->jsonSerializer->serialize($this);
     }
 
     /**

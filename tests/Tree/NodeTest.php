@@ -1,5 +1,8 @@
 <?php
 
+/* @noinspection PhpUndefinedFieldInspection */
+/* @noinspection PhpUndefinedMethodInspection */
+
 namespace BlueM\Tree;
 
 use PHPUnit\Framework\TestCase;
@@ -378,7 +381,7 @@ class NodeTest extends TestCase
     public function inScalarContextTheNodeIsTypecastedToItsId()
     {
         $node = new Node(123, null);
-        static::assertEquals('123', "$node");
+        static::assertEquals('123', (string) $node);
     }
 
     /**
