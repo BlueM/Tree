@@ -133,6 +133,30 @@ echo "$node";
 ```
 
 
+Example:  Using it literal data
+------------------------------------------
+```php
+<?php
+
+require 'vendor/autoload.php';
+
+// Create the Tree instance
+$tree = new BlueM\Tree([
+    ['id' => 1, 'name' => 'Africa'],
+    ['id' => 2, 'name' => 'America'],
+    ['id' => 2, 'name' => 'America'],
+    ['id' => 4, 'name' => 'Australia'],
+    ['id' => 5, 'name' => 'Europe'],
+    ['id' => 6, 'name' => 'Santa Barbara', 'parent' => 8],
+    ['id' => 7, 'name' => 'USA', 'parent' => 2],
+    ['id' => 8, 'name' => 'California', 'parent' => 6],
+    ['id' => 9, 'name' => 'Germany', 'parent' => 5],
+    ['id' => 10, 'name' => 'Hamburg', 'parent' => 9],
+]);
+...
+...
+```
+
 Example:  Using it with a self-joined database table
 ------------------------------------------
 ```php
