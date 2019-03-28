@@ -5,13 +5,13 @@ Overview
 ========
 This library provides handling of data that is structured hierarchically using parent ID references. A typical example is a table in a relational database where each record’s “parent” field references the primary key of another record. Of course, usage is not limited to data originating from a database, but anything: you supply the data, and the library uses it, regardless of where the data came from and how it was processed.
 
-It is important to know that the tree structure created by this package is *read-only*: you can’t use it to perform modifications of the tree nodes. If you need a library for that, you might want to take a look at [nicmart/tree](https://github.com/nicmart/Tree).
+It is important to know that the tree structure created by this package is *read-only*: you can’t use it to perform modifications of the tree nodes.
 
 On the other hand, one nice thing is that it’s pretty fast. This does not only mean the code itself, but also that the constructor takes the input data in a format that is simple to create. For instance, to create a tree from database content, a single `SELECT` is sufficient, regardless of the depth of the tree and even for thousands of nodes.
 
 Installation
 ==============
-The preferred way to install Tree is through [Composer](https://getcomposer.org). For this, simply execute `composer require bluem/tree` (depending on your Composer installation, it could be “composer.phar” instead of “composer”) and everything should work fine. *Or* you manually add`"bluem/tree": "~2.0"` to the dependencies in your `composer.json` file and subsequently install/update dependencies.
+The preferred way to install Tree is through [Composer](https://getcomposer.org). For this, simply execute `composer require bluem/tree` (depending on your Composer installation, it could be “composer.phar” instead of “composer”) and everything should work fine. *Or* you manually add `"bluem/tree": "^3.0"` to the dependencies in your `composer.json` file and subsequently install/update dependencies.
 
 Alternatively, you can clone the repository using git or download a tagged release.
 
@@ -144,7 +144,7 @@ require 'vendor/autoload.php';
 $tree = new BlueM\Tree([
     ['id' => 1, 'name' => 'Africa'],
     ['id' => 2, 'name' => 'America'],
-    ['id' => 2, 'name' => 'America'],
+    ['id' => 3, 'name' => 'Asia'],
     ['id' => 4, 'name' => 'Australia'],
     ['id' => 5, 'name' => 'Europe'],
     ['id' => 6, 'name' => 'Santa Barbara', 'parent' => 8],
@@ -181,7 +181,7 @@ JSON serialization
 ===================
 As `Tree` implements `JsonSerializable`, a tree can be serialized to JSON. By default, the resulting JSON represents a flat (non-hierarchical) representation of the tree data, which – once decoded from JSON – can be re-fed into a new Tree instance. In former versions, you had to subclass the `Tree` and the `Node` class to customize the JSON output. Now, serialization is extracted to an external helper class which can be changed both by setting a constructor argument or at runtime just before serialization. However, the default serialization result is the same as before, so you won’t notice any change in behavior unless you tweaked JSON serialization.
 
-To control the JSON, you can either pass an option `serializer` to the constructor, which must be an object implementing `\BlueM\Tree\Serializer\TreeJsonSerializerInterface`. Or you call method `setJsonSerializer()` on the tree. The latter approach can also be used to re-set serialization behavior to the default by calling it without argument.
+To control the JSON, you can either pass an option `jsonSerializer` to the constructor (i.e. pass something like `['jsonSerializer' => $mySerializer]` as argument 2), which must be an object implementing `\BlueM\Tree\Serializer\TreeJsonSerializerInterface`. Or you call method `setJsonSerializer()` on the tree. The latter approach can also be used to re-set serialization behavior to the default by calling it without an argument.
 
 The library comes with two distinct serializers: `\BlueM\Tree\Serializer\FlatTreeJsonSerializer` is the default, which is used if no serializer is set and which results in the “old”, flat JSON output. Plus, there is `\BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer`, which creates a hierarchical, depth-first sorted representation of the tree nodes. If you need something else, feel free to write your own serializer.
 
@@ -199,11 +199,12 @@ If you want to see TestDox output or coverage data, you can comment in the comme
 Version History
 =================
 
-2.1 (...)
------------
+3.0 (2019-03-28)
+-----
+* JSON serialization is easily customizable by setting a custom serializer. (See section “JSON serialization” in this Readme.) *Potential* BC break: if in your own code, you subclassed `Tree` or `Tree\Node` and added an own implementation of `jsonSerialize()`, your current code *might* break. This is the only reason for the major version number bump, as everything else is unchanged. It is highly likely that you don’t have to change anything to be compatible with v3.
 * License change: BSD-2 to BSD-3
  
-
+ 
 2.0 (2018-02-04)
 -----
 * BC break: `getAncestors()` or `getAncestorsAndSelf()` no longer include the root node as last item of the returned array. *Solution:* add it yourself, if you need it. 
