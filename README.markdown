@@ -133,7 +133,7 @@ echo "$node";
 ```
 
 
-Example:  Using it literal data
+Example:  Using it with literal data
 ------------------------------------------
 ```php
 <?php
