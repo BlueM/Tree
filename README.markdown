@@ -45,11 +45,14 @@ $data = [
     ['nodeId' => 3, 'parentId' => -1, 'title' => 'Node 3'],
     ['nodeId' => 4, 'parentId' => 1, 'title' => 'Node 1.2'],
 ];
+$options = ['rootId' => -1, 'id' => 'nodeId', 'parent' => 'parentId'];
 $tree = new BlueM\Tree(
     $data,
-    ['rootId' => -1, 'id' => 'nodeId', 'parent' => 'parentId']
+    $options
 );
 ```
+
+By default, exceptions will be thrown if a node has a parent that doesn't exist, or a node references itself as it's parent. If you want to silece these exceptions and build the tree without them, simply pass `'silence' => true` in the options array.
 
 Updating the tree with new data
 -------------------------------
