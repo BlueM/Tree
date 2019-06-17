@@ -437,6 +437,26 @@ EXPECTED;
     }
 
     /**
+     * @test
+     */
+    public function familyErrorsCanBeSilencedWhenBuilding()
+    {
+        $tree = new Tree(
+            [
+                ['id' => 1, 'parent' => 0],
+                ['id' => 2, 'parent' => 1],
+                ['id' => 3, 'parent' => 4],
+                ['id' => 4, 'parent' => 4],
+            ],
+            [
+                'silence' => true
+            ]
+        );
+
+        static::assertSame('[{"id":1,"parent":0},{"id":2,"parent":1}]', json_encode($tree));
+    }
+
+    /**
      * @param bool $sorted
      *
      * @return array

@@ -49,6 +49,13 @@ class Tree implements \JsonSerializable
     protected $jsonSerializer;
 
     /**
+     * Silence build errors.
+     * 
+     * @var bool
+     */
+    private $silenceBuildErrors;
+
+    /**
      * @param array|\Traversable $data    The data for the tree (iterable)
      * @param array              $options 0 or more of the following keys: "rootId" (ID of the root node, defaults to 0), "id"
      *                                    (name of the ID field / array key, defaults to "id"), "parent", (name of the parent
@@ -60,6 +67,13 @@ class Tree implements \JsonSerializable
      */
     public function __construct($data = [], array $options = [])
     {
+        $this->silenceBuildErrors = false;
+
+        if (isset($options['silence'])) {
+            $this->silenceBuildErrors = $options['silence'];
+            unset($options['silence']);
+        }
+
         $options = array_change_key_case($options, CASE_LOWER);
 
         if (isset($options['rootid'])) {
@@ -229,16 +243,20 @@ class Tree implements \JsonSerializable
         foreach ($children as $pid => $childIds) {
             foreach ($childIds as $id) {
                 if ((string) $pid === (string) $id) {
-                    throw new InvalidParentException(
-                        "Node with ID $id references its own ID as parent ID"
-                    );
+                    if (! $this->silenceBuildErrors) {
+                        throw new InvalidParentException(
+                            "Node with ID $id references its own ID as parent ID"
+                        );
+                    }
                 }
                 if (isset($this->nodes[$pid])) {
                     $this->nodes[$pid]->addChild($this->nodes[$id]);
                 } else {
-                    throw new InvalidParentException(
-                        "Node with ID $id points to non-existent parent with ID $pid"
-                    );
+                    if (! $this->silenceBuildErrors) {
+                        throw new InvalidParentException(
+                            "Node with ID $id points to non-existent parent with ID $pid"
+                        );
+                    }
                 }
             }
         }
