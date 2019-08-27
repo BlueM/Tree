@@ -49,10 +49,18 @@ class Tree implements \JsonSerializable
     protected $jsonSerializer;
 
     /**
+     * @var callable
+     */
+    protected $buildWarningCallback;
+
+    /**
      * @param array|\Traversable $data    The data for the tree (iterable)
-     * @param array              $options 0 or more of the following keys: "rootId" (ID of the root node, defaults to 0), "id"
-     *                                    (name of the ID field / array key, defaults to "id"), "parent", (name of the parent
-     *                                    ID field / array key, defaults to "parent"), "jsonSerializer"
+     * @param array              $options 0 or more of the following keys, all of which are optional: "rootId" (ID of
+     *                                    the root node, default: 0), "id" (name of the ID field / array key, default:
+     *                                    "id"), "parent" (name of the parent ID field / array key, default: "parent"),
+     *                                    "jsonSerializer" (instance of \BlueM\Tree\Serializer\TreeJsonSerializerInterface),
+     *                                    "buildWarningCallback" (a callable which is called when detecting data
+     *                                    inconsistencies such as an invalid parent)
      *
      * @throws \BlueM\Tree\Exception\InvalidParentException
      * @throws \BlueM\Tree\Exception\InvalidDatatypeException
@@ -88,6 +96,15 @@ class Tree implements \JsonSerializable
                 throw new \InvalidArgumentException('Option “jsonSerializer” must be an object');
             }
             $this->setJsonSerializer($options['jsonserializer']);
+        }
+
+        if (!empty($options['buildwarningcallback'])) {
+            if (!is_callable($options['buildwarningcallback'])) {
+                throw new \InvalidArgumentException('Option “buildWarningCallback” must be a callable');
+            }
+            $this->buildWarningCallback = $options['buildwarningcallback'];
+        } else {
+            $this->buildWarningCallback = [$this, 'buildWarningHandler'];
         }
 
         $this->build($data);
@@ -196,7 +213,7 @@ class Tree implements \JsonSerializable
      * @throws \BlueM\Tree\Exception\InvalidParentException
      * @throws InvalidDatatypeException
      */
-    private function build($data)
+    protected function build($data)
     {
         if (!\is_array($data) && !($data instanceof \Traversable)) {
             throw new InvalidDatatypeException('Data must be an iterable (array or implement Traversable)');
@@ -228,20 +245,34 @@ class Tree implements \JsonSerializable
 
         foreach ($children as $pid => $childIds) {
             foreach ($childIds as $id) {
-                if ((string) $pid === (string) $id) {
-                    throw new InvalidParentException(
-                        "Node with ID $id references its own ID as parent ID"
-                    );
-                }
                 if (isset($this->nodes[$pid])) {
-                    $this->nodes[$pid]->addChild($this->nodes[$id]);
+                    if ($this->nodes[$pid] === $this->nodes[$id]) {
+                        call_user_func($this->buildWarningCallback, $this->nodes[$id], $pid);
+                    } else {
+                        $this->nodes[$pid]->addChild($this->nodes[$id]);
+                    }
                 } else {
-                    throw new InvalidParentException(
-                        "Node with ID $id points to non-existent parent with ID $pid"
-                    );
+                    call_user_func($this->buildWarningCallback, $this->nodes[$id], $pid);
                 }
             }
         }
+    }
+
+    /**
+     * @param Node  $node
+     * @param mixed $parentId
+     */
+    protected function buildWarningHandler(Node $node, $parentId)
+    {
+        if ((string) $parentId === (string) $node->getId()) {
+            throw new InvalidParentException('Node with ID '.$node->getId().' references its own ID as parent ID');
+        }
+
+        if (empty($this->nodes[$parentId])) {
+            throw new InvalidParentException('Node with ID '.$node->getId()." points to non-existent parent with ID $parentId");
+        }
+
+        throw new \InvalidArgumentException('Unrecognized build warning reason');
     }
 
     /**

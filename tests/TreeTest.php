@@ -402,6 +402,31 @@ EXPECTED;
 
     /**
      * @test
+     */
+    public function aCustomBuildWarningCallbackCanBeSpecifiedWhichIsCalledWithNodeAndParentIdAsArgument()
+    {
+        $invocationCount = 0;
+        $buildwarningcallback = function(Node $node, $parentId) use (&$invocationCount) {
+            $invocationCount ++;
+            static::assertSame(2, $node->getId());
+            static::assertSame('', $parentId);
+        };
+
+        new Tree(
+            [
+                ['id' => 1, 'parent' => 0],
+                ['id' => 2, 'parent' => ''],
+            ],
+            [
+                'buildwarningcallback' => $buildwarningcallback
+            ]
+        );
+
+        static::assertSame(1, $invocationCount);
+    }
+
+    /**
+     * @test
      * @expectedException \BlueM\Tree\Exception\InvalidParentException
      * @expectedExceptionMessage 678 references its own ID as parent
      */
