@@ -62,9 +62,9 @@ class Tree implements \JsonSerializable
     {
         $options = array_change_key_case($options, CASE_LOWER);
 
-        if (isset($options['rootid'])) {
-            if (!\is_scalar($options['rootid'])) {
-                throw new \InvalidArgumentException('Option “rootid” must be a scalar');
+        if (array_key_exists('rootid', $options)) {
+            if (!\is_scalar($options['rootid']) && null !== $options['rootid']) {
+                throw new \InvalidArgumentException('Option “rootid” must be scalar or null');
             }
             $this->rootId = $options['rootid'];
         }

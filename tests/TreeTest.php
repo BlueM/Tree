@@ -19,7 +19,7 @@ class TreeTest extends TestCase
     /**
      * @test
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Option “rootid” must be a scalar
+     * @expectedExceptionMessage Option “rootid” must be scalar or null
      */
     public function anExceptionIsThrownIfANonScalarValueShouldBeUsedAsRootId()
     {
@@ -69,6 +69,32 @@ class TreeTest extends TestCase
         $serializerProperty->setAccessible(true);
 
         static::assertSame($serializer, $serializerProperty->getValue($subject));
+    }
+
+    /**
+     * @test
+     */
+    public function nullCanBeUsedAsParentId()
+    {
+        $data = [
+            ['id' => 1, 'parent' => null, 'name' => 'Root'],
+            ['id' => 2, 'parent' => 1, 'name' => 'Child'],
+            ['id' => 3, 'parent' => 2, 'name' => 'Grandchild'],
+            ['id' => 4, 'parent' => null, 'name' => 'Root'],
+        ];
+
+        $tree = new Tree($data, ['rootId' => null]);
+
+        $nodes = $tree->getNodes();
+        static::assertInternalType('array', $nodes);
+        static::assertCount(4, $nodes);
+        static::assertSame(1, $nodes[0]->getId());
+        static::assertSame(2, $nodes[1]->getId());
+        static::assertSame(3, $nodes[2]->getId());
+        static::assertSame(4, $nodes[3]->getId());
+
+        static::assertSame($nodes[0], $nodes[1]->getParent());
+        static::assertNull($nodes[0]->getParent()->getId());
     }
 
     /**
