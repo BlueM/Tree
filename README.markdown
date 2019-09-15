@@ -206,6 +206,13 @@ If you want to see TestDox output or coverage data, you can comment in the comme
 Version History
 =================
 
+3.1 (2019-09-15)
+-----
+* Building the tree is now more flexible and more extendable:
+   * `null` can be used as root ID
+   * Method `Tree::build()`, which was `private` before, is now `protected`, in order to hook into the building process
+   * Until version 3.0, in case of a data inconsistency, an `InvalidParentException` was thrown. Now, the behavior is swappable through a new constructor option “buildWarningCallback” or through subclassing and overwriting method `buildWarningHandler()`
+
 3.0 (2019-03-28)
 -----
 * JSON serialization is easily customizable by setting a custom serializer. (See section “JSON serialization” in this Readme.) *Potential* BC break: if in your own code, you subclassed `Tree` or `Tree\Node` and added an own implementation of `jsonSerialize()`, your current code *might* break. This is the only reason for the major version number bump, as everything else is unchanged. It is highly likely that you don’t have to change anything to be compatible with v3.
