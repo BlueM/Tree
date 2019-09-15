@@ -24,7 +24,7 @@ class Tree implements \JsonSerializable
     const API = 3;
 
     /**
-     * @var int|float|string
+     * @var int|float|string|null
      */
     protected $rootId = 0;
 
