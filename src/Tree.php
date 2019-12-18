@@ -247,12 +247,12 @@ class Tree implements \JsonSerializable
             foreach ($childIds as $id) {
                 if (isset($this->nodes[$pid])) {
                     if ($this->nodes[$pid] === $this->nodes[$id]) {
-                        call_user_func($this->buildWarningCallback, $this->nodes[$id], $pid);
+                        call_user_func($this->buildWarningCallback, $this->nodes[$id], $pid, $this->nodes);
                     } else {
                         $this->nodes[$pid]->addChild($this->nodes[$id]);
                     }
                 } else {
-                    call_user_func($this->buildWarningCallback, $this->nodes[$id], $pid);
+                    call_user_func($this->buildWarningCallback, $this->nodes[$id], $pid, $this->nodes);
                 }
             }
         }
