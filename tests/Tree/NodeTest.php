@@ -306,14 +306,15 @@ class NodeTest extends TestCase
      */
     public function theExistenceOfAPropertyCanBeCheckedUsingIssetFunction()
     {
-        $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
+        $node = new Node(1, null, ['foo' => 'Foo', 'fooBar' => 'Bar']);
 
         static::assertTrue(isset($node->foo));
-        static::assertTrue(isset($node->FOO));
-        static::assertTrue(isset($node->bar));
-        static::assertTrue(isset($node->BAR));
+        static::assertTrue(isset($node->fooBar));
         static::assertTrue(isset($node->children));
         static::assertTrue(isset($node->parent));
+
+        static::assertFalse(isset($node->FOO));
+        static::assertFalse(isset($node->foobar));
     }
 
     /**
@@ -321,14 +322,14 @@ class NodeTest extends TestCase
      */
     public function nodePropertiesAreHandledCaseInsensitively()
     {
-        $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
+        $node = new Node(1, null, ['foo' => 'Foo', 'fooBar' => 'Bar']);
 
         static::assertSame('Foo', $node->foo);
         static::assertSame('Foo', $node->get('foo'));
         static::assertSame('Foo', $node->getFoo());
-        static::assertSame('Bar', $node->bar);
-        static::assertSame('Bar', $node->get('bar'));
-        static::assertSame('Bar', $node->getBar());
+        static::assertSame('Bar', $node->fooBar);
+        static::assertSame('Bar', $node->get('fooBar'));
+        static::assertSame('Bar', $node->getFooBar());
     }
 
     /**
