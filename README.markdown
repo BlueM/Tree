@@ -149,7 +149,7 @@ $tree = new BlueM\Tree([
     ['id' => 5, 'name' => 'Europe'],
     ['id' => 6, 'name' => 'Santa Barbara', 'parent' => 8],
     ['id' => 7, 'name' => 'USA', 'parent' => 2],
-    ['id' => 8, 'name' => 'California', 'parent' => 6],
+    ['id' => 8, 'name' => 'California', 'parent' => 7],
     ['id' => 9, 'name' => 'Germany', 'parent' => 5],
     ['id' => 10, 'name' => 'Hamburg', 'parent' => 9],
 ]);
