@@ -93,7 +93,7 @@ $followingSibling = $node->getFollowingSibling();
 $bool = $node->hasChildren();
 
 // Get the number of Children
-$bool = $node->countChildren();
+$integer = $node->countChildren();
 
 // Get a node's child nodes
 $children = $node->getChildren();
