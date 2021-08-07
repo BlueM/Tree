@@ -107,7 +107,7 @@ $ancestorsPlusSelf = $node->getAncestorsAndSelf();
 // Get a node's descendants (children, grandchildren, ...)
 $descendants = $node->getDescendants();
 
-// Ditto, but include the node itself
+// Dito, but include the node itself
 $descendantsPlusSelf = $node->getDescendantsAndSelf();
 ```
 
