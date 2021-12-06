@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": ">=7.3 || >=8.0",
+        "php": "~8.1.0",
         "ext-json": "*"
     },
     "autoload": {
@@ -21,7 +21,11 @@
     "scripts": {
         "test": "vendor/bin/phpunit"
     },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
     "require-dev": {
-        "phpunit/phpunit": ">=8.0 || >=9.0"
+        "phpunit/phpunit": "^9.5.10",
+        "doctrine/instantiator": "^1.0"
     }
 }

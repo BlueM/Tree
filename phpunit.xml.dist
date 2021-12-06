@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit>
+    <coverage>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </coverage>
     <testsuites>
         <testsuite name="TreeTest">
-            <directory suffix="Test.php">./tests</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
-    <logging>
-        <!--<log type="testdox-text" target="tests/Testdox-Result.txt"/>-->
-        <!--<log type="coverage-html" target="/tmp/phpunit-coverage"/>-->
-    </logging>
 </phpunit>
