@@ -13,9 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 class NodeTest extends TestCase
 {
-    /**
-     * @test
-     */
     public function thePreviousSiblingCanBeRetrieved()
     {
         $node = new Node(123, null);
@@ -33,9 +30,6 @@ class NodeTest extends TestCase
         static::assertSame($sibling, $node->getPrecedingSibling());
     }
 
-    /**
-     * @test
-     */
     public function tryingToGetThePreviousSiblingReturnsNullWhenCalledOnTheFirstNode()
     {
         $node = new Node(123, null);
@@ -52,9 +46,6 @@ class NodeTest extends TestCase
         static::assertNull($node->getPrecedingSibling());
     }
 
-    /**
-     * @test
-     */
     public function theNextSiblingCanBeRetrieved()
     {
         $node = new Node(123, null);
@@ -72,9 +63,6 @@ class NodeTest extends TestCase
         static::assertSame($sibling, $node->getFollowingSibling());
     }
 
-    /**
-     * @test
-     */
     public function allSiblingsCanBeRetrieved()
     {
         $node = new Node(10, null);
@@ -96,9 +84,6 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
     public function allSiblingsCanBeRetrievedIncludingTheNodeItself()
     {
         $node = new Node(10, null);
@@ -120,9 +105,6 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
     public function allSiblingsCanBeRetrievedWhenMixedDataTypesAreUsedForTheIds()
     {
         $node = new Node(0, null);
@@ -144,9 +126,6 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
     public function theChildNodesCanBeRetrieved()
     {
         $node1 = new Node(10, null);
@@ -161,18 +140,12 @@ class NodeTest extends TestCase
         static::assertSame([$node1, $node2, $node3], $parent->getChildren());
     }
 
-    /**
-     * @test
-     */
     public function whenTryingToGetTheChildNodesAnEmptyArrayIsReturnedIfThereAreNoChildNodes()
     {
         $parent = new Node(52, null);
         static::assertSame([], $parent->getChildren());
     }
 
-    /**
-     * @test
-     */
     public function aNodeCanTellHowManyChildrenItHas()
     {
         $node = new Node(10, null);
@@ -184,9 +157,6 @@ class NodeTest extends TestCase
         static::assertSame(2, $node->countChildren());
     }
 
-    /**
-     * @test
-     */
     public function aNodeCanTellIfItHasAnyChildNodes()
     {
         $node = new Node(10, null);
@@ -198,9 +168,6 @@ class NodeTest extends TestCase
         static::assertTrue($node->hasChildren());
     }
 
-    /**
-     * @test
-     */
     public function theParentNodeCanBeRetrieved()
     {
         $node = new Node(2, null);
@@ -213,9 +180,6 @@ class NodeTest extends TestCase
         static::assertSame($parent, $node->getParent());
     }
 
-    /**
-     * @test
-     */
     public function tryingToGetTheParentReturnsNullForTheRootNode()
     {
         $node = new Node(0, null);
@@ -227,9 +191,6 @@ class NodeTest extends TestCase
         static::assertNull($node->getParent());
     }
 
-    /**
-     * @test
-     */
     public function aChildCanBeAttachedToANode()
     {
         $parent = new Node(100, null);
@@ -253,27 +214,18 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
     public function theNodeIdCanBeRetrieved()
     {
         $node = new Node(16, null);
         static::assertEquals(16, $node->getId());
     }
 
-    /**
-     * @test
-     */
     public function aNodePropertyCanBeFetchedUsingMethodGet()
     {
         $node = new Node(16, null, ['key' => 'value']);
         static::assertEquals('value', $node->get('key'));
     }
 
-    /**
-     * @test
-     */
     public function tryingToGetANonExistentPropertyUsingGetThrowsAnException()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -283,18 +235,12 @@ class NodeTest extends TestCase
         static::assertEquals('value', $node->get('foobar'));
     }
 
-    /**
-     * @test
-     */
     public function aNodePropertyCanBeFetchedUsingMagicMethod()
     {
         $node = new Node(16, null, ['key' => 'value']);
         static::assertEquals('value', $node->getKey());
     }
 
-    /**
-     * @test
-     */
     public function tryingToGetANonExistentPropertyUsingMagicMethodThrowsAnException()
     {
         $this->expectException(\BadFunctionCallException::class);
@@ -304,9 +250,6 @@ class NodeTest extends TestCase
         static::assertEquals('value', $node->getFoobar());
     }
 
-    /**
-     * @test
-     */
     public function theExistenceOfAPropertyCanBeCheckedUsingIssetFunction()
     {
         $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
@@ -319,9 +262,6 @@ class NodeTest extends TestCase
         static::assertTrue(isset($node->parent));
     }
 
-    /**
-     * @test
-     */
     public function nodePropertiesAreHandledCaseInsensitively()
     {
         $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
@@ -334,9 +274,6 @@ class NodeTest extends TestCase
         static::assertSame('Bar', $node->getBar());
     }
 
-    /**
-     * @test
-     */
     public function thePropertiesCanBeAccessUsingMagicProperties()
     {
         $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
@@ -346,9 +283,6 @@ class NodeTest extends TestCase
         static::assertNull($node->parent);
     }
 
-    /**
-     * @test
-     */
     public function anExceptionIsThrownWhenAccessingAnInexistentMagicProperty()
     {
         $this->expectException(\RuntimeException::class);
@@ -358,18 +292,12 @@ class NodeTest extends TestCase
         $node->nosuchproperty;
     }
 
-    /**
-     * @test
-     */
     public function thePropertiesCanBeFetchedAsAnArray()
     {
         $node = new Node('xyz', 456, ['foo' => 'bar', 'gggg' => 123]);
         static::assertEquals(['foo' => 'bar', 'gggg' => 123, 'id' => 'xyz', 'parent' => 456], $node->toArray());
     }
 
-    /**
-     * @test
-     */
     public function whenSerializingANodeToJsonItsArrayRepresentationIsUsed()
     {
         $node = new Node('xyz', 456, ['foo' => 'bar', 'gggg' => 123]);
@@ -379,18 +307,12 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
     public function inScalarContextTheNodeIsTypecastedToItsId()
     {
         $node = new Node(123, null);
         static::assertEquals('123', (string) $node);
     }
 
-    /**
-     * @test
-     */
     public function theLevelOfARootNodeIs0()
     {
         $node = new Node(0, null);
@@ -402,9 +324,6 @@ class NodeTest extends TestCase
         static::assertSame(0, $node->getLevel());
     }
 
-    /**
-     * @test
-     */
     public function aNode2LevelsBelowTheRootNodeHasLevel2()
     {
         $node = new Node(123, null);
@@ -419,9 +338,6 @@ class NodeTest extends TestCase
         static::assertSame(2, $node->getLevel());
     }
 
-    /**
-     * @test
-     */
     public function theRootNodesAncestorsIsAnEmptyArray()
     {
         $node = new Node(0, null);
@@ -432,9 +348,6 @@ class NodeTest extends TestCase
         static::assertEquals([], $node->getAncestors());
     }
 
-    /**
-     * @test
-     */
     public function aNodesAncestorsCanBeRetrieved()
     {
         $parentProperty = new \ReflectionProperty(Node::class, 'parent');
@@ -452,9 +365,6 @@ class NodeTest extends TestCase
         static::assertSame([$parent, $grandParent], $node->getAncestors());
     }
 
-    /**
-     * @test
-     */
     public function aNodesAncestorsCanBeRetrievedIncludingTheNodeItself()
     {
         $parentProperty = new \ReflectionProperty(Node::class, 'parent');
@@ -472,9 +382,6 @@ class NodeTest extends TestCase
         static::assertSame([$node, $parent, $grandParent], $node->getAncestorsAndSelf());
     }
 
-    /**
-     * @test
-     */
     public function aNodesDescendantsCanBeRetrieved()
     {
         $childrenProperty = new \ReflectionProperty(Node::class, 'children');
@@ -499,8 +406,6 @@ class NodeTest extends TestCase
      * At the moment, this is an almost exact copy of test method
      * getANodesDescendantsIncludingTheNodeItself(). This will change when the
      * argument to getDescendants() is removed from the API.
-     *
-     * @test
      */
     public function aNodesDescendantsCanBeRetrievedIncludingTheNodeItself()
     {

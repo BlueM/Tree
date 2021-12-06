@@ -22,9 +22,6 @@ use PHPUnit\Framework\TestCase;
  */
 class TreeTest extends TestCase
 {
-    /**
-     * @test
-     */
     public function anExceptionIsThrownIfANonScalarValueShouldBeUsedAsRootId()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -33,9 +30,6 @@ class TreeTest extends TestCase
         new Tree([], ['rootId' => []]);
     }
 
-    /**
-     * @test
-     */
     public function anExceptionIsThrownIfANonStringValueShouldBeUsedAsIdFieldName()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -44,9 +38,6 @@ class TreeTest extends TestCase
         new Tree([], ['id' => 123]);
     }
 
-    /**
-     * @test
-     */
     public function anExceptionIsThrownIfANonStringValueShouldBeUsedAsParentIdFieldName()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -55,9 +46,6 @@ class TreeTest extends TestCase
         new Tree([], ['parent' => $this]);
     }
 
-    /**
-     * @test
-     */
     public function anExceptionIsThrownIfANonObjectShouldBeUsedAsSerializer()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -66,9 +54,6 @@ class TreeTest extends TestCase
         new Tree([], ['jsonSerializer' => 'not an object']);
     }
 
-    /**
-     * @test
-     */
     public function theSerializerCanBeSetToAnObjectImplementingSerializerinterface()
     {
         $serializer = new HierarchicalTreeJsonSerializer();
@@ -81,9 +66,6 @@ class TreeTest extends TestCase
         static::assertSame($serializer, $serializerProperty->getValue($subject));
     }
 
-    /**
-     * @test
-     */
     public function nullCanBeUsedAsParentId()
     {
         $data = [
@@ -106,9 +88,6 @@ class TreeTest extends TestCase
         static::assertNull($nodes[0]->getParent()->getId());
     }
 
-    /**
-     * @test
-     */
     public function theRootNodesCanBeRetrieved()
     {
         $data = self::dataWithNumericKeys();
@@ -125,9 +104,6 @@ class TreeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
     public function theRootNodesCanBeRetrievedWhenTheIdsAreStrings()
     {
         $data = self::dataWithStringKeys();
@@ -143,9 +119,6 @@ class TreeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
     public function theTreeCanBeRebuiltFromNewData()
     {
         $data = self::dataWithNumericKeys();
@@ -159,20 +132,14 @@ class TreeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
     public function anExceptionIsThrownWhenTryingToCreateATreeFromUnusableData()
     {
-        $this->expectException(InvalidDatatypeException::class);
+        $this->expectException(\BlueM\Tree\Exception\InvalidDatatypeException::class);
         $this->expectExceptionMessage('Data must be an iterable');
 
         new Tree('a');
     }
 
-    /**
-     * @test
-     */
     public function aTreeCanBeCreatedFromAnIterable()
     {
         function gen()
@@ -187,9 +154,6 @@ class TreeTest extends TestCase
         static::assertSame('[{"id":1,"parent":0},{"id":2,"parent":0},{"id":3,"parent":2},{"id":4,"parent":0}]', json_encode($tree));
     }
 
-    /**
-     * @test
-     */
     public function aTreeCanBeCreatedFromAnArrayOfObjectsImplementingIterator()
     {
         function makeIterableInstance($data) {
@@ -249,9 +213,6 @@ class TreeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
     public function theTreeCanBeSerializedToAJsonRepresentationFromWhichATreeWithTheSameDataCanBeBuiltWhenDecoded()
     {
         $data = self::dataWithNumericKeys();
@@ -274,9 +235,6 @@ class TreeTest extends TestCase
         static::assertSame($tree1Json, $tree2Json);
     }
 
-    /**
-     * @test
-     */
     public function allNodesCanBeRetrieved()
     {
         $data = self::dataWithNumericKeys();
@@ -293,9 +251,6 @@ class TreeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
     public function allNodesCanBeRetrievedWhenNodeIdsAreStrings()
     {
         $data = self::dataWithStringKeys();
@@ -314,9 +269,6 @@ class TreeTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     */
     public function aNodeCanBeAccessedByItsIntegerId()
     {
         $data = self::dataWithNumericKeys();
@@ -325,9 +277,6 @@ class TreeTest extends TestCase
         static::assertEquals(20, $node->getId());
     }
 
-    /**
-     * @test
-     */
     public function aNodeCanBeAccessedByItsStringId()
     {
         $data = self::dataWithStringKeys();
@@ -336,9 +285,6 @@ class TreeTest extends TestCase
         static::assertEquals('library', $node->getId());
     }
 
-    /**
-     * @test
-     */
     public function tryingToGetANodeByItsIdThrowsAnExceptionIfTheIdIsInvalid()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -349,9 +295,6 @@ class TreeTest extends TestCase
         $tree->getNodeById(999);
     }
 
-    /**
-     * @test
-     */
     public function aNodeCanBeAccessedByItsValuePath()
     {
         $data = self::dataWithNumericKeys();
@@ -362,9 +305,6 @@ class TreeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
     public function tryingToGetANodeByItsValuePathReturnsNullIfNoNodeMatches()
     {
         $data = self::dataWithNumericKeys();
@@ -375,9 +315,6 @@ class TreeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
     public function inScalarContextTheTreeIsReturnedAsAString()
     {
         $data = self::dataWithNumericKeys();
@@ -402,22 +339,18 @@ EXPECTED;
         static::assertEquals($expected, $actual);
     }
 
-    /**
-     * @test
-     */
     public function anExceptionIsThrownWhenAnInvalidParentIdIsReferenced()
     {
-        $this->expectException(InvalidParentException::class);
+        $this->expectException(\BlueM\Tree\Exception\InvalidParentException::class);
         $this->expectExceptionMessage('123 points to non-existent parent with ID 456');
 
-        new Tree([
-            ['id' => 123, 'parent' => 456],
-        ]);
+        new Tree(
+            [
+                ['id' => 123, 'parent' => 456],
+            ]
+        );
     }
 
-    /**
-     * @test
-     */
     public function aCustomBuildWarningCallbackCanBeSpecifiedWhichIsCalledWithNodeAndParentIdAsArgument()
     {
         $invocationCount = 0;
@@ -440,36 +373,35 @@ EXPECTED;
         static::assertSame(1, $invocationCount);
     }
 
-    /**
-     * @test
-     */
     public function anExceptionIsThrownWhenANodeWouldBeItsOwnParent()
     {
-        $this->expectException(InvalidParentException::class);
+        $this->expectException(\BlueM\Tree\Exception\InvalidParentException::class);
         $this->expectExceptionMessage('678 references its own ID as parent');
 
-        new Tree([
-            ['id' => 123, 'parent' => 0],
-            ['id' => 678, 'parent' => 678],
-        ]);
+        new Tree(
+            [
+                ['id' => 123, 'parent' => 0],
+                ['id' => 678, 'parent' => 678],
+            ]
+        );
     }
 
     /**
-     * @test
      * @ticket 3
      */
     public function anExceptionIsThrownWhenANodeWouldBeItsOwnParentWhenOwnIdAndParentIdHaveDifferentTypes()
     {
-        $this->expectException(InvalidParentException::class);
+        $this->expectException(\BlueM\Tree\Exception\InvalidParentException::class);
         $this->expectExceptionMessage('references its own ID as parent');
 
-        new Tree([
-            ['id' => '5', 'parent' => 5],
-        ]);
+        new Tree(
+            [
+                ['id' => '5', 'parent' => 5],
+            ]
+        );
     }
 
     /**
-     * @test
      * @ticket 3
      */
     public function whenMixingNumericAndStringIdsNoExceptionIsThrownDueToImplicitTypecasting()
@@ -480,9 +412,6 @@ EXPECTED;
         static::assertTrue(true); // Just to make PHPUnit happy
     }
 
-    /**
-     * @test
-     */
     public function clientsCanSupplyDifferingNamesForIdAndParentIdInInputData()
     {
         $data = self::dataWithStringKeys(true, 'id_node', 'id_parent');
