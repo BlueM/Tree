@@ -373,7 +373,7 @@ class TreeTest extends TestCase
     {
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
-        $actual = "$tree";
+        $actual = (string)$tree;
         $expected = <<<'EXPECTED'
 - 5
 - 3
