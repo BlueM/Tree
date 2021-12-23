@@ -2,6 +2,8 @@
 
 namespace BlueM;
 
+use BlueM\Tree\Exception\InvalidDatatypeException;
+use BlueM\Tree\Exception\InvalidParentException;
 use BlueM\Tree\Node;
 use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
 use PHPUnit\Framework\TestCase;
@@ -18,41 +20,45 @@ class TreeTest extends TestCase
 {
     /**
      * @test
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Option “rootid” must be scalar or null
      */
     public function anExceptionIsThrownIfANonScalarValueShouldBeUsedAsRootId()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Option “rootid” must be scalar or null');
+
         new Tree([], ['rootId' => []]);
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Option “id” must be a string
      */
     public function anExceptionIsThrownIfANonStringValueShouldBeUsedAsIdFieldName()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Option “id” must be a string');
+
         new Tree([], ['id' => 123]);
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Option “parent” must be a string
      */
     public function anExceptionIsThrownIfANonStringValueShouldBeUsedAsParentIdFieldName()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Option “parent” must be a string');
+
         new Tree([], ['parent' => $this]);
     }
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Option “jsonSerializer” must be an object
      */
     public function anExceptionIsThrownIfANonObjectShouldBeUsedAsSerializer()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Option “jsonSerializer” must be an object');
+
         new Tree([], ['jsonSerializer' => 'not an object']);
     }
 
@@ -151,11 +157,12 @@ class TreeTest extends TestCase
 
     /**
      * @test
-     * @expectedException \BlueM\Tree\Exception\InvalidDatatypeException
-     * @expectedExceptionMessage Data must be an iterable
      */
     public function anExceptionIsThrownWhenTryingToCreateATreeFromUnusableData()
     {
+        $this->expectException(InvalidDatatypeException::class);
+        $this->expectExceptionMessage('Data must be an iterable');
+
         new Tree('a');
     }
 
@@ -319,10 +326,12 @@ class TreeTest extends TestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      */
     public function tryingToGetANodeByItsIdThrowsAnExceptionIfTheIdIsInvalid()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid node primary key 999');
+
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
         $tree->getNodeById(999);
@@ -383,16 +392,15 @@ EXPECTED;
 
     /**
      * @test
-     * @expectedException \BlueM\Tree\Exception\InvalidParentException
-     * @expectedExceptionMessage 123 points to non-existent parent with ID 456
      */
     public function anExceptionIsThrownWhenAnInvalidParentIdIsReferenced()
     {
-        new Tree(
-            [
-                ['id' => 123, 'parent' => 456],
-            ]
-        );
+        $this->expectException(InvalidParentException::class);
+        $this->expectExceptionMessage('123 points to non-existent parent with ID 456');
+
+        new Tree([
+            ['id' => 123, 'parent' => 456],
+        ]);
     }
 
     /**
@@ -422,32 +430,30 @@ EXPECTED;
 
     /**
      * @test
-     * @expectedException \BlueM\Tree\Exception\InvalidParentException
-     * @expectedExceptionMessage 678 references its own ID as parent
      */
     public function anExceptionIsThrownWhenANodeWouldBeItsOwnParent()
     {
-        new Tree(
-            [
-                ['id' => 123, 'parent' => 0],
-                ['id' => 678, 'parent' => 678],
-            ]
-        );
+        $this->expectException(InvalidParentException::class);
+        $this->expectExceptionMessage('678 references its own ID as parent');
+
+        new Tree([
+            ['id' => 123, 'parent' => 0],
+            ['id' => 678, 'parent' => 678],
+        ]);
     }
 
     /**
      * @test
-     * @ticket                   3
-     * @expectedException \BlueM\Tree\Exception\InvalidParentException
-     * @expectedExceptionMessage references its own ID as parent
+     * @ticket 3
      */
     public function anExceptionIsThrownWhenANodeWouldBeItsOwnParentWhenOwnIdAndParentIdHaveDifferentTypes()
     {
-        new Tree(
-            [
-                ['id' => '5', 'parent' => 5],
-            ]
-        );
+        $this->expectException(InvalidParentException::class);
+        $this->expectExceptionMessage('references its own ID as parent');
+
+        new Tree([
+            ['id' => '5', 'parent' => 5],
+        ]);
     }
 
     /**
