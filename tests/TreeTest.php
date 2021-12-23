@@ -86,7 +86,6 @@ class TreeTest extends TestCase
         $tree = new Tree($data, ['rootId' => null]);
 
         $nodes = $tree->getNodes();
-        static::assertInternalType('array', $nodes);
         static::assertCount(4, $nodes);
         static::assertSame(1, $nodes[0]->getId());
         static::assertSame(2, $nodes[1]->getId());
@@ -106,7 +105,6 @@ class TreeTest extends TestCase
         $tree = new Tree($data);
 
         $nodes = $tree->getRootNodes();
-        static::assertInternalType('array', $nodes);
         static::assertCount(5, $nodes);
 
         $expectedOrder = [5, 3, 4, 6, 1];
@@ -126,7 +124,6 @@ class TreeTest extends TestCase
         $tree = new Tree($data, ['rootId' => '']);
 
         $nodes = $tree->getRootNodes();
-        static::assertInternalType('array', $nodes);
 
         $expectedOrder = ['building', 'vehicle'];
 
@@ -265,9 +262,8 @@ class TreeTest extends TestCase
     {
         $data = self::dataWithNumericKeys();
         $tree = new Tree($data);
-        $nodes = $tree->getNodes();
 
-        static::assertInternalType('array', $nodes);
+        $nodes = $tree->getNodes();
         static::assertCount(\count($data), $nodes);
 
         $expectedOrder = [5, 3, 4, 6, 1, 7, 15, 11, 21, 27, 12, 10, 20];
@@ -287,7 +283,6 @@ class TreeTest extends TestCase
         $tree = new Tree($data, ['rootId' => '']);
 
         $nodes = $tree->getNodes();
-        static::assertInternalType('array', $nodes);
         static::assertCount(\count($data), $nodes);
 
         $expectedOrder = [
@@ -477,7 +472,6 @@ EXPECTED;
         $tree = new Tree($data, ['rootId' => '', 'id' => 'id_node', 'parent' => 'id_parent']);
 
         $nodes = $tree->getRootNodes();
-        static::assertInternalType('array', $nodes);
 
         $expectedOrder = ['building', 'vehicle'];
 
