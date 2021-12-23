@@ -490,12 +490,7 @@ EXPECTED;
         }
     }
 
-    /**
-     * @param bool $sorted
-     *
-     * @return array
-     */
-    private static function dataWithNumericKeys($sorted = true): array
+    private static function dataWithNumericKeys(): array
     {
         $data = [
             ['id' => 1, 'name' => 'Europe', 'parent' => 0],
@@ -517,33 +512,24 @@ EXPECTED;
             ['id' => 21, 'name' => 'Altona', 'parent' => 11],
         ];
 
-        if ($sorted) {
-            usort(
-                $data,
-                function ($a, $b) {
-                    if ($a['name'] < $b['name']) {
-                        return -1;
-                    }
-                    if ($a['name'] > $b['name']) {
-                        return 1;
-                    }
-
-                    return 0;
+        usort(
+            $data,
+            function ($a, $b) {
+                if ($a['name'] < $b['name']) {
+                    return -1;
                 }
-            );
-        }
+                if ($a['name'] > $b['name']) {
+                    return 1;
+                }
+
+                return 0;
+            }
+        );
 
         return $data;
     }
 
-    /**
-     * @param bool   $sorted
-     * @param string $idName
-     * @param string $parentName
-     *
-     * @return array
-     */
-    private static function dataWithStringKeys($sorted = true, string $idName = 'id', string $parentName = 'parent'): array
+    private static function dataWithStringKeys(bool $sorted = true, string $idName = 'id', string $parentName = 'parent'): array
     {
         $data = [
             [$idName => 'vehicle', $parentName => ''],
