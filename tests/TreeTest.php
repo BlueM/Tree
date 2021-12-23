@@ -253,7 +253,10 @@ class TreeTest extends TestCase
 
         static::assertCount(\count($data), $tree1JsonDecoded);
         foreach ($data as $nodeData) {
-            static::assertContains($nodeData, $tree1JsonDecoded);
+            ksort($nodeData);
+            // Note: static::assertContains() fails
+            /* @noinspection PhpUnitTestsInspection */
+            static::assertTrue(in_array($nodeData, $data));
         }
 
         $tree2 = new Tree($tree1JsonDecoded);
@@ -495,23 +498,23 @@ EXPECTED;
     private static function dataWithNumericKeys($sorted = true): array
     {
         $data = [
-            ['id' => 1, 'parent' => 0, 'name' => 'Europe'],
-            ['id' => 3, 'parent' => 0, 'name' => 'America'],
-            ['id' => 4, 'parent' => 0, 'name' => 'Asia'],
-            ['id' => 5, 'parent' => 0, 'name' => 'Africa'],
-            ['id' => 6, 'parent' => 0, 'name' => 'Australia'],
+            ['id' => 1, 'name' => 'Europe', 'parent' => 0],
+            ['id' => 3, 'name' => 'America', 'parent' => 0],
+            ['id' => 4, 'name' => 'Asia', 'parent' => 0],
+            ['id' => 5, 'name' => 'Africa', 'parent' => 0],
+            ['id' => 6, 'name' => 'Australia', 'parent' => 0],
             // --
-            ['id' => 7, 'parent' => 1, 'name' => 'Germany'],
-            ['id' => 10, 'parent' => 1, 'name' => 'Portugal'],
+            ['id' => 7, 'name' => 'Germany', 'parent' => 1],
+            ['id' => 10, 'name' => 'Portugal', 'parent' => 1],
             // --
-            ['id' => 11, 'parent' => 7, 'name' => 'Hamburg'],
-            ['id' => 12, 'parent' => 7, 'name' => 'Munich'],
-            ['id' => 15, 'parent' => 7, 'name' => 'Berlin'],
+            ['id' => 11, 'name' => 'Hamburg', 'parent' => 7],
+            ['id' => 12, 'name' => 'Munich', 'parent' => 7],
+            ['id' => 15, 'name' => 'Berlin', 'parent' => 7],
             // --
-            ['id' => 20, 'parent' => 10, 'name' => 'Lisbon'],
+            ['id' => 20, 'name' => 'Lisbon', 'parent' => 10],
             // --
-            ['id' => 27, 'parent' => 11, 'name' => 'Eimsbüttel'],
-            ['id' => 21, 'parent' => 11, 'name' => 'Altona'],
+            ['id' => 27, 'name' => 'Eimsbüttel', 'parent' => 11],
+            ['id' => 21, 'name' => 'Altona', 'parent' => 11],
         ];
 
         if ($sorted) {
