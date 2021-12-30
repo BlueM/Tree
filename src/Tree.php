@@ -21,7 +21,7 @@ class Tree implements \JsonSerializable
      *
      * @var int
      */
-    const API = 3;
+    public const API = 3;
 
     /**
      * @var int|float|string|null
@@ -114,7 +114,7 @@ class Tree implements \JsonSerializable
      * @throws InvalidParentException
      * @throws InvalidDatatypeException
      */
-    public function rebuildWithData(array $data)
+    public function rebuildWithData(array $data): void
     {
         $this->build($data);
     }
@@ -173,10 +173,8 @@ class Tree implements \JsonSerializable
      * name "A" which has a child with name "B" which has a child which has node "C", you
      * would get the latter one by invoking getNodeByValuePath('name', ['A', 'B', 'C']).
      * Comparison is case-sensitive and type-safe.
-     *
-     * @return Node|null
      */
-    public function getNodeByValuePath(string $name, array $search)
+    public function getNodeByValuePath(string $name, array $search): ?Node
     {
         $findNested = function (array $nodes, array $tokens) use ($name, &$findNested) {
             $token = array_shift($tokens);
@@ -208,7 +206,7 @@ class Tree implements \JsonSerializable
      * @throws InvalidParentException
      * @throws InvalidDatatypeException
      */
-    protected function build($data)
+    protected function build($data): void
     {
         if (!\is_array($data) && !($data instanceof \Traversable)) {
             throw new InvalidDatatypeException('Data must be an iterable (array or implement Traversable)');
@@ -256,7 +254,7 @@ class Tree implements \JsonSerializable
     /**
      * @param mixed $parentId
      */
-    protected function buildWarningHandler(Node $node, $parentId)
+    protected function buildWarningHandler(Node $node, $parentId): void
     {
         if ((string) $parentId === (string) $node->getId()) {
             throw new InvalidParentException('Node with ID '.$node->getId().' references its own ID as parent ID');
@@ -292,7 +290,7 @@ class Tree implements \JsonSerializable
      *
      * By passing null, the serializer can be reset to the default one.
      */
-    public function setJsonSerializer(TreeJsonSerializerInterface $serializer = null)
+    public function setJsonSerializer(TreeJsonSerializerInterface $serializer = null): void
     {
         $this->jsonSerializer = $serializer;
     }

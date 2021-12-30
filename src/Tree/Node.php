@@ -46,7 +46,7 @@ class Node implements \JsonSerializable
     /**
      * Adds the given node to this node's children.
      */
-    public function addChild(Node $child)
+    public function addChild(Node $child): void
     {
         $this->children[] = $child;
         $child->parent = $this;
@@ -55,30 +55,24 @@ class Node implements \JsonSerializable
 
     /**
      * Returns previous node in the same level, or NULL if there's no previous node.
-     *
-     * @return Node|null
      */
-    public function getPrecedingSibling()
+    public function getPrecedingSibling(): ?Node
     {
         return $this->getSibling(-1);
     }
 
     /**
      * Returns following node in the same level, or NULL if there's no following node.
-     *
-     * @return Node|null
      */
-    public function getFollowingSibling()
+    public function getFollowingSibling(): ?Node
     {
         return $this->getSibling(1);
     }
 
     /**
      * Returns the sibling with the given offset from this node, or NULL if there is no such sibling.
-     *
-     * @return Node|null
      */
-    private function getSibling(int $offset)
+    private function getSibling(int $offset): ?Node
     {
         $siblingsAndSelf = $this->parent->getChildren();
         $pos = array_search($this, $siblingsAndSelf, true);
@@ -130,10 +124,8 @@ class Node implements \JsonSerializable
 
     /**
      * Returns the parent node or null, if the node is the root node.
-     *
-     * @return Node|null
      */
-    public function getParent()
+    public function getParent(): ?Node
     {
         return $this->parent ?? null;
     }
