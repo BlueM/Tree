@@ -34,7 +34,6 @@ class Node implements \JsonSerializable
     /**
      * @param string|int $id
      * @param string|int $parent
-     * @param array      $properties Associative array of node properties
      */
     public function __construct($id, $parent, array $properties = [])
     {
@@ -46,8 +45,6 @@ class Node implements \JsonSerializable
 
     /**
      * Adds the given node to this node's children.
-     *
-     * @param Node $child
      */
     public function addChild(Node $child)
     {
@@ -79,8 +76,6 @@ class Node implements \JsonSerializable
     /**
      * Returns the sibling with the given offset from this node, or NULL if there is no such sibling.
      *
-     * @param int $offset
-     *
      * @return Node|null
      */
     private function getSibling(int $offset)
@@ -111,11 +106,6 @@ class Node implements \JsonSerializable
         return $this->getSiblingsGeneric(true);
     }
 
-    /**
-     * @param bool $includeSelf
-     *
-     * @return array
-     */
     protected function getSiblingsGeneric(bool $includeSelf): array
     {
         $siblings = [];
@@ -139,9 +129,9 @@ class Node implements \JsonSerializable
     }
 
     /**
-     * Returns the parent object or null, if it has no parent.
+     * Returns the parent node or null, if the node is the root node.
      *
-     * @return Node|null Either parent node or, when called on root node, NULL
+     * @return Node|null
      */
     public function getParent()
     {
@@ -161,13 +151,11 @@ class Node implements \JsonSerializable
     /**
      * Returns a single node property by its name.
      *
-     * @param string $name
-     *
      * @throws \InvalidArgumentException
      *
      * @return mixed
      */
-    public function get($name)
+    public function get(string $name)
     {
         $lowerName = strtolower($name);
         if (isset($this->properties[$lowerName])) {
@@ -179,14 +167,13 @@ class Node implements \JsonSerializable
     }
 
     /**
-     * @param string $name
      * @param mixed  $args
      *
      * @throws \BadFunctionCallException
      *
      * @return mixed
      */
-    public function __call($name, $args)
+    public function __call(string $name, $args)
     {
         $lowerName = strtolower($name);
         if (0 === strpos($lowerName, 'get')) {
@@ -199,13 +186,11 @@ class Node implements \JsonSerializable
     }
 
     /**
-     * @param string $name
-     *
      * @throws \RuntimeException
      *
      * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name)
     {
         if ('parent' === $name || 'children' === $name) {
             return $this->$name;
@@ -219,12 +204,7 @@ class Node implements \JsonSerializable
         );
     }
 
-    /**
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function __isset($name)
+    public function __isset(string $name): bool
     {
         return 'parent' === $name ||
                'children' === $name ||
@@ -247,8 +227,6 @@ class Node implements \JsonSerializable
 
     /**
      * Returns whether or not this node has at least one child node.
-     *
-     * @return bool
      */
     public function hasChildren(): bool
     {
@@ -257,8 +235,6 @@ class Node implements \JsonSerializable
 
     /**
      * Returns number of children this node has.
-     *
-     * @return int
      */
     public function countChildren(): int
     {
@@ -293,11 +269,6 @@ class Node implements \JsonSerializable
         return $this->getDescendantsGeneric(true);
     }
 
-    /**
-     * @param bool $includeSelf
-     *
-     * @return array
-     */
     protected function getDescendantsGeneric(bool $includeSelf): array
     {
         $descendants = $includeSelf ? [$this] : [];
@@ -342,11 +313,6 @@ class Node implements \JsonSerializable
         return $this->getAncestorsGeneric(true);
     }
 
-    /**
-     * @param bool $includeSelf
-     *
-     * @return array
-     */
     protected function getAncestorsGeneric(bool $includeSelf): array
     {
         if (null === $this->parent) {
@@ -356,11 +322,6 @@ class Node implements \JsonSerializable
         return array_merge($includeSelf ? [$this] : [], $this->parent->getAncestorsGeneric(true));
     }
 
-    /**
-     * Returns the node's properties as an array.
-     *
-     * @return array Associative array
-     */
     public function toArray(): array
     {
         return $this->properties;

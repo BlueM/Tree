@@ -11,7 +11,7 @@ use BlueM\Tree\Serializer\TreeJsonSerializerInterface;
 /**
  * Builds and gives access to a tree of nodes which is constructed thru nodes' parent node ID references.
  *
- * @author  Carsten Bluem <carsten@bluem.net>
+ * @author Carsten Bluem <carsten@bluem.net>
  * @license http://www.opensource.org/licenses/bsd-license.php BSD 3-Clause License
  */
 class Tree implements \JsonSerializable
@@ -55,15 +55,15 @@ class Tree implements \JsonSerializable
 
     /**
      * @param array|\Traversable $data    The data for the tree (iterable)
-     * @param array              $options 0 or more of the following keys, all of which are optional: "rootId" (ID of
-     *                                    the root node, default: 0), "id" (name of the ID field / array key, default:
-     *                                    "id"), "parent" (name of the parent ID field / array key, default: "parent"),
-     *                                    "jsonSerializer" (instance of \BlueM\Tree\Serializer\TreeJsonSerializerInterface),
-     *                                    "buildWarningCallback" (a callable which is called when detecting data
-     *                                    inconsistencies such as an invalid parent)
+     * @param array $options 0 or more of the following keys, all of which are optional: "rootId" (ID of
+     *                       the root node, default: 0), "id" (name of the ID field / array key, default:
+     *                       "id"), "parent" (name of the parent ID field / array key, default: "parent"),
+     *                       "jsonSerializer" (instance of \BlueM\Tree\Serializer\TreeJsonSerializerInterface),
+     *                       "buildWarningCallback" (a callable which is called when detecting data
+     *                       inconsistencies such as an invalid parent)
      *
-     * @throws \BlueM\Tree\Exception\InvalidParentException
-     * @throws \BlueM\Tree\Exception\InvalidDatatypeException
+     * @throws InvalidParentException
+     * @throws InvalidDatatypeException
      * @throws \InvalidArgumentException
      */
     public function __construct($data = [], array $options = [])
@@ -111,10 +111,8 @@ class Tree implements \JsonSerializable
     }
 
     /**
-     * @param array $data
-     *
-     * @throws \BlueM\Tree\Exception\InvalidParentException
-     * @throws \BlueM\Tree\Exception\InvalidDatatypeException
+     * @throws InvalidParentException
+     * @throws InvalidDatatypeException
      */
     public function rebuildWithData(array $data)
     {
@@ -176,12 +174,9 @@ class Tree implements \JsonSerializable
      * would get the latter one by invoking getNodeByValuePath('name', ['A', 'B', 'C']).
      * Comparison is case-sensitive and type-safe.
      *
-     * @param string $name
-     * @param array  $search
-     *
      * @return Node|null
      */
-    public function getNodeByValuePath($name, array $search)
+    public function getNodeByValuePath(string $name, array $search)
     {
         $findNested = function (array $nodes, array $tokens) use ($name, &$findNested) {
             $token = array_shift($tokens);
@@ -210,7 +205,7 @@ class Tree implements \JsonSerializable
      *
      * @param array|\Traversable $data The data from which to generate the tree
      *
-     * @throws \BlueM\Tree\Exception\InvalidParentException
+     * @throws InvalidParentException
      * @throws InvalidDatatypeException
      */
     protected function build($data)
@@ -259,7 +254,6 @@ class Tree implements \JsonSerializable
     }
 
     /**
-     * @param Node  $node
      * @param mixed $parentId
      */
     protected function buildWarningHandler(Node $node, $parentId)
@@ -296,7 +290,7 @@ class Tree implements \JsonSerializable
     /**
      * Sets the JSON serializer class to be used, if a different one than the default is required.
      *
-     * @param TreeJsonSerializerInterface $serializer By passing null, the serializer can be reset to the default one
+     * By passing null, the serializer can be reset to the default one.
      */
     public function setJsonSerializer(TreeJsonSerializerInterface $serializer = null)
     {
@@ -322,9 +316,6 @@ class Tree implements \JsonSerializable
      *
      * @param string|int $id
      * @param string|int $parent
-     * @param array      $properties
-     *
-     * @return Node
      */
     protected function createNode($id, $parent, array $properties): Node
     {

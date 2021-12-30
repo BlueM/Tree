@@ -7,7 +7,7 @@ use BlueM\Tree;
 /**
  * Serializer which creates a hierarchical, depth-first sorted representation of the tree nodes.
  *
- * @author  Carsten Bluem <carsten@bluem.net>
+ * @author Carsten Bluem <carsten@bluem.net>
  * @license http://www.opensource.org/licenses/bsd-license.php BSD 3-Clause License
  */
 class HierarchicalTreeJsonSerializer implements TreeJsonSerializerInterface
@@ -17,17 +17,12 @@ class HierarchicalTreeJsonSerializer implements TreeJsonSerializerInterface
      */
     private $childNodesArrayKey;
 
-    /**
-     * @param string $childNodesArrayKey
-     */
-    public function __construct($childNodesArrayKey = 'children')
+    public function __construct(string $childNodesArrayKey = 'children')
     {
         $this->childNodesArrayKey = $childNodesArrayKey;
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @return array Multi-dimensional array of node data arrays, where a node's children are
      *               included in array key "children" of a node
      */
