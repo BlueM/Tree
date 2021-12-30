@@ -1,5 +1,9 @@
 <?php
 
+/* @noinspection PhpUndefinedFieldInspection */
+/* @noinspection PhpUndefinedMethodInspection */
+/* @noinspection ReturnTypeCanBeDeclaredInspection */
+
 namespace BlueM;
 
 use BlueM\Tree\Exception\InvalidDatatypeException;

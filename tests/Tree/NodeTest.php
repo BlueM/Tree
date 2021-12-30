@@ -2,6 +2,7 @@
 
 /* @noinspection PhpUndefinedFieldInspection */
 /* @noinspection PhpUndefinedMethodInspection */
+/* @noinspection ReturnTypeCanBeDeclaredInspection */
 
 namespace BlueM\Tree;
 
