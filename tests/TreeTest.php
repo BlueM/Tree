@@ -205,26 +205,31 @@ class TreeTest extends TestCase
                     $this->keys = array_keys($data);
                 }
 
+                #[\ReturnTypeWillChange]
                 public function current()
                 {
                     return $this->data[$this->keys[$this->pos]];
                 }
 
+                #[\ReturnTypeWillChange]
                 public function next()
                 {
                     ++$this->pos;
                 }
 
+                #[\ReturnTypeWillChange]
                 public function key()
                 {
                     return $this->keys[$this->pos];
                 }
 
+                #[\ReturnTypeWillChange]
                 public function valid()
                 {
                     return isset($this->keys[$this->pos]);
                 }
 
+                #[\ReturnTypeWillChange]
                 public function rewind()
                 {
                     $this->pos = 0;

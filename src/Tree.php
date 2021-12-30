@@ -300,6 +300,7 @@ class Tree implements \JsonSerializable
     /**
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         if (!$this->jsonSerializer) {
