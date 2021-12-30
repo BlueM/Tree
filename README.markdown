@@ -203,6 +203,12 @@ If you want to see TestDox output or coverage data, you can comment in the comme
 Version History
 =================
 
+3.2 (2021-12-30)
+-----
+* Slight modernizations regarding typehints, but apart from that no changes in API or behavior
+* Supresses warnings on PHP 8.1
+* Minimum PHP version is now 7.3 (previously: 7.0)
+
 3.1 (2019-09-15)
 -----
 * Building the tree is now more flexible and more extendable:
