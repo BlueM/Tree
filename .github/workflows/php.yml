@@ -3,30 +3,26 @@
 name: PHP Composer
 
 on:
-  [push]
+  [ push ]
 
 jobs:
-    build:
+  build:
 
-        runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-        steps:
-            - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-            - name: Validate composer.json and composer.lock
-              run: composer validate --strict
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          ini-values: "zend.assertions=1"
 
-            - name: Cache Composer packages
-              id: composer-cache
-              uses: actions/cache@v2
-              with:
-                  path: vendor
-                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: |
-                      ${{ runner.os }}-php-
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
 
-            - name: Install dependencies
-              run: composer install --prefer-dist --no-progress
-
-            - name: Run test suite
-              run: composer run-script test
+      - name: Run test suite
+        run: composer run-script test
