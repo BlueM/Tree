@@ -1,81 +1,61 @@
 <?php
 
-/* @noinspection PhpUndefinedFieldInspection */
-/* @noinspection PhpUndefinedMethodInspection */
-/* @noinspection ReturnTypeCanBeDeclaredInspection */
-
 namespace BlueM\Tree;
 
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers \BlueM\Tree\Node
- */
 class NodeTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function thePreviousSiblingCanBeRetrieved()
+    #[Test]
+    public function thePreviousSiblingCanBeRetrieved(): void
     {
         $node = new Node(123, null);
         $sibling = new Node(456, null);
 
         $parent = new Node(789, null);
         $childrenProperty = new \ReflectionProperty($parent, 'children');
-        $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($parent, [$sibling, $node]);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
         static::assertSame($sibling, $node->getPrecedingSibling());
     }
 
-    /**
-     * @test
-     */
-    public function tryingToGetThePreviousSiblingReturnsNullWhenCalledOnTheFirstNode()
+    #[Test]
+    public function tryingToGetThePreviousSiblingReturnsNullWhenCalledOnTheFirstNode(): void
     {
         $node = new Node(123, null);
         $parent = new Node(789, null);
 
         $childrenProperty = new \ReflectionProperty($parent, 'children');
-        $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($parent, [$node]);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
         static::assertNull($node->getPrecedingSibling());
     }
 
-    /**
-     * @test
-     */
-    public function theNextSiblingCanBeRetrieved()
+    #[Test]
+    public function theNextSiblingCanBeRetrieved(): void
     {
         $node = new Node(123, null);
         $sibling = new Node(456, null);
 
         $parent = new Node(789, null);
         $childrenProperty = new \ReflectionProperty($parent, 'children');
-        $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($parent, [$node, $sibling]);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
         static::assertSame($sibling, $node->getFollowingSibling());
     }
 
-    /**
-     * @test
-     */
-    public function allSiblingsCanBeRetrieved()
+    #[Test]
+    public function allSiblingsCanBeRetrieved(): void
     {
         $node = new Node(10, null);
         $sibling1 = new Node(20, null);
@@ -83,11 +63,9 @@ class NodeTest extends TestCase
 
         $parent = new Node(333, null);
         $childrenProperty = new \ReflectionProperty($parent, 'children');
-        $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($parent, [$node, $sibling1, $sibling2]);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
         static::assertSame(
@@ -96,10 +74,8 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function allSiblingsCanBeRetrievedIncludingTheNodeItself()
+    #[Test]
+    public function allSiblingsCanBeRetrievedIncludingTheNodeItself(): void
     {
         $node = new Node(10, null);
         $sibling1 = new Node(20, null);
@@ -107,11 +83,9 @@ class NodeTest extends TestCase
 
         $parent = new Node(333, null);
         $childrenProperty = new \ReflectionProperty($parent, 'children');
-        $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($parent, [$sibling1, $node, $sibling2]);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
         static::assertSame(
@@ -120,10 +94,8 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function allSiblingsCanBeRetrievedWhenMixedDataTypesAreUsedForTheIds()
+    #[Test]
+    public function allSiblingsCanBeRetrievedWhenMixedDataTypesAreUsedForTheIds(): void
     {
         $node = new Node(0, null);
         $sibling1 = new Node('a', null);
@@ -131,11 +103,9 @@ class NodeTest extends TestCase
 
         $parent = new Node('333', null);
         $childrenProperty = new \ReflectionProperty($parent, 'children');
-        $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($parent, [$node, $sibling1, $sibling2]);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
         static::assertSame(
@@ -144,10 +114,8 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function theChildNodesCanBeRetrieved()
+    #[Test]
+    public function theChildNodesCanBeRetrieved(): void
     {
         $node1 = new Node(10, null);
         $node2 = new Node(20, null);
@@ -155,82 +123,65 @@ class NodeTest extends TestCase
 
         $parent = new Node(333, null);
         $childrenProperty = new \ReflectionProperty($parent, 'children');
-        $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($parent, [$node1, $node2, $node3]);
 
         static::assertSame([$node1, $node2, $node3], $parent->getChildren());
     }
 
-    /**
-     * @test
-     */
-    public function whenTryingToGetTheChildNodesAnEmptyArrayIsReturnedIfThereAreNoChildNodes()
+    #[Test]
+    public function whenTryingToGetTheChildNodesAnEmptyArrayIsReturnedIfThereAreNoChildNodes(): void
     {
         $parent = new Node(52, null);
         static::assertSame([], $parent->getChildren());
     }
 
-    /**
-     * @test
-     */
-    public function aNodeCanTellHowManyChildrenItHas()
+    #[Test]
+    public function aNodeCanTellHowManyChildrenItHas(): void
     {
         $node = new Node(10, null);
 
         $childrenProperty = new \ReflectionProperty($node, 'children');
-        $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($node, ['dummy1', 'dummy2']);
 
         static::assertSame(2, $node->countChildren());
     }
 
-    /**
-     * @test
-     */
-    public function aNodeCanTellIfItHasAnyChildNodes()
+    #[Test]
+    public function aNodeCanTellIfItHasAnyChildNodes(): void
     {
         $node = new Node(10, null);
 
         $childrenProperty = new \ReflectionProperty($node, 'children');
-        $childrenProperty->setAccessible(true);
         $childrenProperty->setValue($node, ['dummy1', 'dummy2']);
 
         static::assertTrue($node->hasChildren());
     }
 
-    /**
-     * @test
-     */
-    public function theParentNodeCanBeRetrieved()
+    #[Test]
+    public function theParentNodeCanBeRetrieved(): void
     {
         $node = new Node(2, null);
         $parent = new Node(4, null);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
 
         static::assertSame($parent, $node->getParent());
     }
 
-    /**
-     * @test
-     */
-    public function tryingToGetTheParentReturnsNullForTheRootNode()
+    #[Test]
+    public function tryingToGetTheParentReturnsNullForTheRootNode(): void
     {
         $node = new Node(0, null);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, null);
 
         static::assertNull($node->getParent());
     }
 
-    /**
-     * @test
-     */
-    public function aChildCanBeAttachedToANode()
+    #[Test]
+    public function aChildCanBeAttachedToANode(): void
     {
         $parent = new Node(100, null);
         $child = new Node(200, null);
@@ -238,43 +189,34 @@ class NodeTest extends TestCase
         $parent->addChild($child);
 
         $childrenProperty = new \ReflectionProperty($parent, 'children');
-        $childrenProperty->setAccessible(true);
         static::assertSame([$child], $childrenProperty->getValue($parent));
 
         $parentProperty = new \ReflectionProperty($child, 'parent');
-        $parentProperty->setAccessible(true);
         static::assertSame($parent, $parentProperty->getValue($child));
 
         $propertiesProperty = new \ReflectionProperty($child, 'properties');
-        $propertiesProperty->setAccessible(true);
         static::assertSame(
             ['id' => 200, 'parent' => 100],
             $propertiesProperty->getValue($child)
         );
     }
 
-    /**
-     * @test
-     */
-    public function theNodeIdCanBeRetrieved()
+    #[Test]
+    public function theNodeIdCanBeRetrieved(): void
     {
         $node = new Node(16, null);
         static::assertEquals(16, $node->getId());
     }
 
-    /**
-     * @test
-     */
-    public function aNodePropertyCanBeFetchedUsingMethodGet()
+    #[Test]
+    public function aNodePropertyCanBeFetchedUsingMethodGet(): void
     {
         $node = new Node(16, null, ['key' => 'value']);
         static::assertEquals('value', $node->get('key'));
     }
 
-    /**
-     * @test
-     */
-    public function tryingToGetANonExistentPropertyUsingGetThrowsAnException()
+    #[Test]
+    public function tryingToGetANonExistentPropertyUsingGetThrowsAnException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Undefined property: foobar (Node ID: 16)');
@@ -283,19 +225,15 @@ class NodeTest extends TestCase
         static::assertEquals('value', $node->get('foobar'));
     }
 
-    /**
-     * @test
-     */
-    public function aNodePropertyCanBeFetchedUsingMagicMethod()
+    #[Test]
+    public function aNodePropertyCanBeFetchedUsingMagicMethod(): void
     {
         $node = new Node(16, null, ['key' => 'value']);
         static::assertEquals('value', $node->getKey());
     }
 
-    /**
-     * @test
-     */
-    public function tryingToGetANonExistentPropertyUsingMagicMethodThrowsAnException()
+    #[Test]
+    public function tryingToGetANonExistentPropertyUsingMagicMethodThrowsAnException(): void
     {
         $this->expectException(\BadFunctionCallException::class);
         $this->expectExceptionMessage('Invalid method getFoobar()');
@@ -304,10 +242,8 @@ class NodeTest extends TestCase
         static::assertEquals('value', $node->getFoobar());
     }
 
-    /**
-     * @test
-     */
-    public function theExistenceOfAPropertyCanBeCheckedUsingIssetFunction()
+    #[Test]
+    public function theExistenceOfAPropertyCanBeCheckedUsingIssetFunction(): void
     {
         $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
 
@@ -319,10 +255,8 @@ class NodeTest extends TestCase
         static::assertTrue(isset($node->parent));
     }
 
-    /**
-     * @test
-     */
-    public function nodePropertiesAreHandledCaseInsensitively()
+    #[Test]
+    public function nodePropertiesAreHandledCaseInsensitively(): void
     {
         $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
 
@@ -334,10 +268,8 @@ class NodeTest extends TestCase
         static::assertSame('Bar', $node->getBar());
     }
 
-    /**
-     * @test
-     */
-    public function thePropertiesCanBeAccessUsingMagicProperties()
+    #[Test]
+    public function thePropertiesCanBeAccessUsingMagicProperties(): void
     {
         $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
 
@@ -346,10 +278,8 @@ class NodeTest extends TestCase
         static::assertNull($node->parent);
     }
 
-    /**
-     * @test
-     */
-    public function anExceptionIsThrownWhenAccessingAnInexistentMagicProperty()
+    #[Test]
+    public function anExceptionIsThrownWhenAccessingAnInexistentMagicProperty(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Undefined property');
@@ -358,19 +288,15 @@ class NodeTest extends TestCase
         $node->nosuchproperty;
     }
 
-    /**
-     * @test
-     */
-    public function thePropertiesCanBeFetchedAsAnArray()
+    #[Test]
+    public function thePropertiesCanBeFetchedAsAnArray(): void
     {
         $node = new Node('xyz', 456, ['foo' => 'bar', 'gggg' => 123]);
         static::assertEquals(['foo' => 'bar', 'gggg' => 123, 'id' => 'xyz', 'parent' => 456], $node->toArray());
     }
 
-    /**
-     * @test
-     */
-    public function whenSerializingANodeToJsonItsArrayRepresentationIsUsed()
+    #[Test]
+    public function whenSerializingANodeToJsonItsArrayRepresentationIsUsed(): void
     {
         $node = new Node('xyz', 456, ['foo' => 'bar', 'gggg' => 123]);
         static::assertEquals(
@@ -379,66 +305,52 @@ class NodeTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function inScalarContextTheNodeIsTypecastedToItsId()
+    #[Test]
+    public function inScalarContextTheNodeIsTypecastedToItsId(): void
     {
         $node = new Node(123, null);
         static::assertEquals('123', (string) $node);
     }
 
-    /**
-     * @test
-     */
-    public function theLevelOfARootNodeIs0()
+    #[Test]
+    public function theLevelOfARootNodeIs0(): void
     {
         $node = new Node(0, null);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, null);
 
         static::assertSame(0, $node->getLevel());
     }
 
-    /**
-     * @test
-     */
-    public function aNode2LevelsBelowTheRootNodeHasLevel2()
+    #[Test]
+    public function aNode2LevelsBelowTheRootNodeHasLevel2(): void
     {
         $node = new Node(123, null);
         $parent = new Node(789, null);
         $rootNode = new Node(0, null);
 
         $parentProperty = new \ReflectionProperty(Node::class, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, $rootNode);
 
         static::assertSame(2, $node->getLevel());
     }
 
-    /**
-     * @test
-     */
-    public function theRootNodesAncestorsIsAnEmptyArray()
+    #[Test]
+    public function theRootNodesAncestorsIsAnEmptyArray(): void
     {
         $node = new Node(0, null);
         $parentProperty = new \ReflectionProperty($node, 'parent');
-        $parentProperty->setAccessible(true);
         $parentProperty->setValue($node, null);
 
         static::assertEquals([], $node->getAncestors());
     }
 
-    /**
-     * @test
-     */
-    public function aNodesAncestorsCanBeRetrieved()
+    #[Test]
+    public function aNodesAncestorsCanBeRetrieved(): void
     {
         $parentProperty = new \ReflectionProperty(Node::class, 'parent');
-        $parentProperty->setAccessible(true);
 
         $node = new Node(3, null);
         $parent = new Node(2, null);
@@ -452,13 +364,10 @@ class NodeTest extends TestCase
         static::assertSame([$parent, $grandParent], $node->getAncestors());
     }
 
-    /**
-     * @test
-     */
-    public function aNodesAncestorsCanBeRetrievedIncludingTheNodeItself()
+    #[Test]
+    public function aNodesAncestorsCanBeRetrievedIncludingTheNodeItself(): void
     {
         $parentProperty = new \ReflectionProperty(Node::class, 'parent');
-        $parentProperty->setAccessible(true);
 
         $node = new Node(3, null);
         $parent = new Node(2, null);
@@ -472,13 +381,10 @@ class NodeTest extends TestCase
         static::assertSame([$node, $parent, $grandParent], $node->getAncestorsAndSelf());
     }
 
-    /**
-     * @test
-     */
-    public function aNodesDescendantsCanBeRetrieved()
+    #[Test]
+    public function aNodesDescendantsCanBeRetrieved(): void
     {
         $childrenProperty = new \ReflectionProperty(Node::class, 'children');
-        $childrenProperty->setAccessible(true);
 
         $node = new Node(1, null);
         $child1 = new Node(2, null);
@@ -492,33 +398,6 @@ class NodeTest extends TestCase
         static::assertSame(
             [$child1, $grandChild1, $grandChild2, $child2],
             $node->getDescendants()
-        );
-    }
-
-    /**
-     * At the moment, this is an almost exact copy of test method
-     * getANodesDescendantsIncludingTheNodeItself(). This will change when the
-     * argument to getDescendants() is removed from the API.
-     *
-     * @test
-     */
-    public function aNodesDescendantsCanBeRetrievedIncludingTheNodeItself()
-    {
-        $childrenProperty = new \ReflectionProperty(Node::class, 'children');
-        $childrenProperty->setAccessible(true);
-
-        $node = new Node(1, null);
-        $child1 = new Node(2, null);
-        $child2 = new Node(3, null);
-        $grandChild1 = new Node(4, null);
-        $grandChild2 = new Node(5, null);
-
-        $childrenProperty->setValue($node, [$child1, $child2]);
-        $childrenProperty->setValue($child1, [$grandChild1, $grandChild2]);
-
-        static::assertSame(
-            [$node, $child1, $grandChild1, $grandChild2, $child2],
-            $node->getDescendantsAndSelf()
         );
     }
 }

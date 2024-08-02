@@ -1,24 +1,16 @@
 <?php
 
-/* @noinspection ReturnTypeCanBeDeclaredInspection */
-/* @noinspection PhpParamsInspection */
-
 namespace BlueM\Tree\Serializer;
 
 use BlueM\Tree;
 use BlueM\Tree\Node;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @group  unit
- * @covers \BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer
- */
 class HierarchicalTreeJsonSerializerTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function serializesToAHierarchicalArray()
+    #[Test]
+    public function serializesToAHierarchicalArray(): void
     {
         $rootNodes = [
             $this->createNodeStub(
@@ -37,7 +29,7 @@ class HierarchicalTreeJsonSerializerTest extends TestCase
         ];
 
         $treeStub = $this->createMock(Tree::class);
-        $treeStub->expects(static::once())
+        $treeStub->expects($this->once())
                  ->method('getRootNodes')
                  ->willReturn($rootNodes);
 
@@ -68,18 +60,18 @@ class HierarchicalTreeJsonSerializerTest extends TestCase
         );
     }
 
-    private function createNodeStub($id, array $childNodes = [])
+    private function createNodeStub($id, array $childNodes = []): Node
     {
         $nodeStub = $this->createMock(Node::class);
-        $nodeStub->expects(static::once())
+        $nodeStub->expects($this->once())
                  ->method('toArray')
                  ->willReturn(['id' => $id]);
-        $nodeStub->expects(static::once())
+        $nodeStub->expects($this->once())
                  ->method('hasChildren')
                  ->willReturn(\count($childNodes) > 0);
 
         if (\count($childNodes)) {
-            $nodeStub->expects(static::once())
+            $nodeStub->expects($this->once())
                      ->method('getChildren')
                      ->willReturn($childNodes);
         }

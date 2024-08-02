@@ -1,25 +1,18 @@
 <?php
 
-/* @noinspection ReturnTypeCanBeDeclaredInspection */
-/* @noinspection PhpParamsInspection */
-
 namespace BlueM\Tree\Serializer;
 
 use BlueM\Tree;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers \BlueM\Tree\Serializer\FlatTreeJsonSerializer
- */
 class FlatTreeJsonSerializerTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function serializationHappensByCallingGetNodesMethodOnTheTree()
+    #[Test]
+    public function serializationHappensByCallingGetNodesMethodOnTheTree(): void
     {
         $treeMock = $this->createMock(Tree::class);
-        $treeMock->expects(static::once())
+        $treeMock->expects($this->once())
                  ->method('getNodes')
                  ->willReturn(['Dummy return value']);
 
