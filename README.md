@@ -203,6 +203,10 @@ If you want to see TestDox output or coverage data, you can comment in the comme
 Version History
 =================
 
+4 (2024-xx-xx)
+---------------
+* Breaking change: minimum PHP version is 8.2
+
 3.2 (2021-12-30)
 -----
 * Slight modernizations regarding typehints, but apart from that no changes in API or behavior
