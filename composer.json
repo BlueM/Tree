@@ -18,6 +18,9 @@
     "autoload": {
         "psr-4": {"BlueM\\": "src/"}
     },
+    "autoload-dev": {
+        "psr-4": {"BlueM\\": "tests/"}
+    },
     "scripts": {
         "test": "vendor/bin/phpunit"
     },
