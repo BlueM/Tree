@@ -17,6 +17,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^11.0"
+        "friendsofphp/php-cs-fixer": "^3.62",
+        "kubawerlos/php-cs-fixer-custom-fixers": "^3.22"
     },
     "autoload": {
         "psr-4": {"BlueM\\": "src/"}
@@ -25,6 +27,8 @@
         "psr-4": {"BlueM\\": "tests/"}
     },
     "scripts": {
+        "php-cs": "vendor/bin/php-cs-fixer fix --dry-run --verbose --diff",
+        "php-cs-fix": "vendor/bin/php-cs-fixer fix",
         "test": "vendor/bin/phpunit --testdox-text=Tests.txt",
         "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage"
     }
