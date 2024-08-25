@@ -141,6 +141,10 @@ class Node implements \JsonSerializable
      */
     public function get(string $property): mixed
     {
+        if ('parent' === $property || 'children' === $property) {
+            return $this->$property;
+        }
+
         if (isset($this->properties[$property])) {
             return $this->properties[$property];
         }
