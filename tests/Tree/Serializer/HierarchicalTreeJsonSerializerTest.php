@@ -22,7 +22,7 @@ class HierarchicalTreeJsonSerializerTest extends TestCase
                             $this->createNodeStub('1.1.1'),
                             $this->createNodeStub('1.1.2'),
                         ]
-                    )
+                    ),
                 ]
             ),
             $this->createNodeStub('2'),
@@ -40,18 +40,16 @@ class HierarchicalTreeJsonSerializerTest extends TestCase
             [
                 [
                     'id' => '1',
-                    'children' =>
+                    'children' => [
                         [
-                            [
-                                'id' => '1.1',
-                                'children' =>
-                                    [
-                                        ['id' => '1.1.1'],
-                                        ['id' => '1.1.2'],
-                                    ],
+                            'id' => '1.1',
+                            'children' => [
+                                ['id' => '1.1.1'],
+                                ['id' => '1.1.2'],
                             ],
                         ],
                     ],
+                ],
                 [
                     'id' => '2',
                 ],

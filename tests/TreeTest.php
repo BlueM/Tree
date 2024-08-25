@@ -92,7 +92,7 @@ class TreeTest extends TestCase
 
         $expectedOrder = [5, 3, 4, 6, 1];
 
-        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
+        for ($i = 0, $ii = \count($nodes); $i < $ii; ++$i) {
             static::assertInstanceOf(Node::class, $nodes[$i]);
             static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
@@ -108,7 +108,7 @@ class TreeTest extends TestCase
 
         $expectedOrder = ['building', 'vehicle'];
 
-        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
+        for ($i = 0, $ii = \count($nodes); $i < $ii; ++$i) {
             static::assertInstanceOf(Node::class, $nodes[$i]);
             static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
@@ -122,7 +122,7 @@ class TreeTest extends TestCase
         $tree = new Tree($data);
         $originalData = json_encode($tree);
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 3; ++$i) {
             $tree->rebuildWithData($data);
             static::assertSame($originalData, json_encode($tree));
         }
@@ -237,7 +237,7 @@ class TreeTest extends TestCase
 
         $expectedOrder = [5, 3, 4, 6, 1, 7, 15, 11, 21, 27, 12, 10, 20];
 
-        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
+        for ($i = 0, $ii = \count($nodes); $i < $ii; ++$i) {
             static::assertInstanceOf(Node::class, $nodes[$i]);
             static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
@@ -256,7 +256,7 @@ class TreeTest extends TestCase
             'building', 'library', 'school', 'primary-school', 'vehicle', 'bicycle', 'car',
         ];
 
-        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
+        for ($i = 0, $ii = \count($nodes); $i < $ii; ++$i) {
             static::assertInstanceOf(Node::class, $nodes[$i]);
             static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
@@ -318,7 +318,7 @@ class TreeTest extends TestCase
     {
         $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
-        $actual = (string)$tree;
+        $actual = (string) $tree;
         $expected = <<<'EXPECTED'
 - 5
 - 3
@@ -365,7 +365,7 @@ EXPECTED;
                 ['id' => 2, 'parent' => ''],
             ],
             [
-                'buildwarningcallback' => $buildwarningcallback
+                'buildwarningcallback' => $buildwarningcallback,
             ]
         );
 
@@ -415,7 +415,7 @@ EXPECTED;
 
         $expectedOrder = ['building', 'vehicle'];
 
-        for ($i = 0, $ii = \count($nodes); $i < $ii; $i++) {
+        for ($i = 0, $ii = \count($nodes); $i < $ii; ++$i) {
             static::assertInstanceOf(Node::class, $nodes[$i]);
             static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
