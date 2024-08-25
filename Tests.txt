@@ -1,53 +1,52 @@
-BlueM\Tree\Node
- [x] The previous sibling can be retrieved
- [x] Trying to get the previous sibling returns null when called on the first node
- [x] The next sibling can be retrieved
- [x] All siblings can be retrieved
- [x] All siblings can be retrieved including the node itself
- [x] All siblings can be retrieved when mixed data types are used for the ids
- [x] The child nodes can be retrieved
- [x] When trying to get the child nodes an empty array is returned if there are no child nodes
- [x] A node can tell how many children it has
- [x] A node can tell if it has any child nodes
- [x] The parent node can be retrieved
- [x] Trying to get the parent returns null for the root node
- [x] A child can be attached to a node
- [x] The node id can be retrieved
- [x] A node property can be fetched using method get
- [x] Trying to get a non existent property using get throws an exception
- [x] A node property can be fetched using magic method
- [x] Trying to get a non existent property using magic method throws an exception
- [x] The existence of a property can be checked using isset function
- [x] Node properties are handled case insensitively
- [x] The properties can be access using magic properties
- [x] An exception is thrown when accessing an inexistent magic property
- [x] The properties can be fetched as an array
- [x] When serializing a node to json its array representation is used
- [x] In scalar context the node is typecasted to its id
- [x] The level of a root node is 0
- [x] A node 2 levels below the root node has level 2
- [x] The root nodes ancestors is an empty array
- [x] A nodes ancestors can be retrieved
- [x] A nodes ancestors can be retrieved including the node itself
- [x] A nodes descendants can be retrieved
- [x] A nodes descendants can be retrieved including the node itself
-
-BlueM\Tree\Serializer\FlatTreeJsonSerializer
+Flat Tree Json Serializer (BlueM\Tree\Serializer\FlatTreeJsonSerializer)
  [x] Serialization happens by calling get nodes method on the tree
 
-BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer
+Hierarchical Tree Json Serializer (BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer)
  [x] Serializes to a hierarchical array
 
-BlueM\Tree
+Node (BlueM\Tree\Node)
+ [x] Level: The level of the root node is null
+ [x] Level: A node 2 levels below the root node has level 2
+ [x] Ancestors: The root node’s ancestors is an empty array
+ [x] Ancestors: A node’s ancestors is an array of nodes, ordered from nearer to more distant ones
+ [x] Ancestors: The node itself can be included in the list of ancestors
+ [x] Descendants: A node’s descendants is an array of nodes, with depth-first sorting
+ [x] Descendants: The node itself can be included in the list of descendants
+ [x] Parent: For a root node, null is returned when calling getParent()
+ [x] Parent: For a non-root node, the parent node is returned when calling getParent()
+ [x] Siblings: The previous sibling can be retrieved
+ [x] Siblings: The next sibling can be retrieved
+ [x] Siblings: All siblings can be retrieved, not including the node itself
+ [x] Siblings: All siblings can be retrieved, including the node itself
+ [x] Siblings: All siblings can be retrieved, even when node IDs have different types
+ [x] Children: When calling getChildren(), an empty array is returned if there are no child nodes
+ [x] Children: When calling getChildren(), an array of child nodes is returned
+ [x] Children: Public property “children” can be used instead of getChildren()
+ [x] Children: get('children') can be used instead of getChildren()
+ [x] Children: A node can tell if it has any child nodes
+ [x] Children: A node knows the number of child nodes it has
+ [x] Children: A child node can be attached to a node
+ [x] Properties / Getter: A node’s properties can be fetched case-insensitively, but preferring exact case, if properties differ in case
+ [x] Properties / Getter: An exception is thrown when calling a getter for a non-existent property
+ [x] Properties / get(): A node’s custom properties can be fetched case-sensitively using get()
+ [x] Properties / get(): An exception is thrown when calling get() with an inexistent node property as argument
+ [x] Properties / Magic property: A property can be fetched case-sensitively as public property
+ [x] Properties / Magic property: An exception is thrown when trying to fetch a non-existent public property
+ [x] Properties / isset(): The existence of a property can be fetched case-sensitively using isset()
+ [x] Properties can be fetched as an array
+ [x] When serialized to JSON, an object containing all properties is returned
+ [x] When typecasted to string, the string representation of the node’s ID is returned
+
+Tree (BlueM\Tree)
  [x] An exception is thrown if a non scalar value should be used as root id
  [x] An exception is thrown if a non string value should be used as id field name
  [x] An exception is thrown if a non string value should be used as parent id field name
  [x] An exception is thrown if a non object should be used as serializer
  [x] The serializer can be set to an object implementing serializerinterface
+ [x] Null can be used as parent id
  [x] The root nodes can be retrieved
  [x] The root nodes can be retrieved when the ids are strings
  [x] The tree can be rebuilt from new data
- [x] An exception is thrown when trying to create a tree from unusable data
  [x] A tree can be created from an iterable
  [x] A tree can be created from an array of objects implementing iterator
  [x] The tree can be serialized to a json representation from which a tree with the same data can be built when decoded
@@ -60,6 +59,8 @@ BlueM\Tree
  [x] Trying to get a node by its value path returns null if no node matches
  [x] In scalar context the tree is returned as a string
  [x] An exception is thrown when an invalid parent id is referenced
+ [x] A custom build warning callback can be specified which is called with node and parent id as argument
+ [x] An exception is thrown if the build warning callback option is not a callable
  [x] An exception is thrown when a node would be its own parent
  [x] An exception is thrown when a node would be its own parent when own id and parent id have different types
  [x] When mixing numeric and string ids no exception is thrown due to implicit typecasting
