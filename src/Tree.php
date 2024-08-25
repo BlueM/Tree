@@ -3,7 +3,6 @@
 namespace BlueM;
 
 use BlueM\Tree\Serializer\FlatTreeJsonSerializer;
-use BlueM\Tree\Exception\InvalidDatatypeException;
 use BlueM\Tree\Exception\InvalidParentException;
 use BlueM\Tree\Node;
 use BlueM\Tree\Serializer\TreeJsonSerializerInterface;
@@ -49,7 +48,6 @@ class Tree implements \JsonSerializable
      *                                      inconsistencies such as an invalid parent)
      *
      * @throws InvalidParentException
-     * @throws InvalidDatatypeException
      * @throws \InvalidArgumentException
      */
     public function __construct(iterable $data = [], array $options = [])
@@ -100,7 +98,6 @@ class Tree implements \JsonSerializable
      * @param iterable<iterable<string, mixed>> $data
      *
      * @throws InvalidParentException
-     * @throws InvalidDatatypeException
      */
     public function rebuildWithData(iterable $data): void
     {
@@ -189,14 +186,9 @@ class Tree implements \JsonSerializable
      * @param iterable<iterable<string, mixed>> $data
      *
      * @throws InvalidParentException
-     * @throws InvalidDatatypeException
      */
     protected function build(iterable $data): void
     {
-        if (!\is_array($data) && !($data instanceof \Traversable)) {
-            throw new InvalidDatatypeException('Data must be an iterable (array or implement Traversable)');
-        }
-
         $this->nodes = [];
         $children = [];
 

@@ -206,6 +206,7 @@ Version History
 4 (2024-xx-xx)
 ---------------
 * Breaking change: minimum PHP version is 8.2
+* Breaking change (at least theoretically): class `InvalidDatatypeException` was removed, which is no longer needed due to a typehint
 
 3.2 (2021-12-30)
 -----

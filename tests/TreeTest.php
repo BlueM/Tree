@@ -2,7 +2,6 @@
 
 namespace BlueM;
 
-use BlueM\Tree\Exception\InvalidDatatypeException;
 use BlueM\Tree\Exception\InvalidParentException;
 use BlueM\Tree\Node;
 use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
@@ -127,15 +126,6 @@ class TreeTest extends TestCase
             $tree->rebuildWithData($data);
             static::assertSame($originalData, json_encode($tree));
         }
-    }
-
-    #[Test]
-    public function anExceptionIsThrownWhenTryingToCreateATreeFromUnusableData(): void
-    {
-        $this->expectException(InvalidDatatypeException::class);
-        $this->expectExceptionMessage('Data must be an iterable');
-
-        new Tree('a');
     }
 
     #[Test]
