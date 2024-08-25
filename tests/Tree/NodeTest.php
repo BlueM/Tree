@@ -368,7 +368,7 @@ class NodeTest extends TestCase
     #[TestDox('Properties / Getter: An exception is thrown when calling a getter for a non-existent property')]
     public function getNodeInexistentPropertyViaGetter(): void
     {
-        $this->expectException(\BadFunctionCallException::class);
+        $this->expectException(\BadMethodCallException::class);
         $this->expectExceptionMessage('Invalid method getNonExistentProperty() called');
 
         $node = new Node(1, null, ['foo' => 'foo']);

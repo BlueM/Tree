@@ -155,7 +155,7 @@ class Node implements \Stringable, \JsonSerializable
     }
 
     /**
-     * @throws \BadFunctionCallException
+     * @throws \BadMethodCallException
      */
     public function __call(string $name, mixed $args): mixed
     {
@@ -170,6 +170,8 @@ class Node implements \Stringable, \JsonSerializable
                 return $lcProperties[$property];
             }
         }
+
+        throw new \BadMethodCallException("Invalid method $name() called");
     }
 
     /**
