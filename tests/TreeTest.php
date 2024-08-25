@@ -84,7 +84,7 @@ class TreeTest extends TestCase
     #[Test]
     public function theRootNodesCanBeRetrieved(): void
     {
-        $data = self::dataWithNumericKeys();
+        $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
 
         $nodes = $tree->getRootNodes();
@@ -101,7 +101,7 @@ class TreeTest extends TestCase
     #[Test]
     public function theRootNodesCanBeRetrievedWhenTheIdsAreStrings(): void
     {
-        $data = self::dataWithStringKeys();
+        $data = self::dummyDataWithStringKeys();
         $tree = new Tree($data, ['rootId' => '']);
 
         $nodes = $tree->getRootNodes();
@@ -117,7 +117,7 @@ class TreeTest extends TestCase
     #[Test]
     public function theTreeCanBeRebuiltFromNewData(): void
     {
-        $data = self::dataWithNumericKeys();
+        $data = self::dummyDataWithNumericKeys();
 
         $tree = new Tree($data);
         $originalData = json_encode($tree);
@@ -206,7 +206,7 @@ class TreeTest extends TestCase
     #[Test]
     public function theTreeCanBeSerializedToAJsonRepresentationFromWhichATreeWithTheSameDataCanBeBuiltWhenDecoded(): void
     {
-        $data = self::dataWithNumericKeys();
+        $data = self::dummyDataWithNumericKeys();
 
         $tree1 = new Tree($data);
         $tree1Json = json_encode($tree1);
@@ -229,7 +229,7 @@ class TreeTest extends TestCase
     #[Test]
     public function allNodesCanBeRetrieved(): void
     {
-        $data = self::dataWithNumericKeys();
+        $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
 
         $nodes = $tree->getNodes();
@@ -246,7 +246,7 @@ class TreeTest extends TestCase
     #[Test]
     public function allNodesCanBeRetrievedWhenNodeIdsAreStrings(): void
     {
-        $data = self::dataWithStringKeys();
+        $data = self::dummyDataWithStringKeys();
         $tree = new Tree($data, ['rootId' => '']);
 
         $nodes = $tree->getNodes();
@@ -265,7 +265,7 @@ class TreeTest extends TestCase
     #[Test]
     public function aNodeCanBeAccessedByItsIntegerId(): void
     {
-        $data = self::dataWithNumericKeys();
+        $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
         $node = $tree->getNodeById(20);
         static::assertEquals(20, $node->getId());
@@ -274,7 +274,7 @@ class TreeTest extends TestCase
     #[Test]
     public function aNodeCanBeAccessedByItsStringId(): void
     {
-        $data = self::dataWithStringKeys();
+        $data = self::dummyDataWithStringKeys();
         $tree = new Tree($data, ['rootId' => '']);
         $node = $tree->getNodeById('library');
         static::assertEquals('library', $node->getId());
@@ -286,7 +286,7 @@ class TreeTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid node primary key 999');
 
-        $data = self::dataWithNumericKeys();
+        $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
         $tree->getNodeById(999);
     }
@@ -294,7 +294,7 @@ class TreeTest extends TestCase
     #[Test]
     public function aNodeCanBeAccessedByItsValuePath(): void
     {
-        $data = self::dataWithNumericKeys();
+        $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
         static::assertEquals(
             $tree->getNodeById(11),
@@ -305,7 +305,7 @@ class TreeTest extends TestCase
     #[Test]
     public function tryingToGetANodeByItsValuePathReturnsNullIfNoNodeMatches(): void
     {
-        $data = self::dataWithNumericKeys();
+        $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
         static::assertEquals(
             null,
@@ -316,7 +316,7 @@ class TreeTest extends TestCase
     #[Test]
     public function inScalarContextTheTreeIsReturnedAsAString(): void
     {
-        $data = self::dataWithNumericKeys();
+        $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
         $actual = (string)$tree;
         $expected = <<<'EXPECTED'
@@ -407,7 +407,7 @@ EXPECTED;
     #[Test]
     public function clientsCanSupplyDifferingNamesForIdAndParentIdInInputData(): void
     {
-        $data = self::dataWithStringKeys(true, 'id_node', 'id_parent');
+        $data = self::dummyDataWithStringKeys('id_node', 'id_parent');
 
         $tree = new Tree($data, ['rootId' => '', 'id' => 'id_node', 'parent' => 'id_parent']);
 
@@ -421,79 +421,41 @@ EXPECTED;
         }
     }
 
-    private static function dataWithNumericKeys(): array
     /**
      * @return array<array<string, string>>
      */
+    private static function dummyDataWithNumericKeys(): array
     {
-        $data = [
-            ['id' => 1, 'name' => 'Europe', 'parent' => 0],
+        return [
+            ['id' => 21, 'name' => 'Altona', 'parent' => 11],
+            ['id' => 5, 'name' => 'Africa', 'parent' => 0],
             ['id' => 3, 'name' => 'America', 'parent' => 0],
             ['id' => 4, 'name' => 'Asia', 'parent' => 0],
-            ['id' => 5, 'name' => 'Africa', 'parent' => 0],
             ['id' => 6, 'name' => 'Australia', 'parent' => 0],
-            // --
-            ['id' => 7, 'name' => 'Germany', 'parent' => 1],
-            ['id' => 10, 'name' => 'Portugal', 'parent' => 1],
-            // --
-            ['id' => 11, 'name' => 'Hamburg', 'parent' => 7],
-            ['id' => 12, 'name' => 'Munich', 'parent' => 7],
             ['id' => 15, 'name' => 'Berlin', 'parent' => 7],
-            // --
-            ['id' => 20, 'name' => 'Lisbon', 'parent' => 10],
-            // --
             ['id' => 27, 'name' => 'Eimsbüttel', 'parent' => 11],
-            ['id' => 21, 'name' => 'Altona', 'parent' => 11],
+            ['id' => 1, 'name' => 'Europe', 'parent' => 0],
+            ['id' => 7, 'name' => 'Germany', 'parent' => 1],
+            ['id' => 11, 'name' => 'Hamburg', 'parent' => 7],
+            ['id' => 20, 'name' => 'Lisbon', 'parent' => 10],
+            ['id' => 12, 'name' => 'Munich', 'parent' => 7],
+            ['id' => 10, 'name' => 'Portugal', 'parent' => 1],
         ];
-
-        usort(
-            $data,
-            function ($a, $b) {
-                if ($a['name'] < $b['name']) {
-                    return -1;
-                }
-                if ($a['name'] > $b['name']) {
-                    return 1;
-                }
-
-                return 0;
-            }
-        );
-
-        return $data;
     }
 
-    private static function dataWithStringKeys(bool $sorted = true, string $idName = 'id', string $parentName = 'parent'): array
     /**
      * @return array<array<string, string>>
      */
+    private static function dummyDataWithStringKeys(string $nodeIdPropertyName = 'id', string $parentIdPropertyName = 'parent'): array
     {
-        $data = [
-            [$idName => 'vehicle', $parentName => ''],
-            [$idName => 'bicycle', $parentName => 'vehicle'],
-            [$idName => 'car', $parentName => 'vehicle'],
-            [$idName => 'building', $parentName => ''],
-            [$idName => 'school', $parentName => 'building'],
-            [$idName => 'library', $parentName => 'building'],
-            [$idName => 'primary-school', $parentName => 'school'],
+        return [
+            [$nodeIdPropertyName => 'bicycle', $parentIdPropertyName => 'vehicle'],
+            [$nodeIdPropertyName => 'building', $parentIdPropertyName => ''],
+            [$nodeIdPropertyName => 'car', $parentIdPropertyName => 'vehicle'],
+            [$nodeIdPropertyName => 'library', $parentIdPropertyName => 'building'],
+            [$nodeIdPropertyName => 'primary-school', $parentIdPropertyName => 'school'],
+            [$nodeIdPropertyName => 'school', $parentIdPropertyName => 'building'],
+            [$nodeIdPropertyName => 'vehicle', $parentIdPropertyName => ''],
         ];
-
-        if ($sorted) {
-            usort(
-                $data,
-                function ($a, $b) use ($idName) {
-                    if ($a[$idName] < $b[$idName]) {
-                        return -1;
-                    }
-                    if ($a[$idName] > $b[$idName]) {
-                        return 1;
-                    }
-
-                    return 0;
-                }
-            );
-        }
-
-        return $data;
     }
 }
