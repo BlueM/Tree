@@ -266,10 +266,7 @@ class Node implements \Stringable, \JsonSerializable
         foreach ($this->children as $childnode) {
             $descendants[] = $childnode;
             if ($childnode->hasChildren()) {
-                // Note: array_merge() in loop looks bad, but measuring showed it's OK
-                // here, unless maybe really large amounts of data
-                /** @noinspection SlowArrayOperationsInLoopInspection */
-                $descendants = array_merge($descendants, $childnode->getDescendants());
+                $descendants = [...$descendants, ...$childnode->getDescendants()];
             }
         }
 
@@ -311,7 +308,11 @@ class Node implements \Stringable, \JsonSerializable
             return [];
         }
 
-        return array_merge($includeSelf ? [$this] : [], $this->parent->getAncestorsGeneric(true));
+        if ($includeSelf) {
+            return [$this, ...$this->parent->getAncestorsGeneric(true)];
+        }
+
+        return $this->parent->getAncestorsGeneric(true);
     }
 
     /**

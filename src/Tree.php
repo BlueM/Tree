@@ -88,7 +88,7 @@ class Tree implements \JsonSerializable, \Stringable
             }
             $this->buildWarningCallback = $options['buildwarningcallback'];
         } else {
-            $this->buildWarningCallback = [$this, 'buildWarningHandler'];
+            $this->buildWarningCallback = $this->buildWarningHandler(...);
         }
 
         $this->build($data);
