@@ -331,6 +331,23 @@ EXPECTED;
     }
 
     #[Test]
+    public function anExceptionIsThrownIfTheBuildWarningCallbackOptionIsNotACallable(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Option “buildWarningCallback” must be a callable');
+
+        new Tree(
+            [
+                ['id' => 1, 'parent' => 0],
+                ['id' => 2, 'parent' => ''],
+            ],
+            [
+                'buildwarningcallback' => 'Must be a callable',
+            ]
+        );
+    }
+
+    #[Test]
     public function anExceptionIsThrownWhenANodeWouldBeItsOwnParent(): void
     {
         $this->expectException(InvalidParentException::class);
