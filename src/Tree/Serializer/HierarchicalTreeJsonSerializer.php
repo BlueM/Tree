@@ -12,10 +12,7 @@ use BlueM\Tree;
  */
 class HierarchicalTreeJsonSerializer implements TreeJsonSerializerInterface
 {
-    /**
-     * @var string
-     */
-    private $childNodesArrayKey;
+    private string $childNodesArrayKey;
 
     public function __construct(string $childNodesArrayKey = 'children')
     {
@@ -23,8 +20,8 @@ class HierarchicalTreeJsonSerializer implements TreeJsonSerializerInterface
     }
 
     /**
-     * @return array Multi-dimensional array of node data arrays, where a node's children are
-     *               included in array key "children" of a node
+     * @return array<array<string, mixed>> Multi-dimensional array of node data arrays, where a node's children
+     *                                     are included in array key "children" of a node
      */
     public function serialize(Tree $tree): array
     {
@@ -36,6 +33,9 @@ class HierarchicalTreeJsonSerializer implements TreeJsonSerializerInterface
         return $data;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function serializeNode(Tree\Node $node): array
     {
         $nodeData = $node->toArray();

@@ -13,6 +13,9 @@ use BlueM\Tree;
  */
 class FlatTreeJsonSerializer implements TreeJsonSerializerInterface
 {
+    /**
+     * @return array<Tree\Node>
+     */
     public function serialize(Tree $tree): array
     {
         return $tree->getNodes();

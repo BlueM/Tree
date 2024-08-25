@@ -18,55 +18,41 @@ class Tree implements \JsonSerializable
 {
     /**
      * API version (will always be in sync with first digit of release version number).
-     *
-     * @var int
      */
     public const API = 3;
 
-    /**
-     * @var int|float|string|null
-     */
-    protected $rootId = 0;
+    protected int|float|string|null $rootId = 0;
+
+    protected string $idKey = 'id';
+
+    protected string $parentKey = 'parent';
 
     /**
-     * @var string
+     * @var array<int|string|float, Node>
      */
-    protected $idKey = 'id';
+    protected array $nodes;
+
+    protected ?TreeJsonSerializerInterface $jsonSerializer = null;
 
     /**
-     * @var string
-     */
-    protected $parentKey = 'parent';
-
-    /**
-     * @var Node[]
-     */
-    protected $nodes;
-
-    /**
-     * @var TreeJsonSerializerInterface
-     */
-    protected $jsonSerializer;
-
-    /**
-     * @var callable
+     * @var ?callable
      */
     protected $buildWarningCallback;
 
     /**
-     * @param array|\Traversable $data    The data for the tree (iterable)
-     * @param array $options 0 or more of the following keys, all of which are optional: "rootId" (ID of
-     *                       the root node, default: 0), "id" (name of the ID field / array key, default:
-     *                       "id"), "parent" (name of the parent ID field / array key, default: "parent"),
-     *                       "jsonSerializer" (instance of \BlueM\Tree\Serializer\TreeJsonSerializerInterface),
-     *                       "buildWarningCallback" (a callable which is called when detecting data
-     *                       inconsistencies such as an invalid parent)
+     * @param iterable<iterable<string, mixed>> $data The data for the tree (iterable)
+     * @param array<string, mixed> $options 0 or more of the following keys, all of which are optional: "rootId" (ID of
+     *                                      the root node, default: 0), "id" (name of the ID field / array key, default:
+     *                                      "id"), "parent" (name of the parent ID field / array key, default: "parent"),
+     *                                      "jsonSerializer" (instance of \BlueM\Tree\Serializer\TreeJsonSerializerInterface),
+     *                                      "buildWarningCallback" (a callable which is called when detecting data
+     *                                      inconsistencies such as an invalid parent)
      *
      * @throws InvalidParentException
      * @throws InvalidDatatypeException
      * @throws \InvalidArgumentException
      */
-    public function __construct($data = [], array $options = [])
+    public function __construct(iterable $data = [], array $options = [])
     {
         $options = array_change_key_case($options, CASE_LOWER);
 
@@ -111,10 +97,12 @@ class Tree implements \JsonSerializable
     }
 
     /**
+     * @param iterable<iterable<string, mixed>> $data
+     *
      * @throws InvalidParentException
      * @throws InvalidDatatypeException
      */
-    public function rebuildWithData(array $data): void
+    public function rebuildWithData(iterable $data): void
     {
         $this->build($data);
     }
@@ -122,10 +110,10 @@ class Tree implements \JsonSerializable
     /**
      * Returns a flat, sorted array of all node objects in the tree.
      *
-     * @return Node[] Nodes, sorted as if the tree was hierarchical,
-     *                i.e.: the first level 1 item, then the children of
-     *                the first level 1 item (and their children), then
-     *                the second level 1 item and so on.
+     * @return array<Node> Nodes, sorted as if the tree was hierarchical,
+     *                     i.e.: the first level 1 item, then the children of
+     *                     the first level 1 item (and their children), then
+     *                     the second level 1 item and so on.
      */
     public function getNodes(): array
     {
@@ -140,13 +128,9 @@ class Tree implements \JsonSerializable
     /**
      * Returns a single node from the tree, identified by its ID.
      *
-     * @param int|string $id Node ID
-     *
      * @throws \InvalidArgumentException
-     *
-     * @return Node
      */
-    public function getNodeById($id): Node
+    public function getNodeById(int|string|float $id): Node
     {
         if (empty($this->nodes[$id])) {
             throw new \InvalidArgumentException("Invalid node primary key $id");
@@ -158,7 +142,7 @@ class Tree implements \JsonSerializable
     /**
      * Returns an array of all nodes in the root level.
      *
-     * @return Node[] Nodes in the correct order
+     * @return array<Node> Nodes in the correct order
      */
     public function getRootNodes(): array
     {
@@ -169,10 +153,11 @@ class Tree implements \JsonSerializable
      * Returns the first node for which a specific property's values of all ancestors
      * and the node are equal to the values in the given argument.
      *
-     * Example: If nodes have property "name", and on the root level there is a node with
-     * name "A" which has a child with name "B" which has a child which has node "C", you
-     * would get the latter one by invoking getNodeByValuePath('name', ['A', 'B', 'C']).
-     * Comparison is case-sensitive and type-safe.
+     * Example: If nodes have property "name", and on the root level there is a node with name "A" which has a
+     * child with name "B" which has a child which has node "C", you would get the latter one by invoking
+     * getNodeByValuePath('name', ['A', 'B', 'C']). Comparison is case-sensitive and type-safe.
+     *
+     * @param array<mixed> $search
      */
     public function getNodeByValuePath(string $name, array $search): ?Node
     {
@@ -201,12 +186,12 @@ class Tree implements \JsonSerializable
     /**
      * Core method for creating the tree.
      *
-     * @param array|\Traversable $data The data from which to generate the tree
+     * @param iterable<iterable<string, mixed>> $data
      *
      * @throws InvalidParentException
      * @throws InvalidDatatypeException
      */
-    protected function build($data): void
+    protected function build(iterable $data): void
     {
         if (!\is_array($data) && !($data instanceof \Traversable)) {
             throw new InvalidDatatypeException('Data must be an iterable (array or implement Traversable)');
@@ -267,12 +252,7 @@ class Tree implements \JsonSerializable
         throw new \InvalidArgumentException('Unrecognized build warning reason');
     }
 
-    /**
-     * Returns a textual representation of the tree.
-     *
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         $str = [];
         foreach ($this->getNodes() as $node) {
@@ -290,16 +270,12 @@ class Tree implements \JsonSerializable
      *
      * By passing null, the serializer can be reset to the default one.
      */
-    public function setJsonSerializer(TreeJsonSerializerInterface $serializer = null): void
+    public function setJsonSerializer(?TreeJsonSerializerInterface $serializer = null): void
     {
         $this->jsonSerializer = $serializer;
     }
 
-    /**
-     * @return mixed
-     */
-    #[\ReturnTypeWillChange]
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         if (!$this->jsonSerializer) {
             $this->jsonSerializer = new FlatTreeJsonSerializer();
@@ -313,10 +289,9 @@ class Tree implements \JsonSerializable
      *
      * Can be overridden by subclasses to use a Node subclass for nodes.
      *
-     * @param string|int $id
-     * @param string|int $parent
+     * @param iterable<iterable<string, mixed>> $properties
      */
-    protected function createNode($id, $parent, array $properties): Node
+    protected function createNode(mixed $id, mixed $parent, iterable $properties): Node
     {
         return new Node($id, $parent, $properties);
     }

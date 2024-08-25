@@ -432,6 +432,9 @@ EXPECTED;
     }
 
     private static function dataWithNumericKeys(): array
+    /**
+     * @return array<array<string, string>>
+     */
     {
         $data = [
             ['id' => 1, 'name' => 'Europe', 'parent' => 0],
@@ -471,6 +474,9 @@ EXPECTED;
     }
 
     private static function dataWithStringKeys(bool $sorted = true, string $idName = 'id', string $parentName = 'parent'): array
+    /**
+     * @return array<array<string, string>>
+     */
     {
         $data = [
             [$idName => 'vehicle', $parentName => ''],

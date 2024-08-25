@@ -60,7 +60,10 @@ class HierarchicalTreeJsonSerializerTest extends TestCase
         );
     }
 
-    private function createNodeStub($id, array $childNodes = []): Node
+    /**
+     * @param array<Node> $childNodes
+     */
+    private function createNodeStub(string $id, array $childNodes = []): Node
     {
         $nodeStub = $this->createMock(Node::class);
         $nodeStub->expects($this->once())

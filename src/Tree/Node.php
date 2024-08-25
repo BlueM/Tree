@@ -13,29 +13,26 @@ class Node implements \JsonSerializable
     /**
      * Associative array, at least having keys "id" and "parent". Other keys may be added as needed.
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    protected $properties = [];
+    protected array $properties = [];
 
     /**
      * Reference to the parent node, in case of the root object: null.
-     *
-     * @var Node
      */
-    protected $parent;
+    protected ?Node $parent = null;
 
     /**
      * Indexed array of child nodes in correct order.
      *
-     * @var array
+     * @var array<self>
      */
-    protected $children = [];
+    protected array $children = [];
 
     /**
-     * @param string|int $id
-     * @param string|int $parent
+     * @param iterable<string, mixed> $properties
      */
-    public function __construct($id, $parent, array $properties = [])
+    public function __construct(mixed $id, mixed $parent, iterable $properties = [])
     {
         $this->properties = array_change_key_case($properties, CASE_LOWER);
         unset($this->properties['id'], $this->properties['parent']);
@@ -83,7 +80,7 @@ class Node implements \JsonSerializable
     /**
      * Returns siblings of the node.
      *
-     * @return Node[]
+     * @return array<self>
      */
     public function getSiblings(): array
     {
@@ -93,13 +90,16 @@ class Node implements \JsonSerializable
     /**
      * Returns siblings of the node and the node itself.
      *
-     * @return Node[]
+     * @return array<self>
      */
     public function getSiblingsAndSelf(): array
     {
         return $this->getSiblingsGeneric(true);
     }
 
+    /**
+     * @return array<self>
+     */
     protected function getSiblingsGeneric(bool $includeSelf): array
     {
         $siblings = [];
@@ -115,7 +115,7 @@ class Node implements \JsonSerializable
     /**
      * Returns all direct children of this node.
      *
-     * @return Node[]
+     * @return array<self>
      */
     public function getChildren(): array
     {
@@ -130,12 +130,7 @@ class Node implements \JsonSerializable
         return $this->parent ?? null;
     }
 
-    /**
-     * Returns a node's ID.
-     *
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): mixed
     {
         return $this->properties['id'];
     }
@@ -144,28 +139,23 @@ class Node implements \JsonSerializable
      * Returns a single node property by its name.
      *
      * @throws \InvalidArgumentException
-     *
-     * @return mixed
      */
-    public function get(string $name)
+    public function get(string $property): mixed
     {
         $lowerName = strtolower($name);
         if (isset($this->properties[$lowerName])) {
             return $this->properties[$lowerName];
         }
+
         throw new \InvalidArgumentException(
-            "Undefined property: $name (Node ID: ".$this->properties['id'].')'
+            "Undefined property: $property (Node ID: ".$this->properties['id'].')'
         );
     }
 
     /**
-     * @param mixed  $args
-     *
      * @throws \BadFunctionCallException
-     *
-     * @return mixed
      */
-    public function __call(string $name, $args)
+    public function __call(string $name, mixed $args): mixed
     {
         $lowerName = strtolower($name);
         if (0 === strpos($lowerName, 'get')) {
@@ -179,10 +169,8 @@ class Node implements \JsonSerializable
 
     /**
      * @throws \RuntimeException
-     *
-     * @return mixed
      */
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         if ('parent' === $name || 'children' === $name) {
             return $this->$name;
@@ -241,7 +229,7 @@ class Node implements \JsonSerializable
      * and B1/B2 are children of B in correct order. If the node itself is to be
      * included, it will be the very first item in the array.
      *
-     * @return Node[]
+     * @return array<self>
      */
     public function getDescendants(): array
     {
@@ -254,13 +242,16 @@ class Node implements \JsonSerializable
      *
      * For order of nodes, see comments on getDescendants()
      *
-     * @return Node[]
+     * @return array<self>
      */
     public function getDescendantsAndSelf(): array
     {
         return $this->getDescendantsGeneric(true);
     }
 
+    /**
+     * @return array<self>
+     */
     protected function getDescendantsGeneric(bool $includeSelf): array
     {
         $descendants = $includeSelf ? [$this] : [];
@@ -283,8 +274,7 @@ class Node implements \JsonSerializable
      * The array returned from this method will include the root node. If you
      * do not want the root node, you should do an array_pop() on the array.
      *
-     * @return Node[] Indexed array of nodes, sorted from the nearest
-     *                one (or self) to the most remote one
+     * @return array<self> Sorted from the nearest one (or self) to the most remote one
      */
     public function getAncestors(): array
     {
@@ -292,19 +282,21 @@ class Node implements \JsonSerializable
     }
 
     /**
-     * Returns an array containing this node and all nodes above (parent, grandparent,
-     * ...) it.
+     * Returns an array containing this node and all nodes above it (parent, grandparent, ...).
      *
      * Note: The array returned from this method will include the root node. If you
      * do not want the root node, you should do an array_pop() on the array.
      *
-     * @return Node[] Indexed, sorted array of nodes: self, parent, grandparent, ...
+     * @return array<self> Sorted array of nodes: self, parent, grandparent, ...
      */
     public function getAncestorsAndSelf(): array
     {
         return $this->getAncestorsGeneric(true);
     }
 
+    /**
+     * @return array<self>
+     */
     protected function getAncestorsGeneric(bool $includeSelf): array
     {
         if (null === $this->parent) {
@@ -314,26 +306,26 @@ class Node implements \JsonSerializable
         return array_merge($includeSelf ? [$this] : [], $this->parent->getAncestorsGeneric(true));
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(): array
     {
         return $this->properties;
     }
 
     /**
-     * Returns a textual representation of this node.
-     *
-     * @return string The node's ID
+     * Returns a textual representation of this node (string representation of node ID).
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->properties['id'];
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
-    #[\ReturnTypeWillChange]
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
