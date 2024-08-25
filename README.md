@@ -206,7 +206,11 @@ Version History
 4 (2024-xx-xx)
 ---------------
 * Breaking change: minimum PHP version is 8.2
+* Breaking change: Node properties are no longer normalized to lowercase
+* Breaking change: The argument to `Node::get($propertyName)` is now treated case-sensitively
+* Breaking change: `$node->propertyName` is now case-sensitive
 * Breaking change (at least theoretically): class `InvalidDatatypeException` was removed, which is no longer needed due to a typehint
+* It’s now possible to call get('parent') or get('children') on a node
 
 3.2 (2021-12-30)
 -----

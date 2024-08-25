@@ -202,17 +202,19 @@ class NodeTest extends TestCase
     }
 
     #[Test]
-    public function theNodeIdCanBeRetrieved(): void
+    #[TestDox('Properties / Getter: A node’s properties can be fetched case-insensitively, but preferring exact case, if properties differ in case')]
+    public function getNodePropertyViaGetter(): void
     {
-        $node = new Node(16, null);
-        static::assertEquals(16, $node->getId());
-    }
+        $node = new Node(16, null, ['foo' => 'foo', 'Foo' => 'Foo', 'BAR' => 'BAR']);
 
-    #[Test]
-    public function aNodePropertyCanBeFetchedUsingMethodGet(): void
-    {
-        $node = new Node(16, null, ['key' => 'value']);
-        static::assertEquals('value', $node->get('key'));
+        static::assertEquals(16, $node->getId());
+        static::assertEquals(16, $node->getID());
+        /* @phpstan-ignore-next-line */
+        static::assertSame('foo', $node->getfoo());
+        /* @phpstan-ignore-next-line */
+        static::assertSame('Foo', $node->getFoo());
+        /* @phpstan-ignore-next-line */
+        static::assertSame('BAR', $node->getBar());
     }
 
     #[Test]
@@ -226,10 +228,13 @@ class NodeTest extends TestCase
     }
 
     #[Test]
-    public function aNodePropertyCanBeFetchedUsingMagicMethod(): void
+    #[TestDox('Properties / get(): A node’s custom properties can be fetched case-sensitively using get()')]
+    public function getNodePropertyViaGet(): void
     {
-        $node = new Node(16, null, ['key' => 'value']);
-        static::assertEquals('value', $node->getKey());
+        $node = new Node(1, null, ['foo' => 'foo', 'Foo' => 'Foo']);
+
+        static::assertSame('foo', $node->get('foo'));
+        static::assertSame('Foo', $node->get('Foo'));
     }
 
     #[Test]
@@ -243,16 +248,15 @@ class NodeTest extends TestCase
     }
 
     #[Test]
-    public function theExistenceOfAPropertyCanBeCheckedUsingIssetFunction(): void
+    #[TestDox('Properties / Magic property: A property can be fetched case-sensitively as public property')]
+    public function getNodePropertyViaPublicProperty(): void
     {
-        $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
+        $node = new Node(1, null, ['foo' => 'foo1', 'Foo' => 'foo2']);
 
-        static::assertTrue(isset($node->foo));
-        static::assertTrue(isset($node->FOO));
-        static::assertTrue(isset($node->bar));
-        static::assertTrue(isset($node->BAR));
-        static::assertTrue(isset($node->children));
-        static::assertTrue(isset($node->parent));
+        /* @phpstan-ignore-next-line */
+        static::assertSame('foo1', $node->foo);
+        /* @phpstan-ignore-next-line */
+        static::assertSame('foo2', $node->Foo);
     }
 
     #[Test]
@@ -269,13 +273,17 @@ class NodeTest extends TestCase
     }
 
     #[Test]
-    public function thePropertiesCanBeAccessUsingMagicProperties(): void
+    #[TestDox('Properties / isset(): The existence of a property can be fetched case-sensitively using isset()')]
+    public function nodePropertyIsset(): void
     {
-        $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => 'Bar']);
+        $node = new Node(1, null, ['foo' => 'Foo', 'BAR' => null]);
 
-        static::assertSame([], $node->children);
-        static::assertSame('Foo', $node->foo);
-        static::assertNull($node->parent);
+        static::assertTrue(isset($node->foo));
+        static::assertFalse(isset($node->FOO));
+        static::assertTrue(isset($node->BAR));
+        static::assertFalse(isset($node->bar));
+        static::assertTrue(isset($node->children));
+        static::assertTrue(isset($node->parent));
     }
 
     #[Test]
