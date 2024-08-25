@@ -250,7 +250,6 @@ class Tree implements \JsonSerializable
         foreach ($this->getNodes() as $node) {
             $indent1st = str_repeat('  ', $node->getLevel() - 1).'- ';
             $indent = str_repeat('  ', ($node->getLevel() - 1) + 2);
-            $node = (string) $node;
             $str[] = $indent1st.str_replace("\n", "$indent\n  ", $node);
         }
 
