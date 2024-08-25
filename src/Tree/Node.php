@@ -32,11 +32,10 @@ class Node implements \Stringable, \JsonSerializable
     /**
      * @param iterable<string, mixed> $properties
      */
-    public function __construct(mixed $id, mixed $parent, iterable $properties = [])
+    public function __construct(mixed $id, iterable $properties = [])
     {
         $this->properties = (array) $properties;
         $this->properties['id'] = $id;
-        $this->properties['parent'] = $parent;
     }
 
     /**
@@ -46,7 +45,6 @@ class Node implements \Stringable, \JsonSerializable
     {
         $this->children[] = $child;
         $child->parent = $this;
-        $child->properties['parent'] = $this->getId();
     }
 
     /**
@@ -320,7 +318,7 @@ class Node implements \Stringable, \JsonSerializable
      */
     public function toArray(): array
     {
-        return $this->properties;
+        return [...$this->properties, ...['parent' => $this->parent?->getId()]];
     }
 
     /**

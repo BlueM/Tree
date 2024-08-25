@@ -193,18 +193,14 @@ class Tree implements \JsonSerializable, \Stringable
         $children = [];
 
         // Create the root node
-        $this->nodes[$this->rootId] = $this->createNode($this->rootId, null, []);
+        $this->nodes[$this->rootId] = $this->createNode($this->rootId, []);
 
         foreach ($data as $row) {
             if ($row instanceof \Iterator) {
                 $row = iterator_to_array($row);
             }
 
-            $this->nodes[$row[$this->idKey]] = $this->createNode(
-                $row[$this->idKey],
-                $row[$this->parentKey],
-                $row
-            );
+            $this->nodes[$row[$this->idKey]] = $this->createNode($row[$this->idKey], $row);
 
             if (empty($children[$row[$this->parentKey]])) {
                 $children[$row[$this->parentKey]] = [$row[$this->idKey]];
@@ -282,8 +278,8 @@ class Tree implements \JsonSerializable, \Stringable
      *
      * @param iterable<iterable<string, mixed>> $properties
      */
-    protected function createNode(mixed $id, mixed $parent, iterable $properties): Node
+    protected function createNode(mixed $id, iterable $properties): Node
     {
-        return new Node($id, $parent, $properties);
+        return new Node($id, $properties);
     }
 }

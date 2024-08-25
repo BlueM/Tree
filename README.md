@@ -209,6 +209,7 @@ Version History
 * Breaking change: Node properties are no longer normalized to lowercase
 * Breaking change: The argument to `Node::get($propertyName)` is now treated case-sensitively
 * Breaking change: `$node->propertyName` is now case-sensitive
+* Breaking change: The signature for `Node::__construct()`` has changed. The parent ID is no longer passed as 2nd argument – this was redundant, as the parent is available in `$node->parent`.
 * Breaking change: Calling the getter for a non-existent property now throws a `BadMethodCallException` (previously `BadFunctionCallException`)
 * Breaking change (at least theoretically): class `InvalidDatatypeException` was removed, which is no longer needed due to a typehint
 * It’s now possible to call get('parent') or get('children') on a node
