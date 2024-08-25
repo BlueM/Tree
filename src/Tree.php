@@ -52,7 +52,7 @@ class Tree implements \JsonSerializable
      */
     public function __construct(iterable $data = [], array $options = [])
     {
-        $options = array_change_key_case($options, CASE_LOWER);
+        $options = array_change_key_case($options);
 
         if (array_key_exists('rootid', $options)) {
             if (!\is_scalar($options['rootid']) && null !== $options['rootid']) {
