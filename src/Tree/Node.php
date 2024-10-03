@@ -143,7 +143,7 @@ class Node implements \Stringable, \JsonSerializable
             return $this->$property;
         }
 
-        if (isset($this->properties[$property])) {
+        if (array_key_exists($property, $this->properties)) {
             return $this->properties[$property];
         }
 

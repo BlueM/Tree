@@ -244,6 +244,7 @@ Version History
 * BC break: Removed argument to `getDescendants()`. *Solution:* If you passed `true` as argument before, change this to `getDescendantsAndSelf()`.
 * BC break: Removed argument to `getSiblings()`. *Solution:* If you passed `true` as argument before, change this to `getSiblingsAndSelf()`.
 * BC break: Moved `BlueM\Tree\InvalidParentException` to `BlueM\Tree\Exception\InvalidParentException`. *Solution:* Update namespace imports.
+* BC break: when a property contains `null`, and `$node->get('the-property')` is invoked, `null` is simply returned instead of throwing an exception, which was the previous behavior.
 * New: Added method `Tree::rebuildWithData()` to rebuild the tree with new data.
 * New: `Tree` and `Tree\Node` implement `JsonSerializable` and provide default implementations, which means that you can easily serialize the whole tree oder nodes to JSON.
 * New: The tree data no longer has to be an `array`, but instead it must be an `iterable`, which means that you can either pass in an `array` or an object implementing the `Traversable` interface. Also, the data for a node no longer has to be an array, but can also be an object implementing the `Iterator` interface. These changes should make working with the library more flexible.

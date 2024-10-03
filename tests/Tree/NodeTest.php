@@ -4,6 +4,7 @@ namespace BlueM\Tree;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\Attributes\Ticket;
 use PHPUnit\Framework\TestCase;
 
 class NodeTest extends TestCase
@@ -442,6 +443,17 @@ class NodeTest extends TestCase
             ['foo' => 'bar', 'Number' => 123, 'number' => 456, 'id' => 'xyz', 'parent' => 789, 'myProperty' => 11.22],
             $node->toArray()
         );
+    }
+
+    #[Test]
+    #[Ticket('https://github.com/BlueM/Tree/issues/48')]
+    public function aNodePropertyMayContainNull(): void
+    {
+        $node = new Node(2, ['foo' => null]);
+        static::assertNull($node->get('foo'));
+        /* @noinspection PhpUndefinedMethodInspection */
+        static::assertNull($node->getFoo());
+        static::assertTrue($node->__isset('foo'));
     }
 
     #[Test]

@@ -5,3 +5,7 @@ parameters:
         - src/
         - tests/
 
+    ignoreErrors:
+        -
+          message: '/undefined method \S+::getFoo/'
+          path: tests/Tree/NodeTest.php

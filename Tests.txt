@@ -34,6 +34,7 @@ Node (BlueM\Tree\Node)
  [x] Properties / Magic property: An exception is thrown when trying to fetch a non-existent public property
  [x] Properties / isset(): The existence of a property can be fetched case-sensitively using isset()
  [x] Properties can be fetched as an array
+ [x] A node property may contain null
  [x] When serialized to JSON, an object containing all properties is returned
  [x] When typecasted to string, the string representation of the node’s ID is returned
 
