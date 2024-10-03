@@ -297,4 +297,4 @@ Version History
 
 Author & License
 =================
-This code was written by Carsten Blüm (www.bluem.net) and licensed under the BSD 3-Clause license.
+This code was written by Carsten Blüm (www.bluem.net) and contributors and licensed under the BSD 3-Clause license.
