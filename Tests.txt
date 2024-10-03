@@ -59,7 +59,7 @@ Tree (BlueM\Tree)
  [x] Trying to get a node by its value path returns null if no node matches
  [x] In scalar context the tree is returned as a string
  [x] An exception is thrown when an invalid parent id is referenced
- [x] A custom build warning callback can be specified which is called with node and parent id as argument
+ [x] Build warning callback: a custom callback can be used, which is called with an exception and the tree instance as arguments
  [x] An exception is thrown if the build warning callback option is not a callable
  [x] An exception is thrown when a node would be its own parent
  [x] An exception is thrown when a node would be its own parent when own id and parent id have different types

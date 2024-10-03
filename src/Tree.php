@@ -2,9 +2,11 @@
 
 namespace BlueM;
 
-use BlueM\Tree\Serializer\FlatTreeJsonSerializer;
 use BlueM\Tree\Exception\InvalidParentException;
+use BlueM\Tree\Exception\MissingNodeInvalidParentException;
+use BlueM\Tree\Exception\SelfReferenceInvalidParentException;
 use BlueM\Tree\Node;
+use BlueM\Tree\Serializer\FlatTreeJsonSerializer;
 use BlueM\Tree\Serializer\TreeJsonSerializerInterface;
 
 /**
@@ -212,32 +214,32 @@ class Tree implements \JsonSerializable, \Stringable
         foreach ($children as $pid => $childIds) {
             foreach ($childIds as $id) {
                 if (isset($this->nodes[$pid])) {
-                    if ($this->nodes[$pid] === $this->nodes[$id]) {
-                        call_user_func($this->buildWarningCallback, $this->nodes[$id], $pid);
+                    if ((string) $this->nodes[$pid] === (string) $this->nodes[$id]) {
+                        ($this->buildWarningCallback)(
+                            new SelfReferenceInvalidParentException("Node with ID {$this->nodes[$id]} references its own ID as parent ID"),
+                            $this,
+                            $this->nodes[$id],
+                            $pid,
+                        );
                     } else {
                         $this->nodes[$pid]->addChild($this->nodes[$id]);
                     }
                 } else {
-                    call_user_func($this->buildWarningCallback, $this->nodes[$id], $pid);
+                    $pidStr = ('' === (string) $pid) ? 'empty parent ID' : "ID $pid";
+                    ($this->buildWarningCallback)(
+                        new MissingNodeInvalidParentException("Node with ID {$this->nodes[$id]} points to non-existent parent with $pidStr"),
+                        $this,
+                        $this->nodes[$id],
+                        $pid,
+                    );
                 }
             }
         }
     }
 
-    /**
-     * @param mixed $parentId
-     */
-    protected function buildWarningHandler(Node $node, $parentId): void
+    protected function buildWarningHandler(InvalidParentException $exception): void
     {
-        if ((string) $parentId === (string) $node->getId()) {
-            throw new InvalidParentException('Node with ID '.$node->getId().' references its own ID as parent ID');
-        }
-
-        if (empty($this->nodes[$parentId])) {
-            throw new InvalidParentException('Node with ID '.$node->getId()." points to non-existent parent with ID $parentId");
-        }
-
-        throw new \InvalidArgumentException('Unrecognized build warning reason');
+        throw $exception;
     }
 
     public function __toString(): string

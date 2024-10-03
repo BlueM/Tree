@@ -4,9 +4,12 @@ namespace BlueM;
 
 use BlueM\Helper\IterableObjectFactory;
 use BlueM\Tree\Exception\InvalidParentException;
+use BlueM\Tree\Exception\MissingNodeInvalidParentException;
 use BlueM\Tree\Node;
 use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\Attributes\Ticket;
 use PHPUnit\Framework\TestCase;
 
 class TreeTest extends TestCase
@@ -308,16 +311,21 @@ EXPECTED;
     }
 
     #[Test]
+    #[TestDox('Build warning callback: a custom callback can be used, which is called with an exception and the tree instance as arguments')]
+    #[Ticket('https://github.com/BlueM/Tree/issues/26')]
     public function aCustomBuildWarningCallbackCanBeSpecifiedWhichIsCalledWithNodeAndParentIdAsArgument(): void
     {
         $invocationCount = 0;
-        $buildwarningcallback = function(Node $node, $parentId) use (&$invocationCount) {
-            $invocationCount ++;
+        $treeArg = null;
+        $buildwarningcallback = function (MissingNodeInvalidParentException $exception, Tree $tree, Node $node, mixed $parentId) use (&$invocationCount, &$treeArg) {
+            ++$invocationCount;
+            static::assertSame('Node with ID 2 points to non-existent parent with empty parent ID', $exception->getMessage());
+            $treeArg = $tree;
             static::assertSame(2, $node->getId());
             static::assertSame('', $parentId);
         };
 
-        new Tree(
+        $tree = new Tree(
             [
                 ['id' => 1, 'parent' => 0],
                 ['id' => 2, 'parent' => ''],
@@ -328,6 +336,7 @@ EXPECTED;
         );
 
         static::assertSame(1, $invocationCount);
+        static::assertSame($tree, $treeArg);
     }
 
     #[Test]

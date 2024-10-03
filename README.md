@@ -185,10 +185,13 @@ The library comes with two distinct serializers: `\BlueM\Tree\Serializer\FlatTre
 
 Handling inconsistent data
 ==========================
-If a problem is detected while building the tree (such as a parent reference to the node itself or in invalid parent ID), an `InvalidParentException` exception is thrown. Often this makes sens, but it might not always. For those cases, you can pass in a callable as value for key `buildWarningCallback` in the options argument which can be given as argument 2 to `Tree`’s constructor, and which will be called whenever a problem is seen. The signature of the callable should be like that of method `Tree::buildWarningHandler()`, which is the default implementation (and which throws the `InvalidParentException`). For instance, if you would like to just ignore nodes with invalid parent ID, you could pass in an empty callable.
+If a problem is detected while building the tree (such as a parent reference to the node itself or in invalid parent ID), an exception (subclass of `InvalidParentException`) is thrown. Often this makes sens, but it might not always. For those cases, you can pass in a callable as value for key `buildWarningCallback` in the options argument which can be given as argument 2 to `Tree`’s constructor, and which will be called whenever a problem is seen. The signature of the callable is like this:
 
-Please note that a node with invalid parent ID will *not* be added to the tree. If you need to fix the node (for example, use the root node as parent), you could subclass `Tree`, overwrite `buildWarningHandler()` and do that in the overwritten method.
-
+```php
+function yourCallback(MissingNodeInvalidParentException $exception, Tree $tree, Node $node, mixed $parentId) {
+   // Log this, throw your own exception, ignore this, ...
+}
+```
 
 Running Tests
 ==============
@@ -213,6 +216,7 @@ Version History
 * Breaking change: Calling the getter for a non-existent property now throws a `BadMethodCallException` (previously `BadFunctionCallException`)
 * Breaking change (at least theoretically): class `InvalidDatatypeException` was removed, which is no longer needed due to a typehint
 * It’s now possible to call get('parent') or get('children') on a node
+* Internal changes: added typehints; cleaned up and improved, and simplified unit tests (coverage is now 100%); added code quality tools (PHPStan, php-cs-fixer)
 
 3.2 (2021-12-30)
 -----
@@ -242,7 +246,8 @@ Version History
 * BC break: Moved `BlueM\Tree\InvalidParentException` to `BlueM\Tree\Exception\InvalidParentException`. *Solution:* Update namespace imports.
 * New: Added method `Tree::rebuildWithData()` to rebuild the tree with new data.
 * New: `Tree` and `Tree\Node` implement `JsonSerializable` and provide default implementations, which means that you can easily serialize the whole tree oder nodes to JSON.
-* New: The tree data no longer has to be an `array`, but instead it must be an `iterable`, which means that you can either pass in an `array` or an object implementing the `Traversable` interface. Also, the data for a node no longer has to be an array, but can also be an object implementing the `Iterator` interface. These changes should make working with the library more flexible. 
+* New: The tree data no longer has to be an `array`, but instead it must be an `iterable`, which means that you can either pass in an `array` or an object implementing the `Traversable` interface. Also, the data for a node no longer has to be an array, but can also be an object implementing the `Iterator` interface. These changes should make working with the library more flexible.
+* New: a custom build warning callback/callable is passed one of the `InvalidParentException` subclasses, plus the `Tree` instance, `Node` instance and parent ID.
 * Internal change: Changed autoloading from PSR-0 to PSR-4, renamed sources’ directory from `lib/` to `src/` and tests’ directory from `test/` to `tests/`.
 * Internal change: Code modernization, which now requires PHP >= 7.0
 
