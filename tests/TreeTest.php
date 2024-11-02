@@ -230,6 +230,7 @@ class TreeTest extends TestCase
         $tree = new Tree($data);
         $node = $tree->getNodeById(20);
         static::assertEquals(20, $node->getId());
+        static::assertEquals($node, $tree->getNodeById('20'));
     }
 
     #[Test]
