@@ -158,12 +158,12 @@ class Tree implements \JsonSerializable, \Stringable
      *
      * @param array<mixed> $search
      */
-    public function getNodeByValuePath(string $name, array $search): ?Node
+    public function getNodeByValuePath(string $propertyName, array $search): ?Node
     {
-        $findNested = function (array $nodes, array $tokens) use ($name, &$findNested) {
+        $findNested = function (array $nodes, array $tokens) use ($propertyName, &$findNested) {
             $token = array_shift($tokens);
             foreach ($nodes as $node) {
-                $nodeName = $node->get($name);
+                $nodeName = $node->get($propertyName);
                 if ($nodeName === $token) {
                     // Match
                     if (\count($tokens)) {
