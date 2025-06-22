@@ -212,7 +212,7 @@ Version History
 * Breaking change: Node properties are no longer normalized to lowercase
 * Breaking change: The argument to `Node::get($propertyName)` is now treated case-sensitively
 * Breaking change: `$node->propertyName` is now case-sensitive
-* Breaking change: The signature for `Node::__construct()`` has changed. The parent ID is no longer passed as 2nd argument – this was redundant, as the parent is available in `$node->parent`.
+* Breaking change: The signature for `Node::__construct()` has changed. The parent ID is no longer passed as 2nd argument – this was redundant, as the parent is available in `$node->parent`.
 * Breaking change (if you subclassed it): The signature for `Tree::createNode()` has changed, as the iterable containing the node properties is now optional.
 * Breaking change: Calling the getter for a non-existent property now throws a `BadMethodCallException` (previously `BadFunctionCallException`)
 * Breaking change: a node’s `$properties` array no longer contains the parent node’s ID as property. This was redundant, as the parent node’s ID can be fetched by calling `$node->getParent()?->getId()`
