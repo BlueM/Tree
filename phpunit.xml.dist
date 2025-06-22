@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- https://docs.phpunit.de/en/10.5/configuration.html -->
+<!-- https://docs.phpunit.de/en/11.4/ -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          beStrictAboutOutputDuringTests="true"
+         colors="true"
          displayDetailsOnTestsThatTriggerWarnings="true"
          failOnRisky="true"
-         colors="true"
 >
+  <php>
+    <ini name="display_errors" value="1" />
+    <ini name="error_reporting" value="-1" />
+  </php>
+
   <testsuites>
-    <testsuite name="Project Test Suite">
+    <testsuite name="unit">
       <directory>tests</directory>
     </testsuite>
   </testsuites>
