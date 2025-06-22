@@ -1,6 +1,6 @@
 # Based on https://github.com/actions/starter-workflows/blob/main/ci/php.yml
 
-name: PHP Composer
+name: Unit tests, static analysis, code style
 
 on:
   [push]
