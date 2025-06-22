@@ -8,13 +8,9 @@ On the other hand, one nice thing is that it’s pretty fast. This does not only
 
 Installation
 ==============
-The preferred way to install Tree is through [Composer](https://getcomposer.org). For this, simply execute `composer require bluem/tree` (depending on your Composer installation, it could be “composer.phar” instead of “composer”) and everything should work fine. *Or* you manually add `"bluem/tree": "^3.0"` to the dependencies in your `composer.json` file and subsequently install/update dependencies.
+The recommended way to install this library is through [Composer](https://getcomposer.org): `composer require bluem/tree`. As the library uses [semantic versioning](http://semver.org), you can define version a constraint in `composer.json` which allows all non-major updates.
 
 Alternatively, you can clone the repository using git or download a tagged release.
-
-Updating
----------
-As this library uses [semantic versioning](https://semver.org), you will get fixes and feature additions when running `composer update`, but not changes which break the API.
 
 
 Usage
