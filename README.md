@@ -1,3 +1,6 @@
+![Build status](https://github.com/BlueM/Tree/actions/workflows/php.yml/badge.svg)
+![Build status](https://github.com/BlueM/Tree/actions/workflows/php.yml/badge.svg)
+
 Overview
 ========
 This library provides handling of data that is structured hierarchically using parent ID references. A typical example is a table in a relational database where each record’s “parent” field references the primary key of another record. Of course, usage is not limited to data originating from a database, but anything: you supply the data, and the library uses it, regardless of where the data came from and how it was processed.
@@ -202,7 +205,7 @@ If you want to see TestDox output or coverage data, you can comment in the comme
 Version History
 =================
 
-4 (2024-xx-xx)
+4 (2025-xx-xx)
 ---------------
 * Breaking change: minimum PHP version is 8.2
 * Breaking change: Node properties are no longer normalized to lowercase
