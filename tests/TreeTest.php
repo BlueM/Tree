@@ -159,7 +159,7 @@ class TreeTest extends TestCase
         ]);
 
         static::assertSame(
-            '[{"id":1,"parent":0,"title":"A"},{"id":2,"parent":0,"title":"B"},{"id":3,"parent":2,"title":"B-1"},{"id":4,"parent":0,"title":"D"}]',
+            '[{"id":1,"title":"A","parent":0},{"id":2,"title":"B","parent":0},{"id":3,"title":"B-1","parent":2},{"id":4,"title":"D","parent":0}]',
             json_encode($tree)
         );
     }

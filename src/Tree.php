@@ -195,20 +195,21 @@ class Tree implements \JsonSerializable, \Stringable
         $children = [];
 
         // Create the root node
-        $this->nodes[$this->rootId] = $this->createNode($this->rootId, []);
+        $this->nodes[$this->rootId] = $this->createNode($this->rootId);
 
-        foreach ($data as $row) {
-            if ($row instanceof \Iterator) {
-                $row = iterator_to_array($row);
+        foreach ($data as $nodeData) {
+            if ($nodeData instanceof \Iterator) {
+                $nodeData = iterator_to_array($nodeData);
             }
 
-            $this->nodes[$row[$this->idKey]] = $this->createNode($row[$this->idKey], $row);
-
-            if (empty($children[$row[$this->parentKey]])) {
-                $children[$row[$this->parentKey]] = [$row[$this->idKey]];
-            } else {
-                $children[$row[$this->parentKey]][] = $row[$this->idKey];
+            if (empty($children[$nodeData[$this->parentKey]])) {
+                $children[$nodeData[$this->parentKey]] = [];
             }
+            $children[$nodeData[$this->parentKey]][] = $nodeData[$this->idKey];
+
+            unset($nodeData[$this->parentKey]);
+
+            $this->nodes[$nodeData[$this->idKey]] = $this->createNode($nodeData[$this->idKey], $nodeData);
         }
 
         foreach ($children as $pid => $childIds) {
@@ -280,7 +281,7 @@ class Tree implements \JsonSerializable, \Stringable
      *
      * @param iterable<iterable<string, mixed>> $properties
      */
-    protected function createNode(mixed $id, iterable $properties): Node
+    protected function createNode(mixed $id, iterable $properties = []): Node
     {
         return new Node($id, $properties);
     }
