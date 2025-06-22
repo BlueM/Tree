@@ -208,6 +208,7 @@ Version History
 * Breaking change: Node properties are no longer normalized to lowercase
 * Breaking change: The argument to `Node::get($propertyName)` is now treated case-sensitively
 * Breaking change: `$node->propertyName` is now case-sensitive
+* No breaking change: Using as getter for accessing a property’s value is still case-insensitive, as functions are case-insensitive in PHP. So if you have a property `foo` on a node, you can call `$node->getFoo()` or `$node->getFOO()`. However, if you have property names which differ *only* in case (admittedly, an extreme edge case), the property with the exactly matching name is preferred over the case-insensitive one.
 * Breaking change: The signature for `Node::__construct()` has changed. The parent ID is no longer passed as 2nd argument – this was redundant, as the parent is available in `$node->parent`.
 * Breaking change (if you subclassed it): The signature for `Tree::createNode()` has changed, as the iterable containing the node properties is now optional.
 * Breaking change: Calling the getter for a non-existent property now throws a `BadMethodCallException` (previously `BadFunctionCallException`)
