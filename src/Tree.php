@@ -202,8 +202,8 @@ class Tree implements \JsonSerializable, \Stringable
                 $nodeData = iterator_to_array($nodeData);
             }
 
-            if (empty($children[$nodeData[$this->parentKey]])) {
-                $children[$nodeData[$this->parentKey]] = [];
+            if (!array_key_exists($nodeData[$this->parentKey], $children)) {
+                $children[] = [];
             }
             $children[$nodeData[$this->parentKey]][] = $nodeData[$this->idKey];
 
