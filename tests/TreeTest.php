@@ -15,7 +15,8 @@ use PHPUnit\Framework\TestCase;
 class TreeTest extends TestCase
 {
     #[Test]
-    public function anExceptionIsThrownIfANonScalarValueShouldBeUsedAsRootId(): void
+    #[TestDox('Constructor args: An exception is thrown if a non scalar value should be used as root id')]
+    public function constructorArgsNonScalarRootId(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Option “rootid” must be scalar or null');
@@ -24,7 +25,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function anExceptionIsThrownIfANonStringValueShouldBeUsedAsIdFieldName(): void
+    #[TestDox('Constructor args: An exception is thrown if a non string value should be used as id field name')]
+    public function constructorArgsNonStringIDFieldName(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Option “id” must be a string');
@@ -33,7 +35,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function anExceptionIsThrownIfANonStringValueShouldBeUsedAsParentIdFieldName(): void
+    #[TestDox('Constructor args: An exception is thrown if a non string value should be used as parent id field name')]
+    public function constructorArgsNonStringParentIDFieldName(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Option “parent” must be a string');
@@ -42,7 +45,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function anExceptionIsThrownIfANonObjectShouldBeUsedAsSerializer(): void
+    #[TestDox('Constructor args: An exception is thrown if a non object should be used as serializer')]
+    public function constructorArgsNonObjectSerializer(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Option “jsonSerializer” must be an object');
@@ -51,7 +55,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function theSerializerCanBeSetToAnObjectImplementingSerializerinterface(): void
+    #[TestDox('Constructor args: The serializer can be set to an object implementing Serializerinterface')]
+    public function constructorArgsValidSerializer(): void
     {
         $serializer = new HierarchicalTreeJsonSerializer();
 
@@ -63,7 +68,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function nullCanBeUsedAsParentId(): void
+    #[TestDox('Constructor args: The root node’s ID can be defined as null')]
+    public function constructorArgsNullAsRootNodeId(): void
     {
         $data = [
             ['id' => 1, 'parent' => null, 'name' => 'Root'],
@@ -86,27 +92,34 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function theRootNodesCanBeRetrieved(): void
+    #[TestDox('Constructor args: The root node’s ID can be defined as null while there is a node with ID 0')]
+    public function constructorArgsNullAsRootNodeIdPlusNodeWithId0(): void
     {
-        $data = self::dummyDataWithNumericKeys();
-        $tree = new Tree($data);
+        $data = [
+            ['id' => 1, 'parent' => null, 'name' => 'Root'],
+            ['id' => 0, 'parent' => 1, 'name' => 'Child'],
+            ['id' => 3, 'parent' => 0, 'name' => 'Grandchild'],
+        ];
 
-        $nodes = $tree->getRootNodes();
-        static::assertCount(5, $nodes);
+        $tree = new Tree($data, ['rootId' => null]);
 
-        $expectedOrder = [5, 3, 4, 6, 1];
+        $nodes = $tree->getNodes();
+        static::assertCount(3, $nodes);
+        static::assertSame(1, $nodes[0]->getId());
+        static::assertSame(0, $nodes[1]->getId());
+        static::assertSame(3, $nodes[2]->getId());
 
-        for ($i = 0, $ii = \count($nodes); $i < $ii; ++$i) {
-            static::assertInstanceOf(Node::class, $nodes[$i]);
-            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
-        }
+        static::assertSame($nodes[0], $nodes[1]->getParent());
+        static::assertNull($nodes[0]->getParent()->getId());
     }
 
     #[Test]
-    public function theRootNodesCanBeRetrievedWhenTheIdsAreStrings(): void
+    #[TestDox('Constructor args: Name of fields for id and parent id in the input data can be changed')]
+    public function constructorArgsChangeFieldNames(): void
     {
-        $data = self::dummyDataWithStringKeys();
-        $tree = new Tree($data, ['rootId' => '']);
+        $data = self::dummyDataWithStringKeys('id_node', 'id_parent');
+
+        $tree = new Tree($data, ['rootId' => '', 'id' => 'id_node', 'parent' => 'id_parent']);
 
         $nodes = $tree->getRootNodes();
 
@@ -119,7 +132,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function theTreeCanBeRebuiltFromNewData(): void
+    #[TestDox('Build: The tree can be rebuilt from new data')]
+    public function buildRebuildWithNewData(): void
     {
         $data = self::dummyDataWithNumericKeys();
 
@@ -133,7 +147,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function aTreeCanBeCreatedFromAnIterable(): void
+    #[TestDox('Build: A tree can be created from an Iterable')]
+    public function buildFromFromAnIterable(): void
     {
         $tree = new Tree(
             IterableObjectFactory::makeIterableInstance(
@@ -149,7 +164,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function aTreeCanBeCreatedFromAnArrayOfObjectsImplementingIterator(): void
+    #[TestDox('Build: A tree can be created from an array of objects implementing Iterator')]
+    public function buildFromAnArrayOfIterators(): void
     {
         $tree = new Tree([
             IterableObjectFactory::makeIterableInstance(['id' => 1, 'parent' => 0, 'title' => 'A']),
@@ -165,7 +181,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function theTreeCanBeSerializedToAJsonRepresentationFromWhichATreeWithTheSameDataCanBeBuiltWhenDecoded(): void
+    #[TestDox('Build: The tree can be serialized to a json representation from which a tree with the same data can be built when decoded')]
+    public function rebuildFromJSONSerialization(): void
     {
         $data = self::dummyDataWithNumericKeys();
 
@@ -188,7 +205,55 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function allNodesCanBeRetrieved(): void
+    #[TestDox('Build: a custom warning callback can be used, which is called with an exception and the tree instance as arguments')]
+    #[Ticket('https://github.com/BlueM/Tree/issues/26')]
+    public function aCustomBuildWarningCallbackCanBeSpecifiedWhichIsCalledWithNodeAndParentIdAsArgument(): void
+    {
+        $invocationCount = 0;
+        $treeArg = null;
+        $buildwarningcallback = function (MissingNodeInvalidParentException $exception, Tree $tree, Node $node, mixed $parentId) use (&$invocationCount, &$treeArg) {
+            ++$invocationCount;
+            static::assertSame('Node with ID 2 points to non-existent parent with empty parent ID', $exception->getMessage());
+            $treeArg = $tree;
+            static::assertSame(2, $node->getId());
+            static::assertSame('', $parentId);
+        };
+
+        $tree = new Tree(
+            [
+                ['id' => 1, 'parent' => 0],
+                ['id' => 2, 'parent' => ''],
+            ],
+            [
+                'buildwarningcallback' => $buildwarningcallback,
+            ]
+        );
+
+        static::assertSame(1, $invocationCount);
+        static::assertSame($tree, $treeArg);
+    }
+
+    #[Test]
+    #[TestDox('Nodes: The root nodes can be retrieved')]
+    public function nodesGetRootNodes(): void
+    {
+        $data = self::dummyDataWithNumericKeys();
+        $tree = new Tree($data);
+
+        $nodes = $tree->getRootNodes();
+        static::assertCount(5, $nodes);
+
+        $expectedOrder = [5, 3, 4, 6, 1];
+
+        for ($i = 0, $ii = \count($nodes); $i < $ii; ++$i) {
+            static::assertInstanceOf(Node::class, $nodes[$i]);
+            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
+        }
+    }
+
+    #[Test]
+    #[TestDox('Nodes: All nodes can be retrieved')]
+    public function nodesGetAllNodes(): void
     {
         $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
@@ -205,26 +270,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function allNodesCanBeRetrievedWhenNodeIdsAreStrings(): void
-    {
-        $data = self::dummyDataWithStringKeys();
-        $tree = new Tree($data, ['rootId' => '']);
-
-        $nodes = $tree->getNodes();
-        static::assertCount(\count($data), $nodes);
-
-        $expectedOrder = [
-            'building', 'library', 'school', 'primary-school', 'vehicle', 'bicycle', 'car',
-        ];
-
-        for ($i = 0, $ii = \count($nodes); $i < $ii; ++$i) {
-            static::assertInstanceOf(Node::class, $nodes[$i]);
-            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
-        }
-    }
-
-    #[Test]
-    public function aNodeCanBeAccessedByItsIntegerId(): void
+    #[TestDox('Nodes: A node can be accessed by its integer id')]
+    public function nodeGetByIntId(): void
     {
         $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
@@ -234,7 +281,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function aNodeCanBeAccessedByItsStringId(): void
+    #[TestDox('Nodes: A node can be accessed by its string id')]
+    public function nodeGetByStringId(): void
     {
         $data = self::dummyDataWithStringKeys();
         $tree = new Tree($data, ['rootId' => '']);
@@ -243,7 +291,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function tryingToGetANodeByItsIdThrowsAnExceptionIfTheIdIsInvalid(): void
+    #[TestDox('Nodes: Trying to get a node by its id throws an exception if the id is invalid')]
+    public function nodeGetByInvalidId(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid node primary key 999');
@@ -254,7 +303,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function aNodeCanBeAccessedByItsValuePath(): void
+    #[TestDox('Nodes: A node can be accessed by its value path')]
+    public function nodeGetByValuePath(): void
     {
         $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
@@ -265,7 +315,8 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    public function tryingToGetANodeByItsValuePathReturnsNullIfNoNodeMatches(): void
+    #[TestDox('Nodes: Trying to get a node by its value path returns null if no node matches')]
+    public function nodeGetByUnresolvableValuePath(): void
     {
         $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
@@ -309,35 +360,6 @@ EXPECTED;
         new Tree([
             ['id' => 123, 'parent' => 456],
         ]);
-    }
-
-    #[Test]
-    #[TestDox('Build warning callback: a custom callback can be used, which is called with an exception and the tree instance as arguments')]
-    #[Ticket('https://github.com/BlueM/Tree/issues/26')]
-    public function aCustomBuildWarningCallbackCanBeSpecifiedWhichIsCalledWithNodeAndParentIdAsArgument(): void
-    {
-        $invocationCount = 0;
-        $treeArg = null;
-        $buildwarningcallback = function (MissingNodeInvalidParentException $exception, Tree $tree, Node $node, mixed $parentId) use (&$invocationCount, &$treeArg) {
-            ++$invocationCount;
-            static::assertSame('Node with ID 2 points to non-existent parent with empty parent ID', $exception->getMessage());
-            $treeArg = $tree;
-            static::assertSame(2, $node->getId());
-            static::assertSame('', $parentId);
-        };
-
-        $tree = new Tree(
-            [
-                ['id' => 1, 'parent' => 0],
-                ['id' => 2, 'parent' => ''],
-            ],
-            [
-                'buildwarningcallback' => $buildwarningcallback,
-            ]
-        );
-
-        static::assertSame(1, $invocationCount);
-        static::assertSame($tree, $treeArg);
     }
 
     #[Test]
@@ -387,23 +409,6 @@ EXPECTED;
             ['id' => 'foo', 'parent' => 0],
         ]);
         static::assertTrue(true); // Just to make PHPUnit happy
-    }
-
-    #[Test]
-    public function clientsCanSupplyDifferingNamesForIdAndParentIdInInputData(): void
-    {
-        $data = self::dummyDataWithStringKeys('id_node', 'id_parent');
-
-        $tree = new Tree($data, ['rootId' => '', 'id' => 'id_node', 'parent' => 'id_parent']);
-
-        $nodes = $tree->getRootNodes();
-
-        $expectedOrder = ['building', 'vehicle'];
-
-        for ($i = 0, $ii = \count($nodes); $i < $ii; ++$i) {
-            static::assertInstanceOf(Node::class, $nodes[$i]);
-            static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
-        }
     }
 
     /**
