@@ -20,7 +20,7 @@ class Tree implements \JsonSerializable, \Stringable
     /**
      * API version (will always be in sync with first digit of release version number).
      */
-    public const API = 3;
+    public const API = 4;
 
     protected int|float|string|null $rootId = 0;
 
