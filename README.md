@@ -1,5 +1,4 @@
 ![Build status](https://github.com/BlueM/Tree/actions/workflows/php.yml/badge.svg)
-![Build status](https://github.com/BlueM/Tree/actions/workflows/php.yml/badge.svg)
 
 Overview
 ========
