@@ -39,11 +39,6 @@ Node (BlueM\Tree\Node)
  [x] When typecasted to string, the string representation of the node’s ID is returned
 
 Tree (BlueM\Tree)
- [x] Constructor args: An exception is thrown if a non scalar value should be used as root id
- [x] Constructor args: An exception is thrown if a non string value should be used as id field name
- [x] Constructor args: An exception is thrown if a non string value should be used as parent id field name
- [x] Constructor args: An exception is thrown if a non object should be used as serializer
- [x] Constructor args: The serializer can be set to an object implementing Serializerinterface
  [x] Constructor args: Root nodes’ parent ID can be defined as null
  [x] Constructor args: The root node’s ID can be defined as null while there is a node with ID 0
  [x] Constructor args: Name of fields for id and parent id in the input data can be changed

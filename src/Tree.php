@@ -6,6 +6,7 @@ use BlueM\Tree\Exception\InvalidParentException;
 use BlueM\Tree\Exception\MissingNodeInvalidParentException;
 use BlueM\Tree\Exception\SelfReferenceInvalidParentException;
 use BlueM\Tree\Node;
+use BlueM\Tree\Options;
 use BlueM\Tree\Serializer\FlatTreeJsonSerializer;
 use BlueM\Tree\Serializer\TreeJsonSerializerInterface;
 
@@ -47,53 +48,22 @@ class Tree implements \JsonSerializable, \Stringable
 
     /**
      * @param iterable<iterable<string, mixed>> $data The data for the tree (iterable)
-     * @param array<string, mixed> $options 0 or more of the following keys, all of which are optional: "rootId" (ID of
-     *                                      the root node, default: 0), "id" (name of the ID field / array key, default:
-     *                                      "id"), "parent" (name of the parent ID field / array key, default: "parent"),
-     *                                      "jsonSerializer" (instance of \BlueM\Tree\Serializer\TreeJsonSerializerInterface),
-     *                                      "buildWarningCallback" (a callable which is called when detecting data
-     *                                      inconsistencies such as an invalid parent)
      *
      * @throws InvalidParentException
      * @throws \InvalidArgumentException
      */
-    public function __construct(iterable $data = [], array $options = [])
+    public function __construct(iterable $data = [], Options $options = new Options())
     {
-        $options = array_change_key_case($options);
+        $this->rootId = $options->rootId;
+        $this->idKey = $options->idFieldName;
+        $this->parentKey = $options->parentIdFieldName;
 
-        if (array_key_exists('rootid', $options)) {
-            if (!\is_scalar($options['rootid']) && null !== $options['rootid']) {
-                throw new \InvalidArgumentException('Option “rootid” must be scalar or null');
-            }
-            $this->rootId = $options['rootid'];
+        if ($options->jsonSerializer) {
+            $this->jsonSerializer = $options->jsonSerializer;
         }
 
-        if (!empty($options['id'])) {
-            if (!\is_string($options['id'])) {
-                throw new \InvalidArgumentException('Option “id” must be a string');
-            }
-            $this->idKey = $options['id'];
-        }
-
-        if (!empty($options['parent'])) {
-            if (!\is_string($options['parent'])) {
-                throw new \InvalidArgumentException('Option “parent” must be a string');
-            }
-            $this->parentKey = $options['parent'];
-        }
-
-        if (!empty($options['jsonserializer'])) {
-            if (!is_object($options['jsonserializer'])) {
-                throw new \InvalidArgumentException('Option “jsonSerializer” must be an object');
-            }
-            $this->setJsonSerializer($options['jsonserializer']);
-        }
-
-        if (!empty($options['buildwarningcallback'])) {
-            if (!is_callable($options['buildwarningcallback'])) {
-                throw new \InvalidArgumentException('Option “buildWarningCallback” must be a callable');
-            }
-            $this->buildWarningCallback = $options['buildwarningcallback'];
+        if ($options->buildWarningCallback) {
+            $this->buildWarningCallback = $options->buildWarningCallback;
         } else {
             $this->buildWarningCallback = $this->buildWarningHandler(...);
         }

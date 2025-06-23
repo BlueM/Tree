@@ -6,7 +6,7 @@ use BlueM\Helper\IterableObjectFactory;
 use BlueM\Tree\Exception\InvalidParentException;
 use BlueM\Tree\Exception\MissingNodeInvalidParentException;
 use BlueM\Tree\Node;
-use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
+use BlueM\Tree\Options;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\Attributes\Ticket;
@@ -14,59 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class TreeTest extends TestCase
 {
-    #[Test]
-    #[TestDox('Constructor args: An exception is thrown if a non scalar value should be used as root id')]
-    public function constructorArgsNonScalarRootId(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Option “rootid” must be scalar or null');
-
-        new Tree([], ['rootId' => []]);
-    }
-
-    #[Test]
-    #[TestDox('Constructor args: An exception is thrown if a non string value should be used as id field name')]
-    public function constructorArgsNonStringIDFieldName(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Option “id” must be a string');
-
-        new Tree([], ['id' => 123]);
-    }
-
-    #[Test]
-    #[TestDox('Constructor args: An exception is thrown if a non string value should be used as parent id field name')]
-    public function constructorArgsNonStringParentIDFieldName(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Option “parent” must be a string');
-
-        new Tree([], ['parent' => $this]);
-    }
-
-    #[Test]
-    #[TestDox('Constructor args: An exception is thrown if a non object should be used as serializer')]
-    public function constructorArgsNonObjectSerializer(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Option “jsonSerializer” must be an object');
-
-        new Tree([], ['jsonSerializer' => 'not an object']);
-    }
-
-    #[Test]
-    #[TestDox('Constructor args: The serializer can be set to an object implementing Serializerinterface')]
-    public function constructorArgsValidSerializer(): void
-    {
-        $serializer = new HierarchicalTreeJsonSerializer();
-
-        $subject = new Tree([], ['jsonSerializer' => $serializer]);
-
-        $serializerProperty = new \ReflectionProperty($subject, 'jsonSerializer');
-
-        static::assertSame($serializer, $serializerProperty->getValue($subject));
-    }
-
     #[Test]
     #[TestDox('Constructor args: Root nodes’ parent ID can be defined as null')]
     public function constructorArgsNullAsRootNodeParentId(): void
@@ -78,7 +25,7 @@ class TreeTest extends TestCase
             ['id' => 4, 'parent' => null, 'name' => 'Root'],
         ];
 
-        $tree = new Tree($data, ['rootId' => null]);
+        $tree = new Tree($data, new Options(rootId: null));
 
         $nodes = $tree->getNodes();
         static::assertCount(4, $nodes);
@@ -100,7 +47,7 @@ class TreeTest extends TestCase
             ['id' => 3, 'parent' => 0, 'name' => 'Grandchild'],
         ];
 
-        $tree = new Tree($data, ['rootId' => null]);
+        $tree = new Tree($data, new Options(rootId: null));
 
         $nodes = $tree->getNodes();
         static::assertCount(3, $nodes);
@@ -118,7 +65,7 @@ class TreeTest extends TestCase
     {
         $data = self::dummyDataWithStringKeys('id_node', 'id_parent');
 
-        $tree = new Tree($data, ['rootId' => '', 'id' => 'id_node', 'parent' => 'id_parent']);
+        $tree = new Tree($data, new Options(rootId: '', idFieldName: 'id_node', parentIdFieldName: 'id_parent'));
 
         $nodes = $tree->getRootNodes();
 
@@ -223,9 +170,7 @@ class TreeTest extends TestCase
                 ['id' => 1, 'parent' => 0],
                 ['id' => 2, 'parent' => ''],
             ],
-            [
-                'buildwarningcallback' => $buildwarningcallback,
-            ]
+            new Options(buildWarningCallback: $buildwarningcallback),
         );
 
         static::assertSame(1, $invocationCount);
@@ -284,7 +229,7 @@ class TreeTest extends TestCase
     public function nodeGetByStringId(): void
     {
         $data = self::dummyDataWithStringKeys();
-        $tree = new Tree($data, ['rootId' => '']);
+        $tree = new Tree($data, new Options(rootId: ''));
         $node = $tree->getNodeById('library');
         static::assertEquals('library', $node->getId());
     }
@@ -378,16 +323,14 @@ EXPECTED;
     public function anExceptionIsThrownIfTheBuildWarningCallbackOptionIsNotACallable(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Option “buildWarningCallback” must be a callable');
+        $this->expectExceptionMessage('$buildWarningCallback must be a callable');
 
         new Tree(
             [
                 ['id' => 1, 'parent' => 0],
                 ['id' => 2, 'parent' => ''],
             ],
-            [
-                'buildwarningcallback' => 'Must be a callable',
-            ]
+            new Options(buildWarningCallback: 'Will cause exception'),
         );
     }
 
