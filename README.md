@@ -43,7 +43,7 @@ $data = [
 ];
 $tree = new BlueM\Tree(
     $data,
-    ['rootId' => -1, 'id' => 'nodeId', 'parent' => 'parentId']
+    new Bluem\Tree\Options(rootId: -1, idFieldName: 'nodeId', parentIdFieldName: 'parentId'),
 );
 ```
 
@@ -177,14 +177,14 @@ JSON serialization
 ===================
 As `Tree` implements `JsonSerializable`, a tree can be serialized to JSON. By default, the resulting JSON represents a flat (non-hierarchical) representation of the tree data, which – once decoded from JSON – can be re-fed into a new `Tree` instance. In version before 3.0, you had to subclass the `Tree` and the `Node` class to customize the JSON output. Now, serialization is extracted to an external helper class which can be changed both by setting a constructor argument or at runtime just before serialization. However, the default serialization result is the same as before, so you won’t notice any change in behavior unless you tweaked JSON serialization.
 
-To control the JSON, you can either pass an option `jsonSerializer` to the constructor (i.e. pass something like `['jsonSerializer' => $mySerializer]` as argument 2), which must be an object implementing `\BlueM\Tree\Serializer\TreeJsonSerializerInterface`. Or you call method `setJsonSerializer()` on the tree. The latter approach can also be used to re-set serialization behavior to the default by calling it without an argument.
+To control the JSON, you can either pass an option `jsonSerializer` to an `\BlueM\Tree\Options` instance you pass the the `Tree` constructor, which must be an object implementing `\BlueM\Tree\Serializer\TreeJsonSerializerInterface`. Or you call method `setJsonSerializer()` on the tree. The latter approach can also be used to re-set serialization behavior to the default by calling it without an argument.
 
 The library comes with two distinct serializers: `\BlueM\Tree\Serializer\FlatTreeJsonSerializer` is the default, which is used if no serializer is set and which results in the “old”, flat JSON output. Plus, there is `\BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer`, which creates a hierarchical, depth-first sorted representation of the tree nodes. If you need something else, feel free to write your own serializer.
 
 
 Handling inconsistent data
 ==========================
-If a problem is detected while building the tree (such as a parent reference to the node itself or in invalid parent ID), an exception (subclass of `InvalidParentException`) is thrown. Often this makes sens, but it might not always. For those cases, you can pass in a callable as value for key `buildWarningCallback` in the options argument which can be given as argument 2 to `Tree`’s constructor, and which will be called whenever a problem is seen. The signature of the callable is like this:
+If a problem is detected while building the tree (such as a parent reference to the node itself or in invalid parent ID), an exception (subclass of `InvalidParentException`) is thrown. Often this makes sense, but it might not always. For those cases, you can pass in a callable by setting `$buildWarningCallback` of a `\BlueM\Tree\Options` instance which can be given as argument 2 to `Tree`’s constructor, and which will be called whenever a problem is seen. The signature of the callable is like this:
 
 ```php
 function yourCallback(MissingNodeInvalidParentException $exception, Tree $tree, Node $node, mixed $parentId) {
@@ -197,9 +197,8 @@ Running Tests
 PHPUnit is configured as a dev dependency, so running tests is a matter of:
 
 * `composer install`
-* `./vendor/bin/phpunit`
-
-If you want to see TestDox output or coverage data, you can comment in the commented lines in the `<log>` section of `phpunit.xml.dist`.
+* `composer test`
+* `composer test-coverage` (For generating coverage output, requires xDebug.)
 
 
 Version History
@@ -213,9 +212,10 @@ Version History
 * Breaking change: `$node->propertyName` is now case-sensitive
 * No breaking change: Using as getter for accessing a property’s value is still case-insensitive, as functions are case-insensitive in PHP. So if you have a property `foo` on a node, you can call `$node->getFoo()` or `$node->getFOO()`. However, if you have property names which differ *only* in case (admittedly, an extreme edge case), the property with the exactly matching name is preferred over the case-insensitive one.
 * Breaking change: The signature for `Node::__construct()` has changed. The parent ID is no longer passed as 2nd argument – this was redundant, as the parent is available in `$node->parent`.
+* Breaking change: argument 2 for `Tree`’s constructor is no longer an associative array, but a DTO, which ensures correct naming and type-safety.
 * Breaking change (if you subclassed it): The signature for `Tree::createNode()` has changed, as the iterable containing the node properties is now optional.
 * Breaking change: Calling the getter for a non-existent property now throws a `BadMethodCallException` (previously `BadFunctionCallException`)
-* Breaking change: a node’s `$properties` array no longer contains the parent node’s ID as property. This was redundant, as the parent node’s ID can be fetched by calling `$node->getParent()?->getId()`
+* Breaking change: there is no longer a “root” node. (Which was confusing anyway, as there is also a method `Tree::getRootNodes()`, which returns something completely different from the “root” node.) Instead, now there are only nodes for the data which is passed to the constructor – no longer any “helper” nodes.
 * Breaking change (at least theoretically): class `InvalidDatatypeException` was removed, which is no longer needed due to a typehint
 * It’s now possible to call get('parent') or get('children') on a node
 * Internal changes: added typehints; cleaned up and improved, and simplified unit tests (coverage is now 100%); added code quality tools (PHPStan, php-cs-fixer)
