@@ -5,14 +5,14 @@ Hierarchical Tree Json Serializer (BlueM\Tree\Serializer\HierarchicalTreeJsonSer
  [x] Serializes to a hierarchical array
 
 Node (BlueM\Tree\Node)
- [x] Level: The level of the root node is null
- [x] Level: A node 2 levels below the root node has level 2
- [x] Ancestors: The root node’s ancestors is an empty array
+ [x] Level: The level of a top-level node is 1
+ [x] Level: A node 2 levels below a top-level node has level 3
+ [x] Ancestors: A top-level node’s ancestors is an empty array
  [x] Ancestors: A node’s ancestors is an array of nodes, ordered from nearer to more distant ones
  [x] Ancestors: The node itself can be included in the list of ancestors
  [x] Descendants: A node’s descendants is an array of nodes, with depth-first sorting
  [x] Descendants: The node itself can be included in the list of descendants
- [x] Parent: For a root node, null is returned when calling getParent()
+ [x] Parent: For a top-level node, null is returned when calling getParent()
  [x] Parent: For a non-root node, the parent node is returned when calling getParent()
  [x] Siblings: The previous sibling can be retrieved
  [x] Siblings: The next sibling can be retrieved
@@ -44,7 +44,7 @@ Tree (BlueM\Tree)
  [x] Constructor args: An exception is thrown if a non string value should be used as parent id field name
  [x] Constructor args: An exception is thrown if a non object should be used as serializer
  [x] Constructor args: The serializer can be set to an object implementing Serializerinterface
- [x] Constructor args: The root node’s ID can be defined as null
+ [x] Constructor args: Root nodes’ parent ID can be defined as null
  [x] Constructor args: The root node’s ID can be defined as null while there is a node with ID 0
  [x] Constructor args: Name of fields for id and parent id in the input data can be changed
  [x] Build: The tree can be rebuilt from new data
@@ -57,6 +57,7 @@ Tree (BlueM\Tree)
  [x] Nodes: A node can be accessed by its integer id
  [x] Nodes: A node can be accessed by its string id
  [x] Nodes: Trying to get a node by its id throws an exception if the id is invalid
+ [x] Nodes: When getNodeById() is called with root nodes’ parent value, an exception will be thrown
  [x] Nodes: A node can be accessed by its value path
  [x] Nodes: Trying to get a node by its value path returns null if no node matches
  [x] In scalar context the tree is returned as a string

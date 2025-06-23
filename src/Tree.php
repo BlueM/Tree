@@ -29,6 +29,11 @@ class Tree implements \JsonSerializable, \Stringable
     protected string $parentKey = 'parent';
 
     /**
+     * @var array<Node>
+     */
+    protected array $rootNodes;
+
+    /**
      * @var array<int|string|float, Node>
      */
     protected array $nodes;
@@ -117,8 +122,10 @@ class Tree implements \JsonSerializable, \Stringable
     public function getNodes(): array
     {
         $nodes = [];
-        foreach ($this->nodes[$this->rootId]->getDescendants() as $subnode) {
-            $nodes[] = $subnode;
+        foreach ($this->rootNodes as $rootNode) {
+            foreach ($rootNode->getDescendantsAndSelf() as $node) {
+                $nodes[] = $node;
+            }
         }
 
         return $nodes;
@@ -131,7 +138,7 @@ class Tree implements \JsonSerializable, \Stringable
      */
     public function getNodeById(int|string|float $id): Node
     {
-        if (empty($this->nodes[$id])) {
+        if (!array_key_exists($id, $this->nodes)) {
             throw new \InvalidArgumentException("Invalid node primary key $id");
         }
 
@@ -145,7 +152,7 @@ class Tree implements \JsonSerializable, \Stringable
      */
     public function getRootNodes(): array
     {
-        return $this->nodes[$this->rootId]->getChildren();
+        return $this->rootNodes;
     }
 
     /**
@@ -192,10 +199,8 @@ class Tree implements \JsonSerializable, \Stringable
     protected function build(iterable $data): void
     {
         $this->nodes = [];
+        $this->rootNodes = [];
         $children = [];
-
-        // Create the root node
-        $this->nodes[$this->rootId] = $this->createNode($this->rootId);
 
         foreach ($data as $nodeData) {
             if ($nodeData instanceof \Iterator) {
@@ -207,9 +212,11 @@ class Tree implements \JsonSerializable, \Stringable
             }
             $children[$nodeData[$this->parentKey]][] = $nodeData[$this->idKey];
 
-            unset($nodeData[$this->parentKey]);
-
             $this->nodes[$nodeData[$this->idKey]] = $this->createNode($nodeData[$this->idKey], $nodeData);
+
+            if ($this->rootId === $nodeData[$this->parentKey]) {
+                $this->rootNodes[] = $this->nodes[$nodeData[$this->idKey]];
+            }
         }
 
         foreach ($children as $pid => $childIds) {
@@ -225,7 +232,7 @@ class Tree implements \JsonSerializable, \Stringable
                     } else {
                         $this->nodes[$pid]->addChild($this->nodes[$id]);
                     }
-                } else {
+                } elseif (!in_array($this->nodes[$id], $this->rootNodes, true)) {
                     $pidStr = ('' === (string) $pid) ? 'empty parent ID' : "ID $pid";
                     ($this->buildWarningCallback)(
                         new MissingNodeInvalidParentException("Node with ID {$this->nodes[$id]} points to non-existent parent with $pidStr"),

@@ -10,37 +10,39 @@ use PHPUnit\Framework\TestCase;
 class NodeTest extends TestCase
 {
     #[Test]
-    #[TestDox('Level: The level of the root node is null')]
-    public function level0(): void
+    #[TestDox('Level: The level of a top-level node is 1')]
+    public function level1(): void
     {
-        $node = new Node(0);
+        $node = new Node(1);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
         $parentProperty->setValue($node, null);
 
-        static::assertSame(0, $node->getLevel());
+        static::assertSame(1, $node->getLevel());
     }
 
     #[Test]
-    #[TestDox('Level: A node 2 levels below the root node has level 2')]
+    #[TestDox('Level: A node 2 levels below a top-level node has level 3')]
     public function level2(): void
     {
         $node = new Node(123);
-        $parent = new Node(789);
-        $rootNode = new Node(0);
+        $parent = new Node(456);
+        $grandParent = new Node(789);
 
         $parentProperty = new \ReflectionProperty(Node::class, 'parent');
-        $parentProperty->setValue($node, $parent);
-        $parentProperty->setValue($parent, $rootNode);
 
-        static::assertSame(2, $node->getLevel());
+        $parentProperty->setValue($node, $parent);
+        $parentProperty->setValue($parent, $grandParent);
+        $parentProperty->setValue($grandParent, null);
+
+        static::assertSame(3, $node->getLevel());
     }
 
     #[Test]
-    #[TestDox('Ancestors: The root node’s ancestors is an empty array')]
+    #[TestDox('Ancestors: A top-level node’s ancestors is an empty array')]
     public function rootAncestors(): void
     {
-        $node = new Node(0);
+        $node = new Node(19);
         $parentProperty = new \ReflectionProperty($node, 'parent');
         $parentProperty->setValue($node, null);
 
@@ -56,12 +58,12 @@ class NodeTest extends TestCase
         $node = new Node(3);
         $parent = new Node(2);
         $grandParent = new Node(1);
-        $rootNode = new Node(0);
 
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, $grandParent);
-        $parentProperty->setValue($grandParent, $rootNode);
+        $parentProperty->setValue($grandParent, null);
 
+        static::assertCount(2, $node->getAncestors());
         static::assertSame([$parent, $grandParent], $node->getAncestors());
     }
 
@@ -74,11 +76,10 @@ class NodeTest extends TestCase
         $node = new Node(3);
         $parent = new Node(2);
         $grandParent = new Node(1);
-        $rootNode = new Node(0);
 
         $parentProperty->setValue($node, $parent);
         $parentProperty->setValue($parent, $grandParent);
-        $parentProperty->setValue($grandParent, $rootNode);
+        $parentProperty->setValue($grandParent, null);
 
         static::assertSame([$node, $parent, $grandParent], $node->getAncestorsAndSelf());
     }
@@ -126,10 +127,10 @@ class NodeTest extends TestCase
     }
 
     #[Test]
-    #[TestDox('Parent: For a root node, null is returned when calling getParent()')]
-    public function tryingToGetTheParentReturnsNullForTheRootNode(): void
+    #[TestDox('Parent: For a top-level node, null is returned when calling getParent()')]
+    public function tryingToGetTheParentReturnsNullForARootNode(): void
     {
-        $node = new Node(0);
+        $node = new Node(93);
 
         $parentProperty = new \ReflectionProperty($node, 'parent');
         $parentProperty->setValue($node, null);
@@ -434,7 +435,7 @@ class NodeTest extends TestCase
     #[TestDox('Properties can be fetched as an array')]
     public function nodePropertiesToArray(): void
     {
-        $node = new Node('xyz', ['foo' => 'bar', 'Number' => 123, 'number' => 456, 'myProperty' => 11.22]);
+        $node = new Node('xyz', ['foo' => 'bar', 'Number' => 123, 'number' => 456, 'myProperty' => 11.22, 'parent' => 789]);
 
         $parentNode = new Node(789);
         $parentNode->addChild($node);
@@ -460,13 +461,13 @@ class NodeTest extends TestCase
     #[TestDox('When serialized to JSON, an object containing all properties is returned')]
     public function nodePropertiesToJson(): void
     {
-        $node = new Node('xyz', ['foo' => 'bar', 'X' => 123]);
+        $node = new Node('xyz', ['foo' => 'bar', 'X' => 123, 'parent' => 456]);
 
         $parentNode = new Node(456);
         $parentNode->addChild($node);
 
         static::assertEquals(
-            '{"foo":"bar","X":123,"id":"xyz","parent":456}',
+            '{"foo":"bar","X":123,"parent":456,"id":"xyz"}',
             json_encode($node)
         );
     }

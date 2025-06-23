@@ -68,11 +68,11 @@ class TreeTest extends TestCase
     }
 
     #[Test]
-    #[TestDox('Constructor args: The root node’s ID can be defined as null')]
-    public function constructorArgsNullAsRootNodeId(): void
+    #[TestDox('Constructor args: Root nodes’ parent ID can be defined as null')]
+    public function constructorArgsNullAsRootNodeParentId(): void
     {
         $data = [
-            ['id' => 1, 'parent' => null, 'name' => 'Root'],
+            ['id' => 1, 'parent' => null, 'name' => 'Root node'],
             ['id' => 2, 'parent' => 1, 'name' => 'Child'],
             ['id' => 3, 'parent' => 2, 'name' => 'Grandchild'],
             ['id' => 4, 'parent' => null, 'name' => 'Root'],
@@ -88,7 +88,6 @@ class TreeTest extends TestCase
         static::assertSame(4, $nodes[3]->getId());
 
         static::assertSame($nodes[0], $nodes[1]->getParent());
-        static::assertNull($nodes[0]->getParent()->getId());
     }
 
     #[Test]
@@ -96,7 +95,7 @@ class TreeTest extends TestCase
     public function constructorArgsNullAsRootNodeIdPlusNodeWithId0(): void
     {
         $data = [
-            ['id' => 1, 'parent' => null, 'name' => 'Root'],
+            ['id' => 1, 'parent' => null, 'name' => 'Top-level node'],
             ['id' => 0, 'parent' => 1, 'name' => 'Child'],
             ['id' => 3, 'parent' => 0, 'name' => 'Grandchild'],
         ];
@@ -110,7 +109,7 @@ class TreeTest extends TestCase
         static::assertSame(3, $nodes[2]->getId());
 
         static::assertSame($nodes[0], $nodes[1]->getParent());
-        static::assertNull($nodes[0]->getParent()->getId());
+        static::assertNull($nodes[0]->getParent());
     }
 
     #[Test]
@@ -175,7 +174,7 @@ class TreeTest extends TestCase
         ]);
 
         static::assertSame(
-            '[{"id":1,"title":"A","parent":0},{"id":2,"title":"B","parent":0},{"id":3,"title":"B-1","parent":2},{"id":4,"title":"D","parent":0}]',
+            '[{"id":1,"parent":0,"title":"A"},{"id":2,"parent":0,"title":"B"},{"id":3,"parent":2,"title":"B-1"},{"id":4,"parent":0,"title":"D"}]',
             json_encode($tree)
         );
     }
@@ -300,6 +299,19 @@ class TreeTest extends TestCase
         $data = self::dummyDataWithNumericKeys();
         $tree = new Tree($data);
         $tree->getNodeById(999);
+    }
+
+    #[Test]
+    #[TestDox('Nodes: When getNodeById() is called with root nodes’ parent value, an exception will be thrown')]
+    #[Ticket('https://github.com/BlueM/Tree/issues/41')]
+    public function nodeGetByRootNodeParentValue(): void
+    {
+        $data = [];
+        $subject = new Tree($data);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid node primary key 0');
+        $subject->getNodeById(0);
     }
 
     #[Test]

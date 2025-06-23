@@ -203,7 +203,7 @@ class Node implements \Stringable, \JsonSerializable
     public function getLevel(): int
     {
         if (null === $this->parent) {
-            return 0;
+            return 1;
         }
 
         return $this->parent->getLevel() + 1;
@@ -301,7 +301,7 @@ class Node implements \Stringable, \JsonSerializable
     protected function getAncestorsGeneric(bool $includeSelf): array
     {
         if (null === $this->parent) {
-            return [];
+            return $includeSelf ? [$this] : [];
         }
 
         if ($includeSelf) {
@@ -316,7 +316,7 @@ class Node implements \Stringable, \JsonSerializable
      */
     public function toArray(): array
     {
-        return [...$this->properties, ...['parent' => $this->parent?->getId()]];
+        return $this->properties;
     }
 
     /**
