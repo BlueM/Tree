@@ -4,12 +4,14 @@ namespace BlueM\Tree\Serializer;
 
 use BlueM\Tree;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\TestCase;
 
 class FlatTreeJsonSerializerTest extends TestCase
 {
     #[Test]
-    public function serializationHappensByCallingGetNodesMethodOnTheTree(): void
+    #[TestDox('Serialization happens by calling getNodes() method on the tree')]
+    public function serializa(): void
     {
         $treeMock = $this->createMock(Tree::class);
         $treeMock->expects($this->once())

@@ -1,5 +1,5 @@
 Flat Tree Json Serializer (BlueM\Tree\Serializer\FlatTreeJsonSerializer)
- [x] Serialization happens by calling get nodes method on the tree
+ [x] Serialization happens by calling getNodes() method on the tree
 
 Hierarchical Tree Json Serializer (BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer)
  [x] Serializes to a hierarchical array
