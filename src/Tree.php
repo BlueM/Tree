@@ -42,7 +42,7 @@ class Tree implements \JsonSerializable, \Stringable
     protected ?TreeJsonSerializerInterface $jsonSerializer = null;
 
     /**
-     * @var ?callable
+     * @var callable
      */
     protected $buildWarningCallback;
 
