@@ -211,7 +211,7 @@ PHPUnit is configured as a dev dependency, so running tests is a matter of:
 Version History
 =================
 
-4 (2025-xx-xx)
+4 (2025-08-17)
 ---------------
 * Breaking change: minimum PHP version is 8.2
 * Breaking change: Node properties are no longer normalized to lowercase
