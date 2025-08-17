@@ -10,7 +10,7 @@ On the other hand, one nice thing is that it’s pretty fast. This does not only
 
 Installation
 ==============
-The recommended way to install this library is through [Composer](https://getcomposer.org): `composer require bluem/tree`. As the library uses [semantic versioning](http://semver.org), you can define version a constraint in `composer.json` which allows all non-major updates.
+The recommended way to install this library is through [Composer](https://getcomposer.org): `composer require bluem/tree`. As the library uses [semantic versioning](http://semver.org), you can define a version constraint in `composer.json` which allows all non-major updates.
 
 Alternatively, you can clone the repository using git or download a tagged release.
 
@@ -32,8 +32,7 @@ $data = [
 $tree = new BlueM\Tree($data);
 
 // When using a data source that uses different keys for "id" and "parent",
-// or if the root node ID is not 0 (in this example: -1), use the options
-// array you can pass to the constructor:
+// or if the root node ID is not 0 (in this example: -1), use Tree’s argument 2.
 $data = [
     ['nodeId' => 1, 'parentId' => -1, 'title' => 'Node 1'],
     ['nodeId' => 2, 'parentId' => 1, 'title' => 'Node 1.1'],
@@ -125,6 +124,15 @@ $array = $node->toArray();
 
 // Get a string representation (which will be the node ID)
 echo "$node";
+```
+
+Using the library with non-default options
+-------------------------------------------
+`Tree` uses defaults, which are defied in `\BlueM\Tree\Options`. If any of those defaults does not fit your needs, you can customize it. 
+
+For example, if the field which holds the parent node’s ID in your data is not called “parent”, but “parent_id”, you could specify it like this:
+```php
+$tree = new BlueM\Tree($nodesData, new \BlueM\Tree\Options(parentIdFieldName: 'parent_id'));
 ```
 
 
