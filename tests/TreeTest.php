@@ -7,6 +7,7 @@ use BlueM\Tree\Exception\InvalidParentException;
 use BlueM\Tree\Exception\MissingNodeInvalidParentException;
 use BlueM\Tree\Node;
 use BlueM\Tree\Options;
+use BlueM\Tree\Serializer\HierarchicalTreeJsonSerializer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\Attributes\Ticket;
@@ -75,6 +76,29 @@ class TreeTest extends TestCase
             static::assertInstanceOf(Node::class, $nodes[$i]);
             static::assertSame($expectedOrder[$i], $nodes[$i]->getId());
         }
+    }
+
+    #[Test]
+    #[TestDox('Constructor args: the JSON serializer can be changed')]
+    public function constructorArgsChangeJsonSerializer(): void
+    {
+        $serializer = new HierarchicalTreeJsonSerializer();
+        $sut = new Tree([], new Options(jsonSerializer: $serializer));
+        $jsonSerializerProperty = new \ReflectionProperty($sut, 'jsonSerializer');
+        static::assertSame($serializer, $jsonSerializerProperty->getValue($sut));
+    }
+
+    #[Test]
+    #[TestDox('The JSON serializer can be changed by calling a method')]
+    public function changeJsonSerializer(): void
+    {
+        $serializer = new HierarchicalTreeJsonSerializer();
+        $sut = new Tree([]);
+        $jsonSerializerProperty = new \ReflectionProperty($sut, 'jsonSerializer');
+        static::assertNotSame($serializer, $jsonSerializerProperty->getValue($sut));
+
+        $sut->setJsonSerializer($serializer);
+        static::assertSame($serializer, $jsonSerializerProperty->getValue($sut));
     }
 
     #[Test]

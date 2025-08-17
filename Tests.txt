@@ -42,6 +42,8 @@ Tree (BlueM\Tree)
  [x] Constructor args: Root nodes’ parent ID can be defined as null
  [x] Constructor args: The root node’s ID can be defined as null while there is a node with ID 0
  [x] Constructor args: Name of fields for id and parent id in the input data can be changed
+ [x] Constructor args: the JSON serializer can be changed
+ [x] The JSON serializer can be changed by calling a method
  [x] Build: The tree can be rebuilt from new data
  [x] Build: A tree can be created from an Iterable
  [x] Build: A tree can be created from an array of objects implementing Iterator
