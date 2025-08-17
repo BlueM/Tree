@@ -25,9 +25,9 @@ class TreeTest extends TestCase
             ['id' => 4, 'parent' => null, 'name' => 'Root'],
         ];
 
-        $tree = new Tree($data, new Options(rootId: null));
+        $sut = new Tree($data, new Options(rootId: null));
 
-        $nodes = $tree->getNodes();
+        $nodes = $sut->getNodes();
         static::assertCount(4, $nodes);
         static::assertSame(1, $nodes[0]->getId());
         static::assertSame(2, $nodes[1]->getId());
@@ -47,9 +47,9 @@ class TreeTest extends TestCase
             ['id' => 3, 'parent' => 0, 'name' => 'Grandchild'],
         ];
 
-        $tree = new Tree($data, new Options(rootId: null));
+        $sut = new Tree($data, new Options(rootId: null));
 
-        $nodes = $tree->getNodes();
+        $nodes = $sut->getNodes();
         static::assertCount(3, $nodes);
         static::assertSame(1, $nodes[0]->getId());
         static::assertSame(0, $nodes[1]->getId());
@@ -65,9 +65,9 @@ class TreeTest extends TestCase
     {
         $data = self::dummyDataWithStringKeys('id_node', 'id_parent');
 
-        $tree = new Tree($data, new Options(rootId: '', idFieldName: 'id_node', parentIdFieldName: 'id_parent'));
+        $sut = new Tree($data, new Options(rootId: '', idFieldName: 'id_node', parentIdFieldName: 'id_parent'));
 
-        $nodes = $tree->getRootNodes();
+        $nodes = $sut->getRootNodes();
 
         $expectedOrder = ['building', 'vehicle'];
 
@@ -83,12 +83,12 @@ class TreeTest extends TestCase
     {
         $data = self::dummyDataWithNumericKeys();
 
-        $tree = new Tree($data);
-        $originalData = json_encode($tree);
+        $sut = new Tree($data);
+        $originalData = json_encode($sut);
 
         for ($i = 0; $i < 3; ++$i) {
-            $tree->rebuildWithData($data);
-            static::assertSame($originalData, json_encode($tree));
+            $sut->rebuildWithData($data);
+            static::assertSame($originalData, json_encode($sut));
         }
     }
 
@@ -96,7 +96,7 @@ class TreeTest extends TestCase
     #[TestDox('Build: A tree can be created from an Iterable')]
     public function buildFromFromAnIterable(): void
     {
-        $tree = new Tree(
+        $sut = new Tree(
             IterableObjectFactory::makeIterableInstance(
                 [
                     ['id' => 1, 'parent' => 0],
@@ -106,14 +106,14 @@ class TreeTest extends TestCase
                 ]
             )
         );
-        static::assertSame('[{"id":1,"parent":0},{"id":2,"parent":0},{"id":3,"parent":2},{"id":4,"parent":0}]', json_encode($tree));
+        static::assertSame('[{"id":1,"parent":0},{"id":2,"parent":0},{"id":3,"parent":2},{"id":4,"parent":0}]', json_encode($sut));
     }
 
     #[Test]
     #[TestDox('Build: A tree can be created from an array of objects implementing Iterator')]
     public function buildFromAnArrayOfIterators(): void
     {
-        $tree = new Tree([
+        $sut = new Tree([
             IterableObjectFactory::makeIterableInstance(['id' => 1, 'parent' => 0, 'title' => 'A']),
             IterableObjectFactory::makeIterableInstance(['id' => 2, 'parent' => 0, 'title' => 'B']),
             IterableObjectFactory::makeIterableInstance(['id' => 3, 'parent' => 2, 'title' => 'B-1']),
@@ -122,7 +122,7 @@ class TreeTest extends TestCase
 
         static::assertSame(
             '[{"id":1,"parent":0,"title":"A"},{"id":2,"parent":0,"title":"B"},{"id":3,"parent":2,"title":"B-1"},{"id":4,"parent":0,"title":"D"}]',
-            json_encode($tree)
+            json_encode($sut)
         );
     }
 
@@ -132,11 +132,11 @@ class TreeTest extends TestCase
     {
         $data = self::dummyDataWithNumericKeys();
 
-        $tree1 = new Tree($data);
-        $tree1Json = json_encode($tree1);
-        $tree1JsonDecoded = json_decode($tree1Json, true);
+        $sut1 = new Tree($data);
+        $sut1Json = json_encode($sut1);
+        $sut1JsonDecoded = json_decode($sut1Json, true);
 
-        static::assertCount(\count($data), $tree1JsonDecoded);
+        static::assertCount(\count($data), $sut1JsonDecoded);
         foreach ($data as $nodeData) {
             ksort($nodeData);
             // Note: static::assertContains() fails
@@ -144,10 +144,10 @@ class TreeTest extends TestCase
             static::assertTrue(in_array($nodeData, $data));
         }
 
-        $tree2 = new Tree($tree1JsonDecoded);
-        $tree2Json = json_encode($tree2);
+        $sut2 = new Tree($sut1JsonDecoded);
+        $sut2Json = json_encode($sut2);
 
-        static::assertSame($tree1Json, $tree2Json);
+        static::assertSame($sut1Json, $sut2Json);
     }
 
     #[Test]
@@ -182,9 +182,9 @@ class TreeTest extends TestCase
     public function nodesGetRootNodes(): void
     {
         $data = self::dummyDataWithNumericKeys();
-        $tree = new Tree($data);
+        $sut = new Tree($data);
 
-        $nodes = $tree->getRootNodes();
+        $nodes = $sut->getRootNodes();
         static::assertCount(5, $nodes);
 
         $expectedOrder = [5, 3, 4, 6, 1];
@@ -200,9 +200,9 @@ class TreeTest extends TestCase
     public function nodesGetAllNodes(): void
     {
         $data = self::dummyDataWithNumericKeys();
-        $tree = new Tree($data);
+        $sut = new Tree($data);
 
-        $nodes = $tree->getNodes();
+        $nodes = $sut->getNodes();
         static::assertCount(\count($data), $nodes);
 
         $expectedOrder = [5, 3, 4, 6, 1, 7, 15, 11, 21, 27, 12, 10, 20];
@@ -218,10 +218,10 @@ class TreeTest extends TestCase
     public function nodeGetByIntId(): void
     {
         $data = self::dummyDataWithNumericKeys();
-        $tree = new Tree($data);
-        $node = $tree->getNodeById(20);
+        $sut = new Tree($data);
+        $node = $sut->getNodeById(20);
         static::assertEquals(20, $node->getId());
-        static::assertEquals($node, $tree->getNodeById('20'));
+        static::assertEquals($node, $sut->getNodeById('20'));
     }
 
     #[Test]
@@ -229,8 +229,8 @@ class TreeTest extends TestCase
     public function nodeGetByStringId(): void
     {
         $data = self::dummyDataWithStringKeys();
-        $tree = new Tree($data, new Options(rootId: ''));
-        $node = $tree->getNodeById('library');
+        $sut = new Tree($data, new Options(rootId: ''));
+        $node = $sut->getNodeById('library');
         static::assertEquals('library', $node->getId());
     }
 
@@ -242,8 +242,8 @@ class TreeTest extends TestCase
         $this->expectExceptionMessage('Invalid node primary key 999');
 
         $data = self::dummyDataWithNumericKeys();
-        $tree = new Tree($data);
-        $tree->getNodeById(999);
+        $sut = new Tree($data);
+        $sut->getNodeById(999);
     }
 
     #[Test]
@@ -252,11 +252,11 @@ class TreeTest extends TestCase
     public function nodeGetByRootNodeParentValue(): void
     {
         $data = [];
-        $subject = new Tree($data);
+        $sut = new Tree($data);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid node primary key 0');
-        $subject->getNodeById(0);
+        $sut->getNodeById(0);
     }
 
     #[Test]
@@ -264,10 +264,10 @@ class TreeTest extends TestCase
     public function nodeGetByValuePath(): void
     {
         $data = self::dummyDataWithNumericKeys();
-        $tree = new Tree($data);
+        $sut = new Tree($data);
         static::assertEquals(
-            $tree->getNodeById(11),
-            $tree->getNodeByValuePath('name', ['Europe', 'Germany', 'Hamburg'])
+            $sut->getNodeById(11),
+            $sut->getNodeByValuePath('name', ['Europe', 'Germany', 'Hamburg'])
         );
     }
 
@@ -276,10 +276,10 @@ class TreeTest extends TestCase
     public function nodeGetByUnresolvableValuePath(): void
     {
         $data = self::dummyDataWithNumericKeys();
-        $tree = new Tree($data);
+        $sut = new Tree($data);
         static::assertEquals(
             null,
-            $tree->getNodeByValuePath('name', ['Europe', 'Germany', 'Frankfurt'])
+            $sut->getNodeByValuePath('name', ['Europe', 'Germany', 'Frankfurt'])
         );
     }
 
@@ -287,8 +287,8 @@ class TreeTest extends TestCase
     public function inScalarContextTheTreeIsReturnedAsAString(): void
     {
         $data = self::dummyDataWithNumericKeys();
-        $tree = new Tree($data);
-        $actual = (string) $tree;
+        $sut = new Tree($data);
+        $actual = (string) $sut;
         $expected = <<<'EXPECTED'
 - 5
 - 3
